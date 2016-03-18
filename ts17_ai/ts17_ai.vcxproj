@@ -83,12 +83,15 @@
     <ClCompile Include="..\ai\teamstyle17.cpp" />
     <ClCompile Include="..\communicate\communicate.cpp" />
     <ClCompile Include="..\headers\basictypes.cpp" />
+    <ClCompile Include="analyzer.cpp" />
+    <ClCompile Include="common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\communicate\communicate.h" />
     <ClInclude Include="..\headers\analyzer.h" />
     <ClInclude Include="..\headers\basic.h" />
     <ClInclude Include="..\headers\basictypes.h" />
+    <ClInclude Include="..\headers\common.h" />
     <ClInclude Include="..\headers\instructions.h" />
     <ClInclude Include="..\headers\processor.h" />
     <ClInclude Include="..\headers\searchtree.h" />

@@ -36,6 +36,12 @@
     <ClCompile Include="..\ai\searchtree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="analyzer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\headers\basic.h">
@@ -60,6 +66,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\basictypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\common.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

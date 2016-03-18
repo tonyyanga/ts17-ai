@@ -1,7 +1,7 @@
 #include "basic.h"
 
+PlayerObject Self;
 //通用的一些
-int usetime(Position p,bool add);		//返回到达p处所需的回合数,add为真则代表使用加速技能
 Position cloest(ObjectType A);	//返回最近的type为A的物体的位置
 Position* pos(ObjectType A);	//返回视野内所有type为A的物体的位置
 
