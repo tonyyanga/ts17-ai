@@ -27,6 +27,9 @@
     <ClCompile Include="..\ai\dll_main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\ai\processor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\headers\basic.h">
@@ -39,6 +42,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\communicate\communicate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\headers\processor.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
