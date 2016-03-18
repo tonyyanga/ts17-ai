@@ -23,7 +23,6 @@ public:
 	void* getmax(int n=1);
 	lnNode* returnall();
 	void additem(const void* item);
-	void cleanup();
 private:
 	binaryNode* root();
 	void heapsort();

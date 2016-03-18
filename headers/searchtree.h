@@ -32,6 +32,7 @@ public:
 	lnNode* reverserankchildren(); // return sorted child linked list, the first should be the worst
 	int span(); // span this node, return number of children
 	int gameover(); //return 0 as not over yet, 1 as winning, 2 as losing
+	bool haschildren();
 };
 
 class SearchTree{
@@ -55,11 +56,9 @@ public:
 private:
 	SceneState* Estimate(const SceneState* origin, const Instruction* order); // calculate the next state
 	MaxHeap* GetHeap(int depth);
-	bool search_layer_exec(lnNode* layerNodes);
-	bool search_layer_exec(SearchNode* node);
+	bool search_layer_exec(const lnNode* layerNodes);
+	bool search_layer_exec(const SearchNode* node);
 };
-
-
 
 
 #endif

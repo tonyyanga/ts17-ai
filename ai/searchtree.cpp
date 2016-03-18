@@ -82,6 +82,31 @@ bool SearchTree::DFS(int width=1) {
 				if (!cancontinue)
 					break;
 			depth = ((SearchNode*)((lnNode*)temp)->dataptr)->depth + 1;
+			}
 		}
 	}
+}
+
+bool SearchTree::search_layer_exec(const lnNode* layerNodes) {
+	lnNode* ptr = (lnNode*)layerNodes;
+	lnNode* child;
+	SearchNode* temp=(SearchNode*)ptr->dataptr;
+	if (temp)
+		int depth = temp->depth + 1;
+	else
+		return false;
+	while(ptr->next) {
+		temp = (SearchNode*)(ptr ->dataptr);
+		temp->span();
+		child = temp->rankchildren();
+		while(child->next) {
+			//add to heap
+			child = child->next;
+		}
+		ptr = ptr->next;
+	}
+}
+
+bool SearchTree::search_layer_exec(const SearchNode* node) {
+
 }
