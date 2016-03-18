@@ -1,7 +1,6 @@
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
-
-
+#include "../headers/teamstyle17.h"
 void LIFO::init()
 {
 	s=new Instruction[stack_size];
@@ -14,7 +13,7 @@ Instruction LIFO::pop()		//Pop first Instruction out
 	return i;
 }
 
-void LIFO::push(Instruction t)
+void LIFO::push(Instruction t,int priority)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
 }
@@ -39,7 +38,7 @@ Instruction FIFO::pop()
 	return s[top--];
 }
 
-void FIFO::push(Instruction t)
+void FIFO::push(Instruction t,int priority)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
 	top++;
@@ -54,3 +53,9 @@ void FIFO::clear()
 {
 	top=0;
 }
+void processor::init()
+{
+	temp_in
+void processor::do_instruction()
+{
+	
