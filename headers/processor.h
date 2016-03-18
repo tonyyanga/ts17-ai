@@ -11,7 +11,7 @@ private:
 	Instruction *s;
 	int bottom;
 public:
-	void init();
+	LIFO(int size);
 	Instruction pop();			//Pop last Instruction out
 	int return_bottom();
 	void push(Instruction t,int priority);	//Push Instruction in
@@ -24,7 +24,7 @@ private:
 	Instruction *s;
 	int top;	
 public:
-	void init();
+	FIFO(int size);
 	Instruction pop();
 	int return_top();
 	void push(Instruction t,int priority);

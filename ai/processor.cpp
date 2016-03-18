@@ -1,9 +1,9 @@
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
-void LIFO::init()
+LIFO::LIFO(int size)
 {
-	s=new Instruction[stack_size];
+	s=new Instruction[size];
 	bottom=0;
 };
 
@@ -35,10 +35,10 @@ void LIFO::clear()
 {
 }
 
-void FIFO::init()
+FIFO::FIFO(int size)
 {
 	top=0;
-	s=new Instruction[stack_size];
+	s=new Instruction[size];
 };
 
 Instruction FIFO::pop()	
