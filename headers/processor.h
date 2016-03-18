@@ -9,9 +9,11 @@ class LIFO
 {
 private:
 	Instruction *s;
+	int bottom;
 public:
 	void init();
 	Instruction pop();			//Pop last Instruction out
+	int return_bottom();
 	void push(Instruction t,int priority);	//Push Instruction in
 	Instruction get_top();		//Get last Instruction
 	void clear();				//Clear all
@@ -24,6 +26,7 @@ private:
 public:
 	void init();
 	Instruction pop();
+	int return_top();
 	void push(Instruction t,int priority);
 	Instruction get_top();
 	void clear();
@@ -36,7 +39,8 @@ private:
 	now_instruction temp_in;
 public:
 	void init();
-	void do_instruction();
+	void choose_instruction();
+	void do_instruction():		//Todo
 }
 
 struct now_instruction
