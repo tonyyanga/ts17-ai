@@ -24,6 +24,7 @@ enum InstructionType {
 	Skill_Shield,
 	Skill_HealthUp,
 	Skill_UpgradeSkill,
+	MultiInstructions,
 	
 	kInstructionType
 };
