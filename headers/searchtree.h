@@ -4,7 +4,7 @@
 #include "basic.h" // get basic structs
 #include "instructions.h" // use basic data
 
-typedef SceneState{
+typedef struct SceneState{
 	// below, ptr?
 	Map map;
 	Status status;
@@ -14,8 +14,8 @@ class SearchNode{
 public:
 	int depth; // tree depth
 	bool spanned;
-	SearchNode* father; // pointer to father node
-	Instruction* order;
+	const SearchNode* father; // pointer to father node
+	const Instruction* order;
 	double number; // work with MaxHeap
 private:
 	lnNode* children; // linked list to child nodes
@@ -24,7 +24,7 @@ private:
 
 public:
 	// constructor
-	SearchNode(const SceneState* state);
+	SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order);
 
 	double evaluate(); // return evaluated value of this state
 	SearchNode* getbestchild(); // return the best child
@@ -36,18 +36,24 @@ public:
 
 class SearchTree{
 private:
-	lnNode* HeapsAtDepth // linked list to store heaps for nodes at certain depth
-	MaxHeap* EndedNodes // heap for ended nodes
+	SearchNode* root;
+	lnNode* HeapsAtDepth; // linked list to store heaps for nodes at certain depth
+	lnNode* EndedNodes; // heap for ended nodes
 	//bool Ended
+	int BFSdepth;
+	int DFSdepth;
 
 public:
 	//constructor
-	SearchTree(const SceneState* rootstate, int BFSdepth=3, int DFSdepth=8);
-
+	SearchTree(const SceneState* rootstate, int BFSdepth=3, int DFSdepth=8); // root is at depth = 0
+	bool BFS();
+	bool DFS();
 	SearchNode* GetBestNode(int depth=-1);
 	lnNode* GetAllNodes(int depth=-1);
 private:
 	SceneState* Estimate(const SceneState* origin, const Instruction* order);
+	MaxHeap* GetHeap(int depth)
+};
 
 
 
