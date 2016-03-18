@@ -47,5 +47,8 @@
     <ClInclude Include="..\headers\processor.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\headers\analyzer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

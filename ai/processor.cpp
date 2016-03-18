@@ -1,11 +1,12 @@
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
-LIFO::LIFO(int size)
+#include <iostream>
+LIFO::LIFO(int size=5)
 {
 	s=new Instruction[size];
 	bottom=0;
-};
+}
 
 Instruction LIFO::pop()		//Pop first Instruction out
 {
@@ -33,13 +34,14 @@ int LIFO::return_bottom()
 
 void LIFO::clear()
 {
+	bottom=0;
 }
 
-FIFO::FIFO(int size)
+FIFO::FIFO(int size=5)
 {
 	top=0;
 	s=new Instruction[size];
-};
+}
 
 Instruction FIFO::pop()	
 {
@@ -67,8 +69,9 @@ void FIFO::clear()
 	top=0;
 }
 
-void processor::init()
+processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2)
 {
+	this->l1=l1,this->l2=l2,this->f1=f1,this->f2=f2;
 	temp_in.priority=0;
 }
 
@@ -82,4 +85,13 @@ void processor::choose_instruction()
 		temp_in.i=l2.pop();
 	else if ((f2.return_top()!=0) && (temp_in.priority<1))
 		temp_in.i=f2.pop();
+}
+
+int main()
+{
+	LIFO l1(5),l2(5);
+	FIFO f1(5),f2(5);
+	processor(l1,l2,f1,f2);
+	system("pause");
+	return 0;
 }

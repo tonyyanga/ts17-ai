@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\communicate\communicate.h" />
+    <ClInclude Include="..\headers\analyzer.h" />
     <ClInclude Include="..\headers\basic.h" />
     <ClInclude Include="..\headers\instructions.h" />
     <ClInclude Include="..\headers\processor.h" />

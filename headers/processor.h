@@ -31,6 +31,11 @@ public:
 	Instruction get_top();
 	void clear();
 };
+struct now_instruction
+{
+	Instruction i;
+	int priority;
+};
 class processor
 {
 private:
@@ -38,14 +43,10 @@ private:
 	FIFO f1,f2;
 	now_instruction temp_in;
 public:
-	void init();
+	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2);
 	void choose_instruction();
-	void do_instruction():		//Todo
-}
+//	void do_instruction():		//Todo
+};
 
-struct now_instruction
-{
-	Instruction i;
-	int priority;
-}
+
 #endif
