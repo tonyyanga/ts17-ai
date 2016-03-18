@@ -108,7 +108,7 @@ bool SearchTree::search_layer_exec(const lnNode* layerNodes) {
 				heap = this->GetHeap(depth);
 			if (heap==NULL)
 				heap = this->extendheap();
-			heap->additem(child->dataptr);
+			heap->additem((SearchNode*)child->dataptr);
 			if (!((SearchNode*)(child->dataptr))->haschildren()) {
 				lnNode* linkedlist = (lnNode*)malloc(sizeof(lnNode));
 				linkedlist->next = this->EndedNodes;
@@ -140,7 +140,7 @@ bool SearchTree::search_layer_exec(const SearchNode* node) {
 			heap = this->GetHeap(depth);
 		if (heap==NULL)
 			heap = this->extendheap();
-		heap->additem(child->dataptr);
+		heap->additem((SearchNode*)child->dataptr);
 		if (!((SearchNode*)(child->dataptr))->haschildren()) {
 			lnNode* linkedlist = (lnNode*)malloc(sizeof(lnNode));
 			linkedlist->next = this->EndedNodes;

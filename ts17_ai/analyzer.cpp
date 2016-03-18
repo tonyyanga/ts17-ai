@@ -11,6 +11,7 @@ Position* pos(ObjectType A)
 
 Position cloest(ObjectType A)
 {
+
 }
 
 

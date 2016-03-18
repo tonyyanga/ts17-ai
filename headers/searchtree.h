@@ -2,6 +2,7 @@
 #define SEARCHTREE
 
 #include "basic.h" // get basic structs
+#include "basictypes.h" // use inheritance
 #include "instructions.h" // use basic data
 
 typedef struct SceneState{
@@ -10,9 +11,7 @@ typedef struct SceneState{
 	Status status;
 };
 
-
-
-class SearchNode{
+class SearchNode:public MaxHeapNode {
 public:
 	int depth; // tree depth
 	bool spanned;
