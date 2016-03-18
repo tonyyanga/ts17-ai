@@ -1,12 +1,7 @@
 #ifndef INSTRUCTIONS
 #define INSTRUCTIONS
 
-typedef struct lnNode{
-	// a basic node of a linked list
-	// make .next = NULL to make the end
-	void* dataptr;
-	lnNode* next;
-};
+#include "basictypes.h"
 
 typedef struct Instruction {
 	int type; // see enum InstructionType

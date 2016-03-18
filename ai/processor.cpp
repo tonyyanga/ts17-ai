@@ -1,8 +1,7 @@
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 
-int stack_size=5;
-int priority_level=2;
+
 void LIFO::init()
 {
 	s=new Instruction[stack_size];

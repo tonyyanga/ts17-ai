@@ -1,8 +1,9 @@
 #ifndef PROCESSOR_H_
 #define PROCESSOR_H_
-#include "instructions.h"
-#include "teamstyle17.h"
 
+#include "instructions.h"
+
+const int stack_size=5;
 
 class LIFO
 {
