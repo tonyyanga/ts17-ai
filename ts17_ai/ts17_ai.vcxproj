@@ -79,6 +79,7 @@
     <ClCompile Include="..\ai\ai.cpp" />
     <ClCompile Include="..\ai\dll_main.cpp" />
     <ClCompile Include="..\ai\processor.cpp" />
+    <ClCompile Include="..\ai\searchtree.cpp" />
     <ClCompile Include="..\ai\teamstyle17.cpp" />
     <ClCompile Include="..\communicate\communicate.cpp" />
     <ClCompile Include="..\headers\basictypes.cpp" />

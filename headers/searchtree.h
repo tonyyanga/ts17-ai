@@ -40,19 +40,23 @@ private:
 	lnNode* HeapsAtDepth; // linked list to store heaps for nodes at certain depth
 	lnNode* EndedNodes; // heap for ended nodes
 	//bool Ended
-	int BFSdepth;
 	int DFSdepth;
 
 public:
 	//constructor
-	SearchTree(const SceneState* rootstate, int BFSdepth=3, int DFSdepth=8); // root is at depth = 0
-	bool BFS();
-	bool DFS();
-	SearchNode* GetBestNode(int depth=-1);
-	lnNode* GetAllNodes(int depth=-1);
+	SearchTree(const SceneState* rootstate, int maxDepth); // root is at depth = 0
+	
+	//return True when there are end nodes
+	bool BFS(int BFSdepth);
+	bool DFS(int width);
+	
+	SearchNode* GetBestNode(int depth);
+	lnNode* GetAllNodes(int depth);
 private:
-	SceneState* Estimate(const SceneState* origin, const Instruction* order);
-	MaxHeap* GetHeap(int depth)
+	SceneState* Estimate(const SceneState* origin, const Instruction* order); // calculate the next state
+	MaxHeap* GetHeap(int depth);
+	bool search_layer_exec(lnNode* layerNodes);
+	bool search_layer_exec(SearchNode* node);
 };
 
 
