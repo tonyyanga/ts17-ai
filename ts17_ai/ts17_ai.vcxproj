@@ -77,6 +77,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\ai\ai.cpp" />
+    <ClCompile Include="..\ai\analyzer.cpp" />
+    <ClCompile Include="..\ai\common.cpp" />
     <ClCompile Include="..\ai\dll_main.cpp" />
     <ClCompile Include="..\ai\processor.cpp" />
     <ClCompile Include="..\ai\searchnode.cpp" />
@@ -84,8 +86,6 @@
     <ClCompile Include="..\ai\teamstyle17.cpp" />
     <ClCompile Include="..\communicate\communicate.cpp" />
     <ClCompile Include="..\headers\basictypes.cpp" />
-    <ClCompile Include="analyzer.cpp" />
-    <ClCompile Include="common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\communicate\communicate.h" />

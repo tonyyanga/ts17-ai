@@ -36,13 +36,13 @@
     <ClCompile Include="..\ai\searchtree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="analyzer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="common.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\ai\searchnode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ai\common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ai\analyzer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
