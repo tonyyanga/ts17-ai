@@ -48,7 +48,7 @@ Position* dev_inway(Speed A)
 	int i;
 	double r=Self->objects[0].radius;
 	Position* posd=pos(DEVOUR);
-	Position linepoint=Self->objects[0].pos+A;
+	Position linepoint=Displacement(Self->objects[0].pos,A);
 	for(i=0;i<count_type(DEVOUR);i++)
 	{
 		distance=PointLineDistance(posd[i],Self->objects[0].pos,linepoint);
