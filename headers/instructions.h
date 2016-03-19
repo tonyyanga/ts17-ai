@@ -24,7 +24,7 @@ struct APIOrder {
 
 enum InstructionType {
 	MovePosition,
-	EatAdvancedenergy,
+	EatAdvancedEnergy,
 	Approach,
 	Escape,
 	Skill_ShortAttack,
@@ -44,7 +44,7 @@ enum InstructionConditionType{
 	MaxTargetHealth,
 	MinSpeedAdvantage,
 	MinSkillPoint,
-	EatAdvancedenergy,
+
 	kInstructionConditionType
 };
 

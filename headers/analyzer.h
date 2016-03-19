@@ -1,3 +1,6 @@
+#ifndef ANALYZER
+#define ANALYZER
+
 #include "basic.h"
 
 PlayerObject Self;
@@ -28,6 +31,8 @@ struct adv_memory
 	int oldtime;		//上一次该光之隧道被吃掉的时间
 	Position pos_dev;	//该光之隧道附近最近的刺球位置
 }
+
+#endif
 
 
 
