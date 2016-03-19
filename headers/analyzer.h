@@ -4,6 +4,7 @@ PlayerObject Self;
 //通用的一些
 Position cloest(ObjectType A);	//返回最近的type为A的物体的位置
 Position* pos(ObjectType A);	//返回视野内所有type为A的物体的位置
+int count_type(ObjectType A);	//返回视野内type为A的物体的数量
 
 
 //关于player的函数与结构
@@ -18,8 +19,7 @@ struct enemy		//己方对敌方的信息储存
 };
 
 //关于devour的函数
-bool dev_inway(Speed);				//判断是否有devour在输入速度上
-Position avoid_newway(Position A);	//返回要到达A需要绕路到的中间点
+Position* dev_inway(Speed);				//判断是否有devour在输入速度上，若有则输出该刺球位置，无则输出NONE
 
 //关于光之隧道的函数
 struct adv_memory
