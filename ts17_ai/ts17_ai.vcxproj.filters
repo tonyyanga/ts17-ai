@@ -5,13 +5,13 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,43 +36,43 @@
     <ClCompile Include="..\ai\searchtree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="analyzer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="common.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\ai\searchnode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ai\analyzer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ai\common.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\headers\basic.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\teamstyle17.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\instructions.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\communicate\communicate.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\processor.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\analyzer.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\searchtree.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\basictypes.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\headers\common.h">
-      <Filter>头文件</Filter>
+      <Filter>源文件\头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
