@@ -2,14 +2,11 @@
 #define SEARCHTREE
 
 #include "basic.h" // get basic structs
+#include "common.h"
 #include "basictypes.h" // use inheritance
 #include "instructions.h" // use basic data
 
-typedef struct SceneState{
-	// below, ptr?
-	Map map;
-	Status status;
-};
+
 
 class SearchNode:public MaxHeapNode {
 public:

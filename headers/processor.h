@@ -2,6 +2,7 @@
 #define PROCESSOR_H_
 
 #include "instructions.h"
+#include "common.h"
 
 const int stack_size=5;
 
@@ -42,11 +43,19 @@ private:
 	LIFO l1,l2;
 	FIFO f1,f2;
 	now_instruction temp_in;
+	
+	//Below by cxn
+	SceneState* CurrentState; // Derek, please keep this up to date
+
+
 public:
 	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2);
 	void choose_instruction();
 //	void do_instruction():		//Todo
-};
 
+// implementation by cxn
+private:
+	APIOrder* Process_MovePosition(Position dest);
+};
 
 #endif

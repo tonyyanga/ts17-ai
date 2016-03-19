@@ -1,6 +1,7 @@
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
+#include"../headers/basic.h"
 #include <iostream>
 LIFO::LIFO(int size=5)
 {
@@ -87,6 +88,19 @@ void processor::choose_instruction()
 		temp_in.i=f2.pop();
 }
 
+void implement(APIOrder x)
+{
+	switch (x.type)
+	{
+	case API_Switchspeed:Move(*((int*)x.p1), *((Speed*)x.p2)); break;
+	case API_UpgradeSkill:UpgradeSkill(*((int*)x.p1), *(SkillType*)x.p2); break;
+	case API_ShortAttack:ShortAttack(*((int*)x.p1)); break;
+	case API_LongAttack:LongAttack(*((int*)x.p1), *((int*)x.p2)); break;
+	case API_Dash:Dash(*((int*)x.p1)); break;
+	case API_Shield:Shield(*((int*)x.p1)); break;
+	case API_HealthUp:HealthUp(*((int*)x.p1)); break;
+	}
+}
 int main()
 {
 	LIFO l1(5),l2(5);

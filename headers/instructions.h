@@ -14,8 +14,17 @@ typedef struct InstructionCondition {
 	lnNode* argvs;
 };
 
+struct APIOrder {
+	//by cxn
+	int type;// see enum APIorderType
+	void *p1;
+	void *p2;
+};
+
+
 enum InstructionType {
 	MovePosition,
+	EatAdvancedenergy,
 	Approach,
 	Escape,
 	Skill_ShortAttack,
@@ -35,8 +44,20 @@ enum InstructionConditionType{
 	MaxTargetHealth,
 	MinSpeedAdvantage,
 	MinSkillPoint,
-
+	EatAdvancedenergy,
 	kInstructionConditionType
 };
 
+enum APIorderType {
+	API_Switchspeed,
+	API_UpgradeSkill,
+	API_ShortAttack,
+	API_LongAttack,
+	API_Dash,
+	API_Shield,
+	API_HealthUp,
+	MultiAPIorder,
+
+	kAPIorederType
+};
 #endif
