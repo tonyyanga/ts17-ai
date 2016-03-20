@@ -49,9 +49,8 @@ private:
 
 
 public:
-	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2);
+	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s);
 	void choose_instruction();
-//	void do_instruction():		//Todo
 
 // implementation by cxn
 private:
