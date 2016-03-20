@@ -1,14 +1,13 @@
+#include <iostream>
+#include <cmath>
+
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
 #include"../headers/basic.h"
-<<<<<<< HEAD
 #include"../headers/analyzer.h"
-=======
 #include"../headers/common.h"
->>>>>>> c1f5d4297038b9a72ddc83978c53bf61d873f5f1
-#include <iostream>
-#include<cmath>
+
 #define PI 3.1415926
 LIFO::LIFO(int size=5)
 {
@@ -110,7 +109,8 @@ void implement(APIOrder x)
 	case API_HealthUp:HealthUp(*(x.p1)); break;
 	}
 }
-<<<<<<< HEAD
+
+
 APIOrder::APIOrder()
 {
 	(*p1) = Self.id;
@@ -156,14 +156,3 @@ void APIOrder::Attack()
 	}
 	else type = API_StayStill;
 }
-
-int main()
-{
-	LIFO l1(5),l2(5);
-	FIFO f1(5),f2(5);
-	processor(l1,l2,f1,f2);
-	system("pause");
-	return 0;
-}
-=======
->>>>>>> c1f5d4297038b9a72ddc83978c53bf61d873f5f1
