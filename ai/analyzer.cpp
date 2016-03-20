@@ -1,15 +1,20 @@
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
-#include<stdio.h>
+#include<stddef.h>
 
 
 void observe(Object A,Enemy* enemy)
 {
 	if (enemy!=NULL)
 	{
-		double s=Norm(enemy->speed);
-		enemy->speed=Displacement(A.pos,enemy->player.pos);
+		double s;
+		int t=GetTime();		//当前回合数
+		if (t-enemy->valid_time==1)				//连续两回合都在视野内
+		{
+			enemy->speed=Displacement(A.pos,enemy->player.pos);
+			s=Norm(enemy->speed);
+		}
 		if (A.radius>enemy->maxr) enemy->maxr=A.radius;
 		if (A.radius<enemy->minr) enemy->minr=A.radius;
 		if (health(A.radius)-health(enemy->player.radius)>400) enemy->addheal++;
@@ -17,19 +22,7 @@ void observe(Object A,Enemy* enemy)
 		if (A.shield_time>0) enemy->skills[2]=1;
 		if (A.long_attack_casting>0) enemy->skills[1]=1;
 		if (s>102) enemy->skills[3]=int((s-100)/20);
-	}
-	else
-	{
-		enemy=new Enemy;
-		enemy->addheal=0;
-		enemy->maxr=A.radius;
-		enemy->minr=A.radius;
-		enemy->player.pos=A.pos;
-		enemy->skills[0]=0;
-		enemy->skills[1]=0;
-		enemy->skills[2]=0;
-		enemy->skills[3]=0;
-		enemy->skills[4]=0;
+		enemy->valid_time=t;
 	}
 }
 

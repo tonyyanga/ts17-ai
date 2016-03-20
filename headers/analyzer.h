@@ -5,11 +5,6 @@
 #include "basic.h"
 
 
-//通用的一些
-Position cloest(ObjectType A);	//返回最近的type为A的物体的位置
-Position* pos(ObjectType A);	//返回视野内所有type为A的物体的位置
-int count_type(ObjectType A);	//返回视野内type为A的物体的数量
-
 class analyzer
 {
 private:
@@ -41,6 +36,7 @@ struct Enemy		//己方对敌方的信息储存
 	Speed speed;
 	int addheal;	//判断敌方是否已经加血次数
 	Object player;
+	int valid_time;	//说明数据来源的回合
 };
 
 
