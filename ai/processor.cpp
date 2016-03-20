@@ -79,13 +79,13 @@ processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2)
 void processor::choose_instruction()
 {
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
-		temp_in.i=l1.pop();
+		temp_in.i=l1.pop(),temp_in.priority=4;
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
-		temp_in.i=f1.pop();
+		temp_in.i=f1.pop(),temp_in.priority=3;
 	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
-		temp_in.i=l2.pop();
+		temp_in.i=l2.pop(),temp_in.priority=2;
 	else if ((f2.return_top()!=0) && (temp_in.priority<1))
-		temp_in.i=f2.pop();
+		temp_in.i=f2.pop(),temp_in.priority=1;
 }
 
 void implement(APIOrder x)
