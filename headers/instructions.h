@@ -62,6 +62,7 @@ enum APIorderType {
 	API_Shield,
 	API_HealthUp,
 	MultiAPIorder,
+	Finished,
 
 	kAPIorederType
 };

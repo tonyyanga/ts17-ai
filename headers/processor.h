@@ -42,7 +42,6 @@ class processor
 private:
 	LIFO l1,l2;
 	FIFO f1,f2;
-	now_instruction temp_in;
 	
 	//Below by cxn
 	SceneState* CurrentState; // Derek, please keep this up to date
@@ -50,8 +49,11 @@ private:
 
 public:
 	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s);
+	now_instruction temp_in;
+	APIOrder now_order;
 	void choose_instruction();
-
+	int judge_condition();
+	APIOrder return_Order();	//Cxn, need you to complete this part (may need to use now_order)
 // implementation by cxn
 private:
 	APIOrder* Process_MovePosition(Position dest);

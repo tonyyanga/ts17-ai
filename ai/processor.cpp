@@ -95,6 +95,31 @@ void processor::choose_instruction()
 		temp_in.i=f2.pop(),temp_in.priority=1;
 }
 
+int processor::judge_condition()
+{
+	lnNode* i=temp_in.i.conditons;
+	while (i != NULL)
+	{
+		//Todo
+	}
+	return 0;
+}
+
+APIOrder processor::return_Order()
+{
+	if (judge_condition()==0)
+	{
+		temp_in.priority=0;
+		choose_instruction();	
+	}
+	//Set now_order to new order (added a new order type Finished
+	if (now_order.type==Finished)
+	{
+		temp_in.priority=0;
+		choose_instruction();	
+	}	
+}
+
 void implement(APIOrder x)
 {
 	switch (x.type)
