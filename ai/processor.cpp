@@ -118,11 +118,11 @@ APIOrder::APIOrder()
 
 void APIOrder::switchspeed()
 {
-	Position min = cloest(PLAYER);
+	Position min = closest(PLAYER);
 	int i;
 	for (i = ENERGY; i < kObjectTypes; i++)
-		if (Distance(Self.pos, cloest((ObjectType)i)) < Distance(Self.pos, min))
-			min = cloest((ObjectType)i);
+		if (Distance(Self.pos, closest((ObjectType)i)) < Distance(Self.pos, min))
+			min = closest((ObjectType)i);
 	if (dev_inway == NULL) type = API_StayStill;
 	else
 	{
@@ -138,16 +138,16 @@ void APIOrder::switchspeed()
 
 void APIOrder::Attack()
 {
-	enemy cloest_enemy;
-	if (Self.skill_cd[SHORT_ATTACK] == 0 && Distance(Self.pos, cloest(PLAYER)) <= 90 + 10 * Self.skill_level[SHORT_ATTACK])
+	Enemy closest_enemy;
+	if (Self.skill_cd[SHORT_ATTACK] == 0 && Distance(Self.pos, closest(PLAYER)) <= 90 + 10 * Self.skill_level[SHORT_ATTACK])
 		type = API_ShortAttack;
 	else type = API_StayStill;
 	if (Self.skill_level[LONG_ATTACK] > 0)
 	{
 		Position Final_position_enemy, Final_position_self;
-		Final_position_enemy.x = cloest(PLAYER).x + cloest_enemy.speed.x*Self.long_attack_casting;
-		Final_position_enemy.y = cloest(PLAYER).y + cloest_enemy.speed.y*Self.long_attack_casting;
-		Final_position_enemy.z = cloest(PLAYER).z + cloest_enemy.speed.z*Self.long_attack_casting;
+		Final_position_enemy.x = closest(PLAYER).x + closest_enemy.speed.x*Self.long_attack_casting;
+		Final_position_enemy.y = closest(PLAYER).y + closest_enemy.speed.y*Self.long_attack_casting;
+		Final_position_enemy.z = closest(PLAYER).z + closest_enemy.speed.z*Self.long_attack_casting;
 		Final_position_self.x = Self.pos.x + Self.speed.x*Self.long_attack_casting;
 		Final_position_self.y = Self.pos.y + Self.speed.y*Self.long_attack_casting;
 		Final_position_self.z = Self.pos.z + Self.speed.z*Self.long_attack_casting;

@@ -77,9 +77,9 @@ analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
 	}
 }
 
-Position analyzer::cloest(ObjectType A,Position p0)
+Position analyzer::closest(ObjectType A,Position p0)
 {
-	int cloest=0,i,n;
+	int closest=0,i,n;
 	Position* posA;
 	switch (A)
 	{
@@ -104,15 +104,15 @@ Position analyzer::cloest(ObjectType A,Position p0)
 	}
 	for(i=1;i<n;i++)
 	{
-		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
-			cloest=i;
+		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
+			closest=i;
 	}
-	return(posA[cloest]);
+	return(posA[closest]);
 }
 
-Position analyzer::cloest(ObjectType A)
+Position analyzer::closest(ObjectType A)
 {
-	int cloest=0,i,n;
+	int closest=0,i,n;
 	Position* posA;
 	Position p0=status->objects[0].pos;
 	switch (A)
@@ -138,10 +138,10 @@ Position analyzer::cloest(ObjectType A)
 	}
 	for(i=1;i<n;i++)
 	{
-		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
-			cloest=i;
+		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
+			closest=i;
 	}
-	return(posA[cloest]);
+	return(posA[closest]);
 }
 
 Position* analyzer::inway(ObjectType B,Speed A)
