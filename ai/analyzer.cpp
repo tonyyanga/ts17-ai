@@ -26,7 +26,7 @@ void observe(Object A,Enemy* enemy)
 	}
 }
 
-analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
+analyzer::analyzer(Enemy* enemy,const Status* status=GetStatus(),const Map* map=GetMap())
 {
 	int i;
 	int m=0,n=0,q=0;
@@ -70,7 +70,7 @@ analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
 		case PLAYER:
 			{
 				*pos_player=map->objects[i].pos;
-				observe(map->objects[i]);
+				observe(map->objects[i],enemy);
 				break;
 			}
 		}
