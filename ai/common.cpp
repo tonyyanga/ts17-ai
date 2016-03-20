@@ -2,7 +2,7 @@
 #include "../headers/teamstyle17.h"
 #include "math.h"
 
-int usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方向改变的回合时,返回从p到p0的回合数,add为假则代表不使用加速技能
+int Usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方向改变的回合时,返回从p到p0的回合数,add为假则代表不使用加速技能
 {
 	int time,da_time;
 	int speed=100;
@@ -33,4 +33,9 @@ int usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方
 double angle(Position p1,Position p2)
 {
 	return(acos(DotProduct(p1,p2)/(Norm(p1)*Norm(p2))));
+}
+
+double health(double radius)
+{
+	return((pow(radius/10,3)));
 }
