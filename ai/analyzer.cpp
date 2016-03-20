@@ -79,9 +79,30 @@ analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
 
 Position analyzer::cloest(ObjectType A,Position p0)
 {
-	int cloest=0,i;
-	Position* posA=get_pos(A);
-	for(i=1;i<count_type(A);i++)
+	int cloest=0,i,n;
+	Position* posA;
+	switch (A)
+	{
+	case ENERGY:
+		{
+			posA=pos_energy;
+			n=num_energy;
+			break;
+		}
+	case ADVANCED_ENERGY:
+		{
+			posA=pos_adv_energy;
+			n=num_adv_energy;
+			break;
+		}
+	case DEVOUR:
+		{
+			posA=pos_devour;
+			n=num_devour;
+			break;
+		}
+	}
+	for(i=1;i<n;i++)
 	{
 		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
 			cloest=i;
@@ -91,10 +112,31 @@ Position analyzer::cloest(ObjectType A,Position p0)
 
 Position analyzer::cloest(ObjectType A)
 {
-	int cloest=0,i;
-	Position* posA=get_pos(A);
+	int cloest=0,i,n;
+	Position* posA;
 	Position p0=status->objects[0].pos;
-	for(i=1;i<count_type(A);i++)
+	switch (A)
+	{
+	case ENERGY:
+		{
+			posA=pos_energy;
+			n=num_energy;
+			break;
+		}
+	case ADVANCED_ENERGY:
+		{
+			posA=pos_adv_energy;
+			n=num_adv_energy;
+			break;
+		}
+	case DEVOUR:
+		{
+			posA=pos_devour;
+			n=num_devour;
+			break;
+		}
+	}
+	for(i=1;i<n;i++)
 	{
 		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
 			cloest=i;
@@ -105,14 +147,35 @@ Position analyzer::cloest(ObjectType A)
 Position* analyzer::inway(ObjectType B,Speed A)
 {
 	double distance;	//Bµ½speedÏß¶ÎµÄ¾àÀë
-	int i;
+	int i,n;
 	double r=status->objects[0].radius;
-	Position* posd=get_pos(B);
 	Position linepoint=Displacement(status->objects[0].pos,A);
-	for(i=0;i<count_type(B);i++)
+	Position* posA;
+	switch (B)
 	{
-		distance=PointLineDistance(posd[i],status->objects[0].pos,linepoint);
-		if (distance<r) return(&posd[i]);
+	case ENERGY:
+		{
+			posA=pos_energy;
+			n=num_energy;
+			break;
+		}
+	case ADVANCED_ENERGY:
+		{
+			posA=pos_adv_energy;
+			n=num_adv_energy;
+			break;
+		}
+	case DEVOUR:
+		{
+			posA=pos_devour;
+			n=num_devour;
+			break;
+		}
+	}
+	for(i=0;i<n;i++)
+	{
+		distance=PointLineDistance(posA[i],status->objects[0].pos,linepoint);
+		if (distance<r) return(&posA[i]);
 	}
 	return(NULL);
 }
