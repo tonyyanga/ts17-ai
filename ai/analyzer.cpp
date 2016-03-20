@@ -77,18 +77,6 @@ analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
 	}
 }
 
-Position* analyzer::get_pos(ObjectType A)
-{
-	switch(A)
-	{
-	case ENERGY:return(pos_energy);
-	case ADVANCED_ENERGY:return(pos_adv_energy);
-	case DEVOUR:return(pos_devour);
-	case PLAYER:return(pos_player);
-	default:return(NULL);
-	}
-}
-
 Position analyzer::cloest(ObjectType A,Position p0)
 {
 	int cloest=0,i;

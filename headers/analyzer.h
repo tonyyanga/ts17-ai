@@ -8,17 +8,16 @@
 class analyzer
 {
 private:
+
+public:
+	const Map* map;
+	const Status* status;
 	int num_energy,num_adv_energy,num,num_devour;
 	Position* pos_energy;
 	Position* pos_adv_energy;
 	Position* pos_devour;
 	Position* pos_player;
-
-public:
-	const Map* map;
-	const Status* status;
 	analyzer(const Status* status,const Map* map);		//构造函数
-	Position* get_pos(ObjectType A);					//返回A类物体的位置（position数列）
 	Position cloest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
 	Position cloest(ObjectType A);			
 	Position* inway(ObjectType B,Speed A);				//判断speed方向上是否会碰到B，是则返回B的位置，不是则返回null）
