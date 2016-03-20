@@ -16,13 +16,13 @@ struct enemy		//己方对敌方的信息储存
 	int ablilty;
 	int maxhealth;
 	int skills[5];	//分别代表敌方五个技能的等级
-	int speed;
+	Speed speed;
 	bool addheal;	//判断敌方是否已经加过1000的血
 	bool to_me;		//判断敌方是否向我方运动
 };
 
 //关于devour的函数
-Position* dev_inway(Speed);				//判断是否有devour在输入速度上，若有则输出该刺球位置，无则输出NONE
+Position* dev_inway(Speed);		//判断是否有devour在输入速度上，若有则输出该刺球位置，无则输出NONE
 
 //关于光之隧道的函数
 struct adv_memory

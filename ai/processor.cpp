@@ -2,7 +2,10 @@
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
 #include"../headers/basic.h"
+#include"../headers/analyzer.h"
 #include <iostream>
+#include<cmath>
+#define PI 3.1415926
 LIFO::LIFO(int size=5)
 {
 	s=new Instruction[size];
@@ -92,15 +95,62 @@ void implement(APIOrder x)
 {
 	switch (x.type)
 	{
-	case API_Switchspeed:Move(*((int*)x.p1), *((Speed*)x.p2)); break;
-	case API_UpgradeSkill:UpgradeSkill(*((int*)x.p1), *(SkillType*)x.p2); break;
-	case API_ShortAttack:ShortAttack(*((int*)x.p1)); break;
-	case API_LongAttack:LongAttack(*((int*)x.p1), *((int*)x.p2)); break;
-	case API_Dash:Dash(*((int*)x.p1)); break;
-	case API_Shield:Shield(*((int*)x.p1)); break;
-	case API_HealthUp:HealthUp(*((int*)x.p1)); break;
+	case API_StayStill:; break;
+	case API_Switchspeed:Move(*(x.p1), *((Speed*)x.p2)); break;
+	case API_UpgradeSkill:UpgradeSkill(*(x.p1), *(SkillType*)x.p2); break;
+	case API_ShortAttack:ShortAttack(*(x.p1)); break;
+	case API_LongAttack:LongAttack(*(x.p1), *((int*)x.p2)); break;
+	case API_Dash:Dash(*(x.p1)); break;
+	case API_Shield:Shield(*(x.p1)); break;
+	case API_HealthUp:HealthUp(*(x.p1)); break;
 	}
 }
+APIOrder::APIOrder()
+{
+	(*p1) = Self.id;
+}
+
+void APIOrder::switchspeed()
+{
+	Position min = cloest(PLAYER);
+	int i;
+	for (i = ENERGY; i < kObjectTypes; i++)
+		if (Distance(Self.pos, cloest((ObjectType)i)) < Distance(Self.pos, min))
+			min = cloest((ObjectType)i);
+	if (dev_inway == NULL) type = API_StayStill;
+	else
+	{
+		type = API_Switchspeed;
+		Position temp;
+		double length = Norm(CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))));
+		temp.x = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).x / length;
+		temp.y = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).y / length;
+		temp.z = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).z / length;
+		*((Position*)p2) = temp;
+	}
+}
+
+void APIOrder::Attack()
+{
+	enemy cloest_enemy;
+	if (Self.skill_cd[SHORT_ATTACK] == 0 && Distance(Self.pos, cloest(PLAYER)) <= 90 + 10 * Self.skill_level[SHORT_ATTACK])
+		type = API_ShortAttack;
+	else type = API_StayStill;
+	if (Self.skill_level[LONG_ATTACK] > 0)
+	{
+		Position Final_position_enemy, Final_position_self;
+		Final_position_enemy.x = cloest(PLAYER).x + cloest_enemy.speed.x*Self.long_attack_casting;
+		Final_position_enemy.y = cloest(PLAYER).y + cloest_enemy.speed.y*Self.long_attack_casting;
+		Final_position_enemy.z = cloest(PLAYER).z + cloest_enemy.speed.z*Self.long_attack_casting;
+		Final_position_self.x = Self.pos.x + Self.speed.x*Self.long_attack_casting;
+		Final_position_self.y = Self.pos.y + Self.speed.y*Self.long_attack_casting;
+		Final_position_self.z = Self.pos.z + Self.speed.z*Self.long_attack_casting;
+		if (Distance(Final_position_enemy, Final_position_self) <= 3000 + 500 * Self.skill_level[LONG_ATTACK])
+			type = API_LongAttack;
+	}
+	else type = API_StayStill;
+}
+
 int main()
 {
 	LIFO l1(5),l2(5);

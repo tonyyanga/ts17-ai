@@ -14,11 +14,15 @@ typedef struct InstructionCondition {
 	lnNode* argvs;
 };
 
-struct APIOrder {
-	//by cxn
+//below by cxn
+class APIOrder {
+public:
 	int type;// see enum APIorderType
-	void *p1;
+	int *p1;
 	void *p2;
+	APIOrder();
+	void switchspeed();
+	void Attack();
 };
 
 
@@ -49,6 +53,7 @@ enum InstructionConditionType{
 };
 
 enum APIorderType {
+	API_StayStill,
 	API_Switchspeed,
 	API_UpgradeSkill,
 	API_ShortAttack,
