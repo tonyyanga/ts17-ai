@@ -1,39 +1,98 @@
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
+#include "../headers/analyzer.h"
+#include<stddef.h>
 
-const Map *map=GetMap();
-const Status *Self=GetStatus();
 
-
-int count_type(ObjectType A)
+void observe(Object A,Enemy* enemy)
 {
-	int count,i;
-	for(i=0;i<map->objects_number;i++)
+	if (enemy!=NULL)
 	{
-		if (map->objects[i].type==A)
-			count++;
+		double s;
+		int t=GetTime();		//当前回合数
+		if (t-enemy->valid_time==1)				//连续两回合都在视野内
+		{
+			enemy->speed=Displacement(A.pos,enemy->player.pos);
+			s=Norm(enemy->speed);
+		}
+		if (A.radius>enemy->maxr) enemy->maxr=A.radius;
+		if (A.radius<enemy->minr) enemy->minr=A.radius;
+		if (health(A.radius)-health(enemy->player.radius)>400) enemy->addheal++;
+		enemy->player=A;
+		if (A.shield_time>0) enemy->skills[2]=1;
+		if (A.long_attack_casting>0) enemy->skills[1]=1;
+		if (s>102) enemy->skills[3]=int((s-100)/20);
+		enemy->valid_time=t;
 	}
-	return(count);
 }
 
-Position* pos(ObjectType A)
+analyzer::analyzer(const Status* status=GetStatus(),const Map* map=GetMap())
 {
 	int i;
-	Position* Pos;
-	Pos=new Position[count_type(A)];	//给Pos分配A数量的内存
+	int m=0,n=0,q=0;
+	num_energy=0;
+	num_adv_energy=0;
+	num_devour=0;
 	for(i=0;i<map->objects_number;i++)
 	{
-		if (map->objects[i].type==A)
-			Pos[i]=map->objects[i].pos;
+		switch(map->objects[i].type)
+		{
+		case ENERGY:num_energy++;break;
+		case ADVANCED_ENERGY:num_adv_energy++;break;
+		case DEVOUR:num_devour++;break;
+		}
 	}
-	return(Pos);
+	pos_adv_energy=new Position[num_adv_energy];
+	pos_devour=new Position[num_devour];
+	pos_energy=new Position[num_energy];
+	for(i=0;i<map->objects_number;i++)
+	{
+		switch(map->objects[i].type)
+		{
+		case ENERGY:
+			{
+				pos_energy[m]=map->objects[i].pos;
+				m++;
+				break;
+			}
+		case ADVANCED_ENERGY:
+			{
+				pos_adv_energy[n]=map->objects[i].pos;
+				n++;
+				break;
+			}
+		case DEVOUR:
+			{
+				pos_adv_energy[q]=map->objects[i].pos;
+				q++;
+				break;
+			}
+		case PLAYER:
+			{
+				*pos_player=map->objects[i].pos;
+				observe(map->objects[i]);
+				break;
+			}
+		}
+	}
 }
 
-Position cloest(ObjectType A)
+Position* analyzer::get_pos(ObjectType A)
+{
+	switch(A)
+	{
+	case ENERGY:return(pos_energy);
+	case ADVANCED_ENERGY:return(pos_adv_energy);
+	case DEVOUR:return(pos_devour);
+	case PLAYER:return(pos_player);
+	default:return(NULL);
+	}
+}
+
+Position analyzer::cloest(ObjectType A,Position p0)
 {
 	int cloest=0,i;
-	Position* posA=pos(A);
-	Position p0=Self->objects[0].pos;
+	Position* posA=get_pos(A);
 	for(i=1;i<count_type(A);i++)
 	{
 		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
@@ -42,22 +101,48 @@ Position cloest(ObjectType A)
 	return(posA[cloest]);
 }
 
-Position* dev_inway(Speed A)
+Position analyzer::cloest(ObjectType A)
 {
-	double distance;	//刺球到speed线段的距离
-	int i;
-	double r=Self->objects[0].radius;
-	Position* posd=pos(DEVOUR);
-	Position linepoint=Displacement(Self->objects[0].pos,A);
-	for(i=0;i<count_type(DEVOUR);i++)
+	int cloest=0,i;
+	Position* posA=get_pos(A);
+	Position p0=status->objects[0].pos;
+	for(i=1;i<count_type(A);i++)
 	{
-		distance=PointLineDistance(posd[i],Self->objects[0].pos,linepoint);
-		if (distance<r) return(&posd[i]);
+		if (Distance(p0,posA[i])<Distance(p0,posA[cloest]))
+			cloest=i;
 	}
-	return(0);
+	return(posA[cloest]);
 }
 
-		
+Position* analyzer::inway(ObjectType B,Speed A)
+{
+	double distance;	//B到speed线段的距离
+	int i;
+	double r=status->objects[0].radius;
+	Position* posd=get_pos(B);
+	Position linepoint=Displacement(status->objects[0].pos,A);
+	for(i=0;i<count_type(B);i++)
+	{
+		distance=PointLineDistance(posd[i],status->objects[0].pos,linepoint);
+		if (distance<r) return(&posd[i]);
+	}
+	return(NULL);
+}
+
+analyzer::~analyzer()
+{
+	delete[] pos_adv_energy;
+	delete[] pos_devour;
+	delete[] pos_energy;
+	delete pos_player;
+}
+
+
+
+
+
+
+
 
 
 
