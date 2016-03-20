@@ -1,3 +1,6 @@
+#ifndef COMMON_H_
+#define COMMON_H_
+
 #include "basic.h"
 #include "analyzer.h"
 
@@ -13,3 +16,5 @@ typedef struct SceneState {
 double angle(Position p1,Position p2);		//计算p1,p2矢量夹角（返回arccos值）
 
 double health(double radius);				//输入半径返回血量
+
+#endif

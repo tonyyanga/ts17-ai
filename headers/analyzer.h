@@ -1,5 +1,6 @@
-#ifndef ANALYZER_H_
-#define ANALYZER_H_
+
+#ifndef ANALYZER
+#define ANALYZER
 
 #include "basic.h"
 

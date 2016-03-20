@@ -2,6 +2,7 @@
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
 #include"../headers/basic.h"
+#include"../headers/common.h"
 #include <iostream>
 LIFO::LIFO(int size=5)
 {
@@ -70,22 +71,23 @@ void FIFO::clear()
 	top=0;
 }
 
-processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2)
+processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s)
 {
 	this->l1=l1,this->l2=l2,this->f1=f1,this->f2=f2;
 	temp_in.priority=0;
+	this->CurrentState=s;
 }
 
 void processor::choose_instruction()
 {
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
-		temp_in.i=l1.pop();
+		temp_in.i=l1.pop(),temp_in.priority=4;
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
-		temp_in.i=f1.pop();
+		temp_in.i=f1.pop(),temp_in.priority=3;
 	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
-		temp_in.i=l2.pop();
+		temp_in.i=l2.pop(),temp_in.priority=2;
 	else if ((f2.return_top()!=0) && (temp_in.priority<1))
-		temp_in.i=f2.pop();
+		temp_in.i=f2.pop(),temp_in.priority=1;
 }
 
 void implement(APIOrder x)
@@ -100,12 +102,4 @@ void implement(APIOrder x)
 	case API_Shield:Shield(*((int*)x.p1)); break;
 	case API_HealthUp:HealthUp(*((int*)x.p1)); break;
 	}
-}
-int main()
-{
-	LIFO l1(5),l2(5);
-	FIFO f1(5),f2(5);
-	processor(l1,l2,f1,f2);
-	system("pause");
-	return 0;
 }
