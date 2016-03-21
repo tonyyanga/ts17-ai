@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cmath>
-
 #include "../headers/instructions.h"
 #include "../headers/processor.h"
 #include "../headers/teamstyle17.h"
@@ -135,49 +134,73 @@ void implement(APIOrder x)
 	}
 }
 
+bool APIOrder::if_elseFinish()
+{
+	now_instruction* Current_instruction = new now_instruction;
+	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
+	if ((*Current_instruction).i.type == Skill_Shield && (*(*Current_analyzer).status).objects[0].shield_time != 0)
+		return 1;
+	else if ((*Current_instruction).i.type == Skill_Dash && (*(*Current_analyzer).status).objects[0].dash_time != 0)
+		return 1;
+	else return 0;
+	delete Current_instruction;
+	free(Current_analyzer);
+}
+
+bool APIOrder::if_elseNeed()
+{
+	Enemy* Current_enemy = new Enemy;
+	now_instruction* Current_instruction = new now_instruction;
+	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
+	if ((*Current_instruction).i.type == Skill_HealthUp)
+	{
+		Position* Current_enemy_position = new Position;
+		Position* Current_self_position = new Position;
+		(*Current_enemy_position).x = (*Current_enemy).player.pos.x + (*Current_enemy).speed.x*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		(*Current_enemy_position).y = (*Current_enemy).player.pos.y + (*Current_enemy).speed.y*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		(*Current_enemy_position).x = (*Current_enemy).player.pos.z + (*Current_enemy).speed.z*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		(*Current_self_position).x = (*(*Current_analyzer).status).objects[0].pos.x + (*(*Current_analyzer).status).objects[0].speed.x*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		(*Current_self_position).y = (*(*Current_analyzer).status).objects[0].pos.y + (*(*Current_analyzer).status).objects[0].speed.y*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		(*Current_self_position).z = (*(*Current_analyzer).status).objects[0].pos.z + (*(*Current_analyzer).status).objects[0].speed.z*(*(*Current_analyzer).status).objects[0].long_attack_casting;
+		if (Distance(*Current_enemy_position, *Current_self_position) <= 3000 + (*(*Current_analyzer).status).objects[0].skill_level[LONG_ATTACK] * 500)
+			return 1;
+	}
+}
+
+void APIOrder::Do_it()
+{
+	now_instruction* Current_instruction = new now_instruction;
+	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
+	if ((*Current_instruction).i.type == Skill_ShortAttack)
+	{
+		type = API_ShortAttack;
+		implement(*this);
+	}
+	if ((*Current_instruction).i.type == Skill_HealthUp)
+	{
+		type = API_HealthUp;
+		implement(*this);
+	}
+	if ((*Current_instruction).i.type == Skill_Dash&&if_elseFinish() == 0)
+	{
+		type = API_Dash;
+		implement(*this);
+	}
+	if ((*Current_instruction).i.type == Skill_Shield&&if_elseFinish() == 0)
+	{
+		type = API_Shield;
+		implement(*this);
+	}
+	if ((*Current_instruction).i.type == Skill_LongAttack&&if_elseNeed() == 1)
+	{
+		type = API_LongAttack;
+		implement(*this);
+	}
+}
 
 APIOrder::APIOrder()
 {
-	(*p1) = Self.id;
-}
-
-void APIOrder::switchspeed()
-{
-	Position min = closest(PLAYER);
-	int i;
-	for (i = ENERGY; i < kObjectTypes; i++)
-		if (Distance(Self.pos, closest((ObjectType)i)) < Distance(Self.pos, min))
-			min = closest((ObjectType)i);
-	if (dev_inway == NULL) type = API_StayStill;
-	else
-	{
-		type = API_Switchspeed;
-		Position temp;
-		double length = Norm(CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))));
-		temp.x = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).x / length;
-		temp.y = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).y / length;
-		temp.z = CrossProduct(Self.speed, Displacement(Self.pos, *dev_inway(Self.speed))).z / length;
-		*((Position*)p2) = temp;
-	}
-}
-
-void APIOrder::Attack()
-{
-	Enemy closest_enemy;
-	if (Self.skill_cd[SHORT_ATTACK] == 0 && Distance(Self.pos, closest(PLAYER)) <= 90 + 10 * Self.skill_level[SHORT_ATTACK])
-		type = API_ShortAttack;
-	else type = API_StayStill;
-	if (Self.skill_level[LONG_ATTACK] > 0)
-	{
-		Position Final_position_enemy, Final_position_self;
-		Final_position_enemy.x = closest(PLAYER).x + closest_enemy.speed.x*Self.long_attack_casting;
-		Final_position_enemy.y = closest(PLAYER).y + closest_enemy.speed.y*Self.long_attack_casting;
-		Final_position_enemy.z = closest(PLAYER).z + closest_enemy.speed.z*Self.long_attack_casting;
-		Final_position_self.x = Self.pos.x + Self.speed.x*Self.long_attack_casting;
-		Final_position_self.y = Self.pos.y + Self.speed.y*Self.long_attack_casting;
-		Final_position_self.z = Self.pos.z + Self.speed.z*Self.long_attack_casting;
-		if (Distance(Final_position_enemy, Final_position_self) <= 3000 + 500 * Self.skill_level[LONG_ATTACK])
-			type = API_LongAttack;
-	}
-	else type = API_StayStill;
+	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
+	(*p1) = (*(*Current_analyzer).status).objects[0].id;
+	free(Current_analyzer);
 }

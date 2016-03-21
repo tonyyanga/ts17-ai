@@ -42,10 +42,6 @@ class processor
 private:
 	LIFO l1,l2;
 	FIFO f1,f2;
-	
-	//Below by cxn
-	SceneState* CurrentState; // Derek, please keep this up to date
-
 
 public:
 	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s);

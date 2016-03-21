@@ -2,7 +2,7 @@
 #define ANALYZER
 
 #include "basic.h"
-
+#include"processor.h"
 
 class analyzer
 {

@@ -21,8 +21,9 @@ public:
 	int *p1;
 	void *p2;
 	APIOrder();
-	void switchspeed();
-	void Attack();
+	bool if_elseFinish();// 判断now_instruction是否已经被执行,如果已经执行，则返回1，否则返回0
+	bool if_elseNeed();//判断执行now_instruction是否有必要，如果有必要，则返回1，否则返回0
+	void Do_it();
 };
 
 
