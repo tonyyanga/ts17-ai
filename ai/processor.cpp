@@ -75,11 +75,12 @@ void FIFO::clear()
 	top=0;
 }
 
-processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s)
+processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,analyzer* s)
 {
 	this->l1=l1,this->l2=l2,this->f1=f1,this->f2=f2;
+	state=s;
+	object_id=(*(*state).status).objects[0].id;
 	temp_in.priority=0;
-	this->CurrentState=s;
 }
 
 void processor::choose_instruction()
@@ -101,22 +102,18 @@ int processor::judge_condition()
 	{
 		//Todo
 	}
-	return 0;
+	return 0;	//0 if object doesn't meet the conditions
 }
 
 APIOrder processor::return_Order()
 {
-	if (judge_condition()==0)
+	while ((judge_condition()==0||now_order.if_elseFinish()||now_order.if_elseNeed())&&f2.return_top!=0)
 	{
 		temp_in.priority=0;
 		choose_instruction();	
 	}
-	//Set now_order to new order (added a new order type Finished
-	if (now_order.type==Finished)
-	{
-		temp_in.priority=0;
-		choose_instruction();	
-	}	
+	//**Move to next order or create orders if a new instruction is given
+	
 }
 
 void implement(APIOrder x)
@@ -163,8 +160,10 @@ bool APIOrder::if_elseNeed()
 		(*Current_self_position).y = (*(*Current_analyzer).status).objects[0].pos.y + (*(*Current_analyzer).status).objects[0].speed.y*(*(*Current_analyzer).status).objects[0].long_attack_casting;
 		(*Current_self_position).z = (*(*Current_analyzer).status).objects[0].pos.z + (*(*Current_analyzer).status).objects[0].speed.z*(*(*Current_analyzer).status).objects[0].long_attack_casting;
 		if (Distance(*Current_enemy_position, *Current_self_position) <= 3000 + (*(*Current_analyzer).status).objects[0].skill_level[LONG_ATTACK] * 500)
-			return 1;
+			return 0;
 	}
+	else 
+		return 1;
 }
 
 void APIOrder::Do_it()
@@ -200,7 +199,5 @@ void APIOrder::Do_it()
 
 APIOrder::APIOrder()
 {
-	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
-	(*p1) = (*(*Current_analyzer).status).objects[0].id;
-	free(Current_analyzer);
+	//Objected included in processor
 }

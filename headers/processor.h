@@ -3,6 +3,7 @@
 
 #include "instructions.h"
 #include "common.h"
+#include "analyzer.h"
 
 const int stack_size=5;
 
@@ -42,14 +43,16 @@ class processor
 private:
 	LIFO l1,l2;
 	FIFO f1,f2;
+	analyzer* state;
+	int object_id;
 
 public:
-	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,SceneState* s);
-	now_instruction temp_in;
-	APIOrder now_order;
+	processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,analyzer* s);
+	now_instruction temp_in;	//Instruction to be done
+	APIOrder now_order;			//API order to be done
 	void choose_instruction();
 	int judge_condition();
-	APIOrder return_Order();	//Cxn, need you to complete this part (may need to use now_order)
+	APIOrder return_Order();
 // implementation by cxn
 private:
 	APIOrder* Process_MovePosition(Position dest);
