@@ -75,12 +75,13 @@ void FIFO::clear()
 	top=0;
 }
 
-processor::processor(LIFO l1,LIFO l2,FIFO f1,FIFO f2,analyzer* s)
+processor::processor(analyzer* s)
 {
-	this->l1=l1,this->l2=l2,this->f1=f1,this->f2=f2;
+	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
 	state=s;
 	object_id=(*(*state).status).objects[0].id;
 	temp_in.priority=0;
+	now_order=new APIOrder;
 }
 
 void processor::choose_instruction()
@@ -107,10 +108,11 @@ int processor::judge_condition()
 
 APIOrder processor::return_Order()
 {
-	while ((judge_condition()==0||now_order.if_elseFinish()||now_order.if_elseNeed())&&f2.return_top!=0)
+	while ((judge_condition()==0||now_order->if_elseFinish()||now_order->if_elseNeed())&&f2.return_top!=0)
 	{
 		temp_in.priority=0;
 		choose_instruction();	
+		now_order->next_order;
 	}
 	//**Move to next order or create orders if a new instruction is given
 	
