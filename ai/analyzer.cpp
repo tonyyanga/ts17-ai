@@ -180,6 +180,48 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
+Position analyzer::best_way()
+{
+	double d;
+	int x,y,z,i=0;
+	double r=status->objects[0].radius;
+	Position selfpos=status->objects[0].pos;
+	struct midu
+	{
+		Position speed;
+		double weight;
+	}m[26];	//27-1
+	for(x=-1;x<=1;x++)
+	{
+		for(y=-1;i<=1;y++)
+		{
+			for(z=-1;z<=1;z++)
+			{
+				if (!x && !y && !z) continue;
+				m[i].speed.x=x;
+				m[i].speed.y=y;
+				m[i].speed.z=z;
+				m[i].weight=0;
+			}
+		}
+	}
+	for(i=0;i<26;i++)
+	{
+		for(x=0;x<num_energy;x++)
+		{
+			d=PointLineDistance(pos_energy[x],selfpos,Displacement(selfpos,m[i].speed));
+			if (d<r) m[i].weight+=1;
+		}
+	}
+	x=0;
+	for(i=1;i<26;i++)
+	{
+		if (m[i].weight>m[x].weight) x=i;
+	}
+	return(m[x].speed);
+}
+	
+
 analyzer::~analyzer()
 {
 	delete[] pos_adv_energy;
