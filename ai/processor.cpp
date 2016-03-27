@@ -135,15 +135,10 @@ void implement(APIOrder x)
 
 bool APIOrder::if_elseFinish()
 {
-	now_instruction* Current_instruction = new now_instruction;
-	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
-	if ((*Current_instruction).i.type == Skill_Shield && (*(*Current_analyzer).status).objects[0].shield_time != 0)
-		return 1;
-	else if ((*Current_instruction).i.type == Skill_Dash && (*(*Current_analyzer).status).objects[0].dash_time != 0)
-		return 1;
-	else return 0;
-	delete Current_instruction;
-	free(Current_analyzer);
+	Order* Current_order = new Order;
+	if ((*Current_order).next == NULL)
+		free(Current_order);
+	else next_order();
 }
 
 bool APIOrder::if_elseNeed()
@@ -151,7 +146,11 @@ bool APIOrder::if_elseNeed()
 	Enemy* Current_enemy = new Enemy;
 	now_instruction* Current_instruction = new now_instruction;
 	analyzer* Current_analyzer = (analyzer*)malloc(sizeof(analyzer));
-	if ((*Current_instruction).i.type == Skill_HealthUp)
+	if ((*Current_instruction).i.type == Skill_Shield && (*(*Current_analyzer).status).objects[0].shield_time != 0)
+		return 1;
+	else if ((*Current_instruction).i.type == Skill_Dash && (*(*Current_analyzer).status).objects[0].dash_time != 0)
+		return 1;
+	else if ((*Current_instruction).i.type == Skill_HealthUp)
 	{
 		Position* Current_enemy_position = new Position;
 		Position* Current_self_position = new Position;
@@ -163,9 +162,17 @@ bool APIOrder::if_elseNeed()
 		(*Current_self_position).z = (*(*Current_analyzer).status).objects[0].pos.z + (*(*Current_analyzer).status).objects[0].speed.z*(*(*Current_analyzer).status).objects[0].long_attack_casting;
 		if (Distance(*Current_enemy_position, *Current_self_position) <= 3000 + (*(*Current_analyzer).status).objects[0].skill_level[LONG_ATTACK] * 500)
 			return 0;
+		else
+			return 1;
 	}
-	else 
-		return 1;
+	else return 0;
+}
+
+void APIOrder::next_order()
+{
+	Order* Next_order = new Order;
+	delete order;
+	order = (*Next_order).next;
 }
 
 void APIOrder::Do_it()

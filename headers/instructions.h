@@ -15,11 +15,11 @@ typedef struct InstructionCondition {
 };
 
 //below by cxn
-typedef struct order
+typedef struct Order
 {
 	int x;				//order type
 	lnNode* argvs;		//arguments
-	order* next;		//next order
+	Order* next;		//next order
 };
 class APIOrder {
 	//Creates a series of orders according to given instruction
@@ -29,13 +29,11 @@ public:
 	int type;			// see enum APIorderType			**should be in order
 	int *p1;			//object id,						**could be seen in processor
 	void *p2;			//arguments							**should be in order
-	order* order;		
+	Order* order;		
 	APIOrder();			
-	void create_orders();//									**creates orders according to instructions
-	bool if_elseFinish();// 判断now_instruction是否已经被执行,如果已经执行，则返回1，否则返回0   **simply check if order.next==NULL, if NULL then free all orders
+	void Do_it();//									**creates orders according to instructions
+	bool if_elseFinish();//							**simply check if order.next==NULL, if NULL then free all orders
 	bool if_elseNeed();//判断执行now_instruction是否有必要，如果有必要，则返回0，否则返回1
-	void Do_it();
-
 	void next_order();//									**delete current order and move to next one
 	void new_order();//										**delete all order and create new orders
 };
