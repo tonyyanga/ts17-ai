@@ -77,6 +77,10 @@ analyzer::analyzer(Enemy* enemy,const Status* status=GetStatus(),const Map* map=
 				observe(map->objects[i],enemy);
 				break;
 			}
+		case BOSS:
+			{
+				boss=map->objects[i];
+			}
 		}
 	}
 }
@@ -179,6 +183,11 @@ Position* analyzer::inway(ObjectType B,Speed A)
 			n=num_devour;
 			break;
 		}
+	case BOSS:
+		{
+			posA=&boss.pos;
+			n=1;
+		}
 	}
 	for(i=0;i<n;i++)
 	{
@@ -191,6 +200,7 @@ Position* analyzer::inway(ObjectType B,Speed A)
 Position analyzer::best_way()
 {
 	double d;
+	int dis;
 	int x,y,z,i=0;
 	double r=status->objects[0].radius;
 	Position selfpos=status->objects[0].pos;
@@ -218,7 +228,13 @@ Position analyzer::best_way()
 		for(x=0;x<num_energy;x++)
 		{
 			d=PointLineDistance(pos_energy[x],selfpos,Displacement(selfpos,m[i].speed));
-			if (d<r) m[i].weight+=1;
+			if (d<r) 
+			{
+					dis=int(Norm(Displacement(pos_energy[x],selfpos)));				//为节省运算资源，将其作为int计算
+					dis/=100;
+					dis=dis*dis;
+					m[i].weight+=1.0/dis;
+			}
 		}
 	}
 	x=0;
