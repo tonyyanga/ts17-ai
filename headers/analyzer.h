@@ -4,7 +4,7 @@
 #include "basic.h"
 #include"processor.h"
 
-class analyzer
+typedef class analyzer
 {
 private:
 
@@ -16,7 +16,7 @@ public:
 	Position* pos_adv_energy;
 	Position* pos_devour;
 	Position* pos_player;
-	analyzer(Enemy* enemy,const Status* status,const Map* map);		//构造函数
+	analyzer(struct Enemy* enemy,const Status* status,const Map* map);		//构造函数
 	Position closest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
 	Position closest(ObjectType A);			
 	Position* inway(ObjectType B,Speed A);				//判断speed方向上是否会碰到B，是则返回B的位置，不是则返回null）
@@ -27,7 +27,7 @@ public:
 
 //关于player的函数与结构
 
-struct Enemy		//己方对敌方的信息储存
+typedef struct Enemy		//己方对敌方的信息储存
 {
 	double maxr;
 	double minr;

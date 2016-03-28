@@ -108,11 +108,11 @@ int processor::judge_condition()
 
 APIOrder processor::return_Order()
 {
-	while ((judge_condition()==0||now_order->if_elseFinish()||now_order->if_elseNeed())&&f2.return_top!=0)
+	while ((judge_condition()==0||now_order->if_elseFinish()||now_order->if_elseNeed())&&f2.return_top()!=0)
 	{
 		temp_in.priority=0;
 		choose_instruction();	
-		now_order->next_order;
+		now_order->next_order();
 	}
 	//**Move to next order or create orders if a new instruction is given
 	

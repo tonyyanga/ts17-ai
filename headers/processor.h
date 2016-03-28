@@ -38,15 +38,15 @@ struct now_instruction
 	Instruction i;
 	int priority;
 };
-typedef class processor
+class processor
 {
 public:
-	processor(analyzer* s);
+	processor(class analyzer *s);
 	now_instruction temp_in;	//Instruction to be done
 	APIOrder* now_order;			//API order to be done
 	LIFO l1,l2;
 	FIFO f1,f2;
-	analyzer* state;
+	class analyzer *state;
 	int object_id;
 	void choose_instruction();
 	int judge_condition();

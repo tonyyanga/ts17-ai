@@ -9,7 +9,7 @@ int Usetime(bool add,Position &p,Position &p0,PlayerObject &Self);	//²»¼ÆËãËÙ¶È·
 typedef struct SceneState {
 	// below, ptr?
 	Map map;
-	Status status;
+	struct Status status;
 	Enemy enemy;		//¼º·½¶ÔµĞ·½µÄĞÅÏ¢´¢´æ
 };
 
