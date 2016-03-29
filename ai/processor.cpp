@@ -134,7 +134,7 @@ void implement(APIOrder x)
 	}
 }
 
-bool APIOrder::if_elseFinish()
+void APIOrder::if_elseFinish()
 {
 	Order* Current_order = new Order;
 	if ((*Current_order).next == NULL)
@@ -151,7 +151,7 @@ bool APIOrder::if_elseNeed()
 		return 1;
 	else if ((*Current_instruction).i.type == Skill_Dash && (*(*Current_analyzer).status).objects[0].dash_time != 0)
 		return 1;
-	else if ((*Current_instruction).i.type == Skill_HealthUp)
+	else if ((*Current_instruction).i.type == Skill_LongAttack)
 	{
 		Position* Current_enemy_position = new Position;
 		Position* Current_self_position = new Position;
@@ -165,8 +165,13 @@ bool APIOrder::if_elseNeed()
 			return 0;
 		else
 			return 1;
+		free(Current_enemy_position);
+		free(Current_self_position);
 	}
 	else return 0;
+	free(Current_analyzer);
+	free(Current_enemy);
+	free(Current_instruction);
 }
 
 void APIOrder::next_order()
@@ -190,20 +195,43 @@ void APIOrder::Do_it()
 		type = API_HealthUp;
 		implement(*this);
 	}
-	if ((*Current_instruction).i.type == Skill_Dash&&if_elseFinish() == 0)
+	if ((*Current_instruction).i.type == Skill_Dash&&if_elseNeed()==0)
 	{
 		type = API_Dash;
 		implement(*this);
 	}
-	if ((*Current_instruction).i.type == Skill_Shield&&if_elseFinish() == 0)
+	if ((*Current_instruction).i.type == Skill_Shield&&if_elseNeed()==0)
 	{
 		type = API_Shield;
 		implement(*this);
 	}
-	if ((*Current_instruction).i.type == Skill_LongAttack&&if_elseNeed() == 1)
+	if ((*Current_instruction).i.type == Skill_LongAttack&&if_elseNeed()==0)
 	{
 		type = API_LongAttack;
 		implement(*this);
+	}
+	if ((*Current_instruction).i.type == MovePosition|| (*Current_instruction).i.type==Approach|| (*Current_instruction).i.type == EatAdvancedEnergy|| (*Current_instruction).i.type == Escape)
+	{
+		int i, flag = 0;	//flag=0 means no object is inway;
+		for (i = PLAYER; i < kObjectTypes;i++)
+			if ((*Current_analyzer).inway(ObjectType(i), *(Position*)(*(*Current_instruction).i.argvs).dataptr) != NULL)
+			{
+				flag = 1;
+				break;
+			}
+		if(flag==0)
+		{
+			type = API_Switchspeed;
+			(*(Position*)p2) = Displacement((*(*Current_analyzer).status).objects[0].pos, *(Position*)(*(*Current_instruction).i.argvs).dataptr);
+			implement(*this);
+		}
+		else
+		{
+			if((*Current_analyzer).inway(DEVOUR, *(Position*)(*(*Current_instruction).i.argvs).dataptr)!=NULL)
+			type = API_Switchspeed;
+			(*(Position*)p2) = CrossProduct((*(*Current_analyzer).status).objects[0].pos, *(Position*)(*(*Current_instruction).i.argvs).dataptr);
+			implement(*this);
+		}
 	}
 }
 

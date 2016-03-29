@@ -32,7 +32,7 @@ public:
 	Order* order;		
 	APIOrder();			
 	void Do_it();//									**creates orders according to instructions
-	bool if_elseFinish();//							**simply check if order.next==NULL, if NULL then free all orders
+	void if_elseFinish();//							**simply check if order.next==NULL, if NULL then free all orders
 	bool if_elseNeed();//判断执行now_instruction是否有必要，如果有必要，则返回0，否则返回1
 	void next_order();//									**delete current order and move to next one
 	void new_order();//										**delete all order and create new orders
