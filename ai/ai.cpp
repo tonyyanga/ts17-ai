@@ -35,11 +35,6 @@ namespace ai{
 		proc = new processor(state);
 		time = GetTime();
 		thread search(do_search);
-		//Main AI
-
-
-		//Process and execute order
-		proc->return_Order();
 	}
 
 	Enemy* Enemy_init() {
@@ -65,7 +60,7 @@ namespace ai{
 			#endif
 			t=GetTime();
 			if (t!=time) {
-				// update
+				// update, split it from the search tree for real-time performance
 				SceneState* temp;
 				time=t;
 				temp=state;
@@ -99,6 +94,8 @@ namespace ai{
 				}
 
 				implement(proc->return_Order());
+
+				delete tree;
 			}
 		}
 	}
