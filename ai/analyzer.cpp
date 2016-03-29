@@ -197,18 +197,15 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-Position analyzer::best_way()
+density* analyzer::best_way()
 {
 	double d;
 	int dis;
 	int x,y,z,i=0;
+	density t[3];
 	double r=status->objects[0].radius;
 	Position selfpos=status->objects[0].pos;
-	struct midu
-	{
-		Position speed;
-		double weight;
-	}m[26];	//27-1
+	density m[26];	//27-1
 	for(x=-1;x<=1;x++)
 	{
 		for(y=-1;i<=1;y++)
@@ -220,6 +217,7 @@ Position analyzer::best_way()
 				m[i].speed.y=y;
 				m[i].speed.z=z;
 				m[i].weight=0;
+				m[i].number=0;
 			}
 		}
 	}
@@ -234,15 +232,28 @@ Position analyzer::best_way()
 					dis/=100;
 					dis=dis*dis;
 					m[i].weight+=1.0/dis;
+					m[i].number++;
 			}
 		}
 	}
 	x=0;
-	for(i=1;i<26;i++)
+	for(i=0;i<26;i++)
 	{
-		if (m[i].weight>m[x].weight) x=i;
+		for(x=i+1;x<26;x++)
+		{
+			if (m[i].weight>m[x].weight) 
+			{
+				t[0]=m[i];
+				m[i]=m[x];
+				m[x]=t[0];
+			}
+		}
 	}
-	return(m[x].speed);
+	for(i=0;i<3;i++)
+	{
+		t[i]=m[i];
+	}
+	return(t);
 }
 	
 
