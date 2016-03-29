@@ -75,10 +75,11 @@ void FIFO::clear()
 	top=0;
 }
 
-processor::processor(analyzer* s)
+processor::processor(SceneState* s)
 {
 	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
-	state=s;
+	scene=s;
+	state=new analyzer(scene);
 	object_id=(*(*state).status).objects[0].id;
 	temp_in.priority=0;
 	now_order=new APIOrder;

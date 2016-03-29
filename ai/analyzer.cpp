@@ -1,7 +1,11 @@
+#include <stddef.h>
+#include <new>
+
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
-#include<stddef.h>
+#include "../headers/basic.h"
+
 
 
 void observe(Object A,Enemy* enemy)
@@ -75,6 +79,10 @@ analyzer::analyzer(Enemy* enemy,const Status* status=GetStatus(),const Map* map=
 			}
 		}
 	}
+}
+
+analyzer::analyzer(SceneState* state) {
+	new (this) analyzer(state->enemy, state->status, state->map);
 }
 
 Position analyzer::closest(ObjectType A,Position p0)

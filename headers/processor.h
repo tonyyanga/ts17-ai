@@ -41,12 +41,12 @@ struct now_instruction
 class processor
 {
 public:
-	processor(class analyzer *s);
+	processor(struct SceneState *s);
+	bool update(struct SceneState *s);
 	now_instruction temp_in;	//Instruction to be done
 	APIOrder* now_order;			//API order to be done
 	LIFO l1,l2;
 	FIFO f1,f2;
-	class analyzer *state;
 	int object_id;
 	void choose_instruction();
 	int judge_condition();
@@ -54,6 +54,8 @@ public:
 // implementation by cxn
 private:
 	APIOrder* Process_MovePosition(Position dest);
+	struct SceneState* scene;
+	class analyzer* state;
 };
 
 #endif

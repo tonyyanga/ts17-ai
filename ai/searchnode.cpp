@@ -3,7 +3,7 @@
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 
-SearchNode::SearchNode(const analyzer* state, const SearchNode* father, const Instruction* order) {
+SearchNode::SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order) {
 	this->state=state;
 	this->father=father;
 	this->order=order;
@@ -28,7 +28,7 @@ int SearchNode::span() {
 	return count;
 }
 
-void SearchNode::AddChild(const analyzer* state, const Instruction* order) {
+void SearchNode::AddChild(const SceneState* state, const Instruction* order) {
 	SearchNode* child=&SearchNode(state, this, order);
 	lnNode* temp = (lnNode*)malloc(sizeof(lnNode));
 	temp->next=this->children;
@@ -36,7 +36,7 @@ void SearchNode::AddChild(const analyzer* state, const Instruction* order) {
 	this->children=temp;
 }
 
-analyzer* SearchNode::Estimate(const Instruction* order) {
+SceneState* SearchNode::Estimate(const Instruction* order) {
 
 }
 

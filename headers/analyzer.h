@@ -2,9 +2,10 @@
 #define ANALYZER
 
 #include "basic.h"
-#include"processor.h"
+#include "processor.h"
+#include "common.h"
 
-typedef class analyzer
+class analyzer
 {
 private:
 
@@ -17,6 +18,7 @@ public:
 	Position* pos_devour;
 	Position* pos_player;
 	analyzer(struct Enemy* enemy,const Status* status,const Map* map);		//构造函数
+	analyzer(struct SceneState* state);
 	Position closest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
 	Position closest(ObjectType A);			
 	Position* inway(ObjectType B,Speed A);				//判断speed方向上是否会碰到B，是则返回B的位置，不是则返回null）
