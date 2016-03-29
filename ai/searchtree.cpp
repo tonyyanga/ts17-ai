@@ -4,7 +4,7 @@
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 
-SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth=8) {
+SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 	// init
 	lnNode* HeapList;
 	this->root = &SearchNode(rootstate, NULL, NULL);
@@ -35,17 +35,17 @@ MaxHeap* SearchTree::GetHeap(int depth) {
 		return (MaxHeap*)ptr->dataptr;
 }
 
-SearchNode* SearchTree::GetBestNode(int depth=-1) {
+SearchNode* SearchTree::GetBestNode(int depth) {
 	MaxHeap* heap = this->GetHeap(depth);
 	return (SearchNode*)(heap->getmax());
 }
 
-lnNode* SearchTree::GetAllNodes(int depth=-1) {
+lnNode* SearchTree::GetAllNodes(int depth) {
 	MaxHeap* heap = this->GetHeap(depth);
 	return (lnNode*)(heap->returnall());
 }
 
-bool SearchTree::BFS(int BFSdepth=3) {
+bool SearchTree::BFS(int BFSdepth) {
 	lnNode* ptr;
 	int count;
 	bool result=false;
@@ -56,7 +56,7 @@ bool SearchTree::BFS(int BFSdepth=3) {
 	return result;
 }
 
-bool SearchTree::DFS(int width=1) {
+bool SearchTree::DFS(int width) {
 	MaxHeap* heap;
 	int depth=this->DFSdepth;
 	void* temp;

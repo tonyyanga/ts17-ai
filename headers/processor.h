@@ -47,6 +47,10 @@ public:
 	APIOrder* now_order;			//API order to be done
 	LIFO l1,l2;
 	FIFO f1,f2;
+
+	//TODO
+	void AddInstruction(Instruction* order, int priority); // abstract interface to add orders, ## deep copy needed ##
+
 	int object_id;
 	void choose_instruction();
 	int judge_condition();
@@ -57,5 +61,7 @@ private:
 	struct SceneState* scene;
 	class analyzer* state;
 };
+
+void implement(APIOrder x);
 
 #endif

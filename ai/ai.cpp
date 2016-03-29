@@ -11,11 +11,11 @@
 #include "../headers/instructions.h"
 #include "../headers/analyzer.h"
 #include "../headers/processor.h"
+#include "../headers/searchtree.h"
 
 using namespace std;
 
 namespace ai{
-
 	Enemy* enemy;
 	SceneState* state;
 	processor* proc;
@@ -23,7 +23,7 @@ namespace ai{
 
 	void AIMain();
 	Enemy* Enemy_init();
-	void update_status();
+	void do_search();
 
 	void AIMain() {
 		// Initialize
@@ -34,8 +34,7 @@ namespace ai{
 		state->map=GetMap();
 		proc = new processor(state);
 		time = GetTime();
-		thread update(update_status);
-
+		thread search(do_search);
 		//Main AI
 
 
@@ -56,22 +55,52 @@ namespace ai{
 		return enemy;
 	}
 
-	void update_status() {
+	void search() {
 		int t;
 		while(true){
 			#ifdef WIN32
-			Sleep(1000);
+			Sleep(100);
 			#else
-			sleep(2);
+			usleep(100);
 			#endif
 			t=GetTime();
 			if (t!=time) {
+				// update
+				SceneState* temp;
 				time=t;
+				temp=state;
+				state=NULL;
+				delete temp;
+				temp=(SceneState*)malloc(sizeof(SceneState));
+				temp->enemy=enemy; // keep enemy updated
+				temp->status= GetStatus();
+				temp->map=GetMap();
+				state=temp;
+				proc->update(state);
+				//implement(proc->return_Order());
+				delete temp;
 
+				//do search
+				SearchTree* tree = new SearchTree((const SceneState*)state);
+
+				// time critical
+				tree->BFS();
+				tree->DFS();
+
+				// TODO: analyze?
+				{
+					SearchNode* SelectedNode;
+					lnNode* orders;
+					SelectedNode = tree->GetBestNode();
+					orders = SelectedNode->getInstructionChain();
+
+					//TODO: remove some items in this order chain, or choose one
+					//TODO: add instructions to processor
+				}
+
+				implement(proc->return_Order());
 			}
-		}		
-
-
+		}
 	}
 
 }
@@ -79,3 +108,4 @@ namespace ai{
 void AIMain() {
 	ai::AIMain();
 }
+
