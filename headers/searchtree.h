@@ -17,12 +17,12 @@ public:
 	double number; // work with MaxHeap
 private:
 	lnNode* children; // linked list to child nodes
-	const SceneState* state;
+	const analyzer* state;
 	int gameover_state;
 
 public:
 	// constructor
-	SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order);
+	SearchNode(const analyzer* state, const SearchNode* father, const Instruction* order);
 	~SearchNode();
 
 	double evaluate(); // return evaluated value of this state AND SET gameover_state
@@ -34,9 +34,9 @@ public:
 	bool haschildren();
 
 private:
-	SceneState* Estimate(const Instruction* order); // calculate the next state
+	analyzer* Estimate(const Instruction* order); // calculate the next state
 	lnNode* CheckPossibleOrders(); // return a linked list of possible orders
-	void AddChild(const SceneState* state, const Instruction* Order);
+	void AddChild(const analyzer* state, const Instruction* Order);
 };
 
 class SearchTree{
@@ -49,7 +49,7 @@ private:
 
 public:
 	//constructor
-	SearchTree(const SceneState* rootstate, int maxDepth); // root is at depth = 0
+	SearchTree(const analyzer* rootstate, int maxDepth); // root is at depth = 0
 	~SearchTree();
 	
 	//return True when there are end nodes

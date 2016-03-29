@@ -4,7 +4,7 @@
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 
-SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth=8) {
+SearchTree::SearchTree(const analyzer* rootstate, int DFSdepth=8) {
 	// init
 	lnNode* HeapList;
 	this->root = &SearchNode(rootstate, NULL, NULL);
