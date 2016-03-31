@@ -114,9 +114,8 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 					enemy.Health-=200+300*(Self.skill_level[1]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(1100+300*(Self.skill_level[1]+Self.radius+boss.boss.radius))
+			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(1100+300*(Self.skill_level[1]+Self.radius+boss.boss.radius)))
 			{
-				heal=health(boss.boss.radius);
 				heal-=200+300*(Self.skill_level[1]);
 				boss.boss.radius=get_radius(heal);
 			}
@@ -489,12 +488,36 @@ double SearchNode::evaluate()
 			gameover_state=1;
 
 		//evaluating
-		int rate_boss,rate_enemy;
-		return (rate_boss)*
+		int rate_boss,rate_enemy,rate_boss_distance;
+		int enemy_evaluation_point;
+		if (Enemy_original_hp_rate>1) //Add enemy's ability points into consideration!
+		{
+			int rate4;
+			int rate5,rate6;//rate5: shield status, rate6: dash status
+			enemy_evaluation_point=	
+				Enemy_original_hp_rate*state->status->objects[0].health+
+				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
+				rate4*Enemy_distance+
+				rate5*(state->status->objects[0].shield_time>0)+
+				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
+		}
+		else
+		{
+			int rate4;
+			int rate5,rate6;//rate5: shield status, rate6: dash status
+			enemy_evaluation_point=
+				Enemy_original_hp_rate*state->status->objects[0].health+
+				rate4*Enemy_distance+
+				rate5*(state->status->objects[0].shield_time>0)+
+				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
+		}
+		return 
+			(rate_boss)*
 			(state->status->objects[0].health+
 			rate1*extra_ability+
 			rate2*food_density+
 			rate3*state->map->time+
-			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius;)
+			rate_boss_distance*(state->status->objects[0].vision-Boss_distance)/state->boss->boss.radius)+
+			(rate_enemy)*enemy_evaluation_point;
 	}
 }
