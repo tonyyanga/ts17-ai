@@ -20,6 +20,7 @@ namespace ai{
 	SceneState* state;
 	processor* proc;
 	int time;
+	Boss boss;
 
 	void AIMain();
 	Enemy* Enemy_init();
@@ -49,7 +50,10 @@ namespace ai{
 		enemy->skills[4]=0;
 		return enemy;
 	}
-
+	Boss* Boss_init()
+	{
+		Boss* boss=new Boss;
+	}
 	void search() {
 		int t;
 		while(true){

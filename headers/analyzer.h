@@ -5,12 +5,18 @@
 #include "processor.h"
 #include "common.h"
 
-struct density
+struct density			//用于表示食物的密度分布
 	{
 		Speed speed;
 		int number;
 		double weight;
 	};
+
+struct Boss
+{
+	Object boss;
+	int valid_time;
+};
 
 class analyzer
 {
@@ -24,9 +30,9 @@ public:
 	Position* pos_adv_energy;
 	Position* pos_devour;
 	Position* pos_player;
-	analyzer(struct Enemy* enemy,const Status* status,const Map* map);		//构造函数
+	Position* pos_boss;
+	analyzer(struct Enemy* enemy,struct Boss* boss,const Status* status,const Map* map);		//构造函数
 	analyzer(struct SceneState* state);
-	Object boss;				//存boss的基本状态
 	Position closest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
 	Position closest(ObjectType A);			
 	Position* inway(ObjectType B,Speed A);				//判断speed方向上是否会碰到B，是则返回B的位置，不是则返回null）

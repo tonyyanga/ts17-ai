@@ -10,6 +10,7 @@ typedef struct SceneState {
 	const struct Map* map;
 	const struct Status* status;
 	struct Enemy* enemy;
+	struct Boss* boss;
 };
 
 double angle(Position p1,Position p2);		//计算p1,p2矢量夹角（返回arccos值）

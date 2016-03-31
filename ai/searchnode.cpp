@@ -3,7 +3,7 @@
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 #include "../headers/teamstyle17.h"
-#include "../headers/common.h"
+#include "../headers/analyzer.h"
 
 SearchNode::SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order) {
 	this->state=state;
@@ -39,6 +39,43 @@ void SearchNode::AddChild(const SceneState* state, const Instruction* order) {
 }
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
+	SceneState estimate;
+	int type=order->type;
+	lnNode *argv=order->argvs;
+	Status *status=(Status *)GetStatus();
+	Map* map=(Map*)(GetMap());
+	PlayerObject* Self=status->objects;
+	Enemy enemy;			//may have problem here
+	switch(order->type)
+	{
+	case 0:
+		{
+			Self->pos.x=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self->pos.y=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self->pos.z=*(double *)(argv->dataptr);
+			break;
+		}
+	case 1:
+		{
+			Self->pos.x=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self->pos.y=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self->pos.z=*(double *)(argv->dataptr);
+			Self->ability+=3;
+			map=NULL;		//穿越后地图未知，返回空指针；
+			break;
+		}
+	case 2:
+		{
+		}
+	}
+		
+			
+
+
 
 }
 
