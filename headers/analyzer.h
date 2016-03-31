@@ -54,6 +54,7 @@ typedef struct Enemy		//己方对敌方的信息储存
 	bool to_me;		//判断敌方是否向我方运动
 	int valid_time;	//说明数据来源的回合
 	Object player;
+	double Health;
 };
 
 void observe(Object A,Enemy* enemy);	//用于观察敌人信息

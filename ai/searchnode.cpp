@@ -40,43 +40,144 @@ void SearchNode::AddChild(const SceneState* state, const Instruction* order) {
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	SceneState estimate;
+	int t,s=0,n=0;
+	double heal;
 	int type=order->type;
 	lnNode *argv=order->argvs;
-	Status *status=(Status *)GetStatus();
-	Map* map=(Map*)(GetMap());
-	PlayerObject* Self=status->objects;
-	Enemy enemy;			//may have problem here
+	Status status=*(state->status);
+	PlayerObject Self=state->status->objects[0];
+	Map map=*state->map;
+	Enemy enemy=*state->enemy;
+	Boss boss=*state->boss;
+	estimate.map=&map;
 	switch(order->type)
 	{
 	case 0:
 		{
-			Self->pos.x=*(double *)(argv->dataptr);
+			Self.pos.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self->pos.y=*(double *)(argv->dataptr);
+			Self.pos.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self->pos.z=*(double *)(argv->dataptr);
+			Self.pos.z=*(double *)(argv->dataptr);
 			break;
 		}
 	case 1:
 		{
-			Self->pos.x=*(double *)(argv->dataptr);
+			Self.pos.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self->pos.y=*(double *)(argv->dataptr);
+			Self.pos.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self->pos.z=*(double *)(argv->dataptr);
-			Self->ability+=3;
-			map=NULL;		//穿越后地图未知，返回空指针；
+			Self.pos.z=*(double *)(argv->dataptr);
+			Self.ability+=3;
+			estimate.map=NULL;
 			break;
 		}
 	case 2:
 		{
+			Self.pos.x=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self.pos.y=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self.pos.z=*(double *)(argv->dataptr);
+			break;
+		}
+	case 3:
+		{
+			Self.pos.x=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self.pos.y=*(double *)(argv->dataptr);
+			argv=argv->next;
+			Self.pos.z=*(double *)(argv->dataptr);
+			break;
+		}
+	case 5:
+		{
+			Self.skill_cd[0]=80;
+			if (Norm(Displacement(enemy.player.pos,Self.pos))<=(2000+500*(Self.skill_level[0])+Self.radius+enemy.player.radius))
+				{
+					enemy.Health-=100*(Self.skill_level[0]);
+					enemy.player.radius=get_radius(enemy.Health);
+			}
+			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(2000+500*(Self.skill_level[0])+Self.radius+boss.boss.radius))
+			{
+				heal=health(boss.boss.radius);
+				heal-=100*(Self.skill_level[0]);
+				boss.boss.radius=get_radius(heal);
+			}
+			break;
+		}
+	case 4:
+		{
+			Self.skill_cd[1]=80;
+			if (Norm(Displacement(enemy.player.pos,Self.pos))<=(1100+300*(Self.skill_level[1])+Self.radius+enemy.player.radius))
+				{
+					enemy.Health-=200+300*(Self.skill_level[1]);
+					enemy.player.radius=get_radius(enemy.Health);
+			}
+			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(1100+300*(Self.skill_level[1]+Self.radius+boss.boss.radius))
+			{
+				heal=health(boss.boss.radius);
+				heal-=200+300*(Self.skill_level[1]);
+				boss.boss.radius=get_radius(heal);
+			}
+			break;
+		}
+	case 7:
+		{
+			Self.shield_time=20+10*Self.skill_level[2];
+			Self.skill_cd[2]=100;
+			break;
+		}
+	case 6:
+		{
+			Self.skill_cd[3]=100;
+			break;
+		}
+	case 8:
+		{
+			Self.health+=500;
+			if (Self.skill_level[5])
+				Self.ability-=pow(2,Self.skill_level[5]);
+			else
+			{
+				for(t=0;t<6;t++)
+				{
+					if (Self.skill_level[t]) s++;
+					Self.ability-=pow(2,s);
+				}
+			}
+			Self.skill_level[5]++;
+			break;
+		}
+	case 9:
+		{
+			n=*(int *)(argv->dataptr);
+			if (Self.skill_level[n])
+			{
+				if (n==2 || n==4)
+					Self.ability-=2*pow(2,Self.skill_level[n]);
+				else 
+					Self.ability-=pow(2,Self.skill_level[n]);
+			}
+			else
+			{
+				for(t=0;t<6;t++)
+				{
+					if (Self.skill_level[t]) s++;
+					if (n==2 || n==4)
+						Self.ability-=2*pow(2,s);
+					else 
+						Self.ability-=pow(2,s);
+				}
+			}
+			Self.skill_level[n]++;
+			break;
 		}
 	}
-		
-			
-
-
-
+	estimate.status=&status;
+	estimate.boss=&boss;
+	estimate.enemy=&enemy;
+	return(&estimate);
 }
 
 lnNode* SearchNode::CheckPossibleOrders()
