@@ -39,10 +39,3 @@ double health(double radius)
 {
 	return((pow(radius/10,3)));
 }
-
-double get_radius(double Health)
-{
-	double r;
-	r=100*pow(Health,1.0/3);
-	return(r);
-}

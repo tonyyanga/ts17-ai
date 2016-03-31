@@ -16,6 +16,5 @@ typedef struct SceneState {
 double angle(Position p1,Position p2);		//计算p1,p2矢量夹角（返回arccos值）
 
 double health(double radius);				//输入半径返回血量
-double get_radius(double Health)；
 
 #endif

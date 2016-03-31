@@ -27,7 +27,6 @@ void observe(Object A,Enemy* enemy)
 		if (A.long_attack_casting>0) enemy->skills[1]=1;
 		if (s>102) enemy->skills[3]=int((s-100)/20);
 		enemy->valid_time=t;
-		enemy->Health=health(A.radius);
 	}
 }
 
