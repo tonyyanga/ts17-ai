@@ -84,34 +84,133 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* l=new lnNode;
 	lnNode* head=l;
 	Instruction* t;
-	if (sizeof(this->state->map->objects)/sizeof(Object))
+	int time=GetTime();
+	if ((state->boss->valid_time==time)||(state->enemy->valid_time==time))
 	{
-		for (int k=InstructionType(EatAdvancedEnergy);k<=InstructionType(Skill_UpgradeSkill);k++)
+		Position* positions=new Position[3];
+		SceneState s=*state;
+		analyzer temp_analyzer(&s);
+		for (int i=0;i<3;i++)
 		{
+			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
+			positions[i].y=(temp_analyzer.best_way())[i].speed.y*100+state->status->objects[0].pos.y;
+			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
 			t=new Instruction;
-			t->type=k;
-			if (k==InstructionType(Approach))
-			{
-				t->argvs->dataptr=new double(state->status->objects[0].radius);
-			}
-			if (k==InstructionType(Escape))
-			{
-				t->argvs->dataptr=new double(5000);
-			}
+			t->type=InstructionType(MovePosition);
+			lnNode* n=new lnNode;
+			t->argvs=n;
+			t->argvs->dataptr=&positions[i];
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;
 		}
-		for (int k=SkillType(LONG_ATTACK);k<SkillType(HEALTH_UP);k++)
+		t=new Instruction;
+		t->type=InstructionType(EatAdvancedEnergy);
+		lnNode* temp=new lnNode;
+		l->dataptr=t;
+		l->next=temp;
+		l=l->next;
+		if (state->boss->valid_time==time)
 		{
 			t=new Instruction;
-			t->type=InstructionType(Skill_UpgradeSkill);
-			t->argvs->dataptr=new int(k);
+			t->type=InstructionType(Approach);
+			t->argvs->dataptr=new double(state->status->objects[0].radius);
+			lnNode* n=new lnNode;
+			n->dataptr=new int(state->boss->boss.id);
+			t->argvs->next=n;
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;
+		}
+		if (state->enemy->valid_time==time)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Approach);
+			t->argvs->dataptr=new double(state->status->objects[0].radius);
+			lnNode* n=new lnNode;
+			n->dataptr=new int(state->enemy->player.id);
+			t->argvs->next=n;
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		t=new Instruction;
+		t->type=InstructionType(Escape);
+		lnNode* n=new lnNode;
+		t->argvs=n;
+		t->argvs->dataptr=new double(5000);
+		lnNode* temp=new lnNode;
+		l->dataptr=t;
+		l->next=temp;
+		l=l->next;
+		if (state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]>0)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Skill_ShortAttack);
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		if (state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]>0&&state->enemy->valid_time==time)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Skill_LongAttack);
+			lnNode* n=new lnNode;
+			t->argvs=n;
+			t->argvs->dataptr=new int(state->enemy->player.id);
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		if (state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]>0&&state->boss->valid_time==time)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Skill_LongAttack);
+			lnNode* n=new lnNode;
+			t->argvs=n;
+			t->argvs->dataptr=new int(state->boss->boss.id);
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		if (state->status->objects[0].skill_level[SkillType(DASH)]>0)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Skill_Dash);
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		if (state->status->objects[0].skill_level[SkillType(SHIELD)]>0)
+		{
+			t=new Instruction;
+			t->type=InstructionType(Skill_Shield);
+			lnNode* temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
+		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
+		{
+			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
+			{
+				t=new Instruction;
+				t->type=InstructionType(Skill_UpgradeSkill);
+				lnNode* n=new lnNode;
+				t->argvs=n;
+				t->argvs->dataptr=new int(k);
+				lnNode* temp=new lnNode;
+				l->dataptr=t;
+				l->next=temp;
+				l=l->next;
+			}
 		}
 		l=NULL;
 		return head;
@@ -168,8 +267,11 @@ double SearchNode::evaluate()
 		for (int k=0;k<state->status->objects[0].skill_level[i];k++)
 			extra_ability+=kBasicSkillPrice[i]*pow(2,k);
 	}
+	int time=GetTime();
+	bool enemy_in_sight=(state->enemy->valid_time==time);
+	bool boss_in_sight=(state->boss->valid_time==time);
 	//Enemy in sight
-	if ((sizeof(state->map->objects)/sizeof(Object)==1)&&(state->map->objects[0].team_id>=0))
+	if (enemy_in_sight==1&&boss_in_sight==0)
 	{
 		//initializing data
 		int possible_extra_hp,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
@@ -181,21 +283,21 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
-		double original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
-		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
-		double distance=Distance(state->status->objects[0].pos,state->map->objects[0].pos);
+		double original_hp_rate=state->status->objects[0].health/health(state->enemy->player.radius);
+		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->enemy->player.radius);
+		double distance=Distance(state->status->objects[0].pos,state->enemy->player.pos);
 
 
 		//setting game over state
 		gameover_state=0;
-		if ((original_hp_rate<=death_rate&&distance<state->map->objects[0].radius)||(state->status->objects[0].health<0.25*state->status->objects[0].max_health))
+		if ((original_hp_rate<=death_rate&&distance<state->enemy->player.radius)||(state->status->objects[0].health<0.25*state->status->objects[0].max_health))
 			gameover_state=2;
-		if ((original_hp_rate>=kill_rate&&distance<state->map->objects[0].radius)||(health(state->map->objects[0].radius)<0.25*(health(state->enemy->maxr))))
+		if ((original_hp_rate>=kill_rate&&distance<state->status->objects[0].radius)||(health(state->enemy->player.radius)<0.25*(health(state->enemy->maxr))))
 			gameover_state=1;
 
 
 		//evaluation
-		if (1/*how to know that we can defeat the enemy?)*/)
+		if (original_hp_rate>1) //Add enemy's ability points into consideration!
 		{
 			int rate4;
 			int rate5,rate6;//rate5: shield status, rate6: dash status
@@ -203,7 +305,7 @@ double SearchNode::evaluate()
 				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
-				rate6*(state->status->objects[0].dash_time>0);
+				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
 		}
 		else
 		{
@@ -212,18 +314,18 @@ double SearchNode::evaluate()
 			return original_hp_rate*state->status->objects[0].health+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
-				rate6*(state->status->objects[0].dash_time>0);
+				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
 		}
 	}
-	else if (sizeof(state->map->objects)/sizeof(Object)==0)									//Regular mode
+	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
 		int rate4;
 		return state->status->objects[0].health+
 			rate1*extra_ability+
 			rate2*food_density+
-			rate3*(state->map->time); //distance to center?
+			rate3*(time); //distance to center?
 	}
-	else if((sizeof(state->map->objects)/sizeof(Object)==1)&&(state->map->objects[0].team_id==-2))//Only boss in sight
+	else if(enemy_in_sight==0&&boss_in_sight==1)//Only boss in sight
 	{
 		//initializing data
 		int rate4;
@@ -238,21 +340,21 @@ double SearchNode::evaluate()
 		}
 		double original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
 		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
-		double distance=Distance(state->status->objects[0].pos,state->map->objects[0].pos);
+		double distance=Distance(state->status->objects[0].pos,state->boss->boss.pos);
 
 		//setting game over state
 		gameover_state=0;
-		if ((original_hp_rate<=death_rate&&distance<state->map->objects[0].radius)||(state->status->objects[0].health<0.25*state->status->objects[0].max_health))
+		if ((original_hp_rate<=death_rate&&distance<state->boss->boss.radius)||(state->status->objects[0].health<0.25*state->status->objects[0].max_health))
 			gameover_state=2;
-		if ((original_hp_rate>=kill_rate&&distance<state->map->objects[0].radius)||(health(state->map->objects[0].radius)<0.25*(health(state->enemy->maxr))))
+		if ((original_hp_rate>=kill_rate&&distance<state->status->objects[0].radius)||(state->boss->boss.radius<1))
 			gameover_state=1;
 
 		//evaluating
 		return state->status->objects[0].health+
-			rate1*extra_ability-rate3*(state->map->time)+
+			rate1*extra_ability+
 			rate2*food_density+
 			rate3*state->map->time+
-			rate4*distance;
+			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius;
 	}
 	else																					  //Both enemy and boss in sight
 	{
@@ -266,44 +368,32 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
-		int boss_id;
-		double Enemy_original_hp_rate;
-		double Enemy_extra_hp_rate_self;
-		double Enemy_distance;
-		double Boss_original_hp_rate;
-		double Boss_extra_hp_rate_self;
-		double Boss_distance;
-		if (state->map->objects[0].id==-2)
-		{
-			boss_id=0;
-			double Boss_original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
-			double Boss_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
-			double Boss_distance=Distance(state->status->objects[0].pos,state->map->objects[0].pos);
-			double Enemy_original_hp_rate=state->status->objects[0].health/health(state->map->objects[1].radius);
-			double Enemy_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[1].radius);
-			double Enemy_distance=Distance(state->status->objects[0].pos,state->map->objects[1].pos);
-		}
-		else
-		{
-			boss_id=1;
-			double Enemy_original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
-			double Enemy_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
-			double Enemy_distance=Distance(state->status->objects[0].pos,state->map->objects[0].pos);
-			double Boss_original_hp_rate=state->status->objects[0].health/health(state->map->objects[1].radius);
-			double Boss_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[1].radius);
-			double Boss_distance=Distance(state->status->objects[0].pos,state->map->objects[1].pos);
-		}
+		double Enemy_original_hp_rate=state->status->objects[0].health/health(state->enemy->player.radius);
+		double Enemy_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->enemy->player.radius);
+		double Enemy_distance=Distance(state->status->objects[0].pos,state->enemy->player.pos);
+		double Boss_original_hp_rate=state->status->objects[0].health/health(state->boss->boss.radius);
+		double Boss_extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->boss->boss.radius);
+		double Boss_distance=Distance(state->status->objects[0].pos,state->boss->boss.pos);
 
 		//setting game over state
 		gameover_state=0;
-		if ((Boss_original_hp_rate<=death_rate&&Boss_distance<state->map->objects[0].radius)||
+		if ((Boss_original_hp_rate<=death_rate&&Boss_distance<state->boss->boss.radius)||
 			(state->status->objects[0].health<0.25*state->status->objects[0].max_health)||
-			(Enemy_original_hp_rate<=death_rate&&Enemy_distance<state->map->objects[0].radius))
+			(Enemy_original_hp_rate<=death_rate&&Enemy_distance<state->enemy->player.radius))
 			gameover_state=2;
-		if ((Boss_original_hp_rate>=kill_rate&&Boss_distance<state->map->objects[0].radius)||
-			(health(state->map->objects[1-boss_id].radius)<0.25*(health(state->enemy->maxr)))||
-			(Enemy_original_hp_rate>=kill_rate&&Enemy_distance<state->map->objects[0].radius)||
-			(health(state->map->objects[boss_id].radius)<1))
+		if ((Boss_original_hp_rate>=kill_rate&&Boss_distance<state->status->objects[0].radius)||
+			(health(state->enemy->player.radius)<0.25*(health(state->enemy->maxr)))||
+			(Enemy_original_hp_rate>=kill_rate&&Enemy_distance<state->status->objects[0].radius)||
+			(health(state->boss->boss.radius)<1))
 			gameover_state=1;
+
+		//evaluating
+		int rate_boss,rate_enemy;
+		return (rate_boss)*
+			(state->status->objects[0].health+
+			rate1*extra_ability+
+			rate2*food_density+
+			rate3*state->map->time+
+			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius;)
 	}
 }
