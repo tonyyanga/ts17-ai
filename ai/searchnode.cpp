@@ -6,17 +6,22 @@
 #include "../headers/analyzer.h"
 #include "../headers/evaluate_rates.h"
 
+int SearchNode::count=0;
+
 SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction* order) {
 	this->state=state;
 	this->father=father;
 	this->order=order;
 	this->spanned=false;
+	this->children=NULL;
 	this->number=this->evaluate();
 	if (father) {
 		this->depth=father->depth+1;
 	} else {
 		this->depth=0;
 	}
+	count++;
+	std::cout<<count<<std::endl;
 }
 
 SearchNode::~SearchNode() {
@@ -80,6 +85,7 @@ void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	SceneState* estimate=new SceneState(*state);
+	return (estimate);
 	int t,s=0,n=0;
 	double heal;
 	Position new_position;
@@ -90,7 +96,6 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
-	return (estimate);
 	switch(order->type)
 	{
 	case 0:
@@ -244,11 +249,28 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* head=l;
 	Instruction* t;
 	int time=GetTime();
+	lnNode* temp;
+
 	if ((state->boss->valid_time==time)||(state->enemy->valid_time==time))
 	{
 		Position* positions=new Position[3];
 		SceneState s=*state;
 		analyzer temp_analyzer(&s);
+		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
+		{
+			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
+			{
+				t=new Instruction;
+				t->type=InstructionType(Skill_UpgradeSkill);
+				lnNode* n=new lnNode;
+				t->argvs=n;
+				t->argvs->dataptr=new int(k);                        //*****************************************//
+				temp=new lnNode;
+				l->dataptr=t;
+				l->next=temp;
+				l=l->next;
+			}
+		}
 		for (int i=0;i<3;i++)
 		{
 			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
@@ -259,7 +281,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			lnNode* n=new lnNode;
 			t->argvs=n;
 			t->argvs->dataptr=&positions[i];
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;
@@ -269,32 +291,36 @@ lnNode* SearchNode::CheckPossibleOrders()
 		lnNode* n=new lnNode;
 		n->dataptr=&temp_analyzer.pos_adv_energy[0];
 		t->argvs=n;
-		lnNode* temp=new lnNode;
+		temp=new lnNode;
 		l->dataptr=t;
 		l->next=temp;
-		l=l->next;
 		if (state->boss->valid_time==time)
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Approach);
+			t->argvs=new lnNode;
 			t->argvs->dataptr=new Object(state->boss->boss);
+			t->argvs->next=new lnNode;
 			t->argvs->next->dataptr=new double(state->status->objects[0].radius);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
 		if (state->enemy->valid_time==time)
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Approach);
+			t->argvs=new lnNode;
 			t->argvs->dataptr=new Object(state->enemy->player);
+			t->argvs->next=new lnNode;
 			t->argvs->next->dataptr=new double(state->status->objects[0].radius);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
-			l->next=temp;
-			l=l->next;
 		}
+		l->next=new lnNode;
+		l=l->next;
 		t=new Instruction;
 		t->type=InstructionType(Flee);
 		n=new lnNode;
@@ -303,75 +329,60 @@ lnNode* SearchNode::CheckPossibleOrders()
 		temp=new lnNode;
 		l->dataptr=t;
 		(l->next)=temp;
-		l=l->next;
 		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos)||
 			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_ShortAttack);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
 		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos))
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
 			t->argvs->dataptr=new Object(state->enemy->player);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
 		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
 			t->argvs->dataptr=new Object(state->boss->boss);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
 		if (state->status->objects[0].skill_level[SkillType(DASH)]>0)
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_Dash);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
 		if (state->status->objects[0].skill_level[SkillType(SHIELD)]>0)
 		{
+			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_Shield);
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
 		}
-		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
-		{
-			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
-			{
-				t=new Instruction;
-				t->type=InstructionType(Skill_UpgradeSkill);
-				lnNode* n=new lnNode;
-				t->argvs=n;
-				t->argvs->dataptr=new int(k);
-				lnNode* temp=new lnNode;
-				l->dataptr=t;
-				l->next=temp;
-				l=l->next;
-			}
-		}
-		l=NULL;
+		l->next=NULL;
+		delete temp;
 		return head;
 }
 	else
@@ -389,7 +400,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->argvs=new lnNode;
 			t->argvs->dataptr=&positions[i];
 			t->argvs->next=NULL;
-			lnNode* temp=new lnNode;
+			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;

@@ -81,9 +81,9 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		case DEVOUR:num_devour++;break;
 		}
 	}
-	cout<<"num_enengy"<<num_energy;
+	/*cout<<"num_enengy"<<num_energy;
 	cout<<"num_adv_enengy"<<num_adv_energy;
-	cout<<"num_devour"<<num_devour;
+	cout<<"num_devour"<<num_devour;*/
 	pos_adv_energy=new Position[num_adv_energy];
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];

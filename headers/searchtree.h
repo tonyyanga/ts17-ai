@@ -38,6 +38,7 @@ private:
 	SceneState* Estimate(const Instruction* order); // calculate the next state
 	lnNode* CheckPossibleOrders(); // return a linked list of possible orders
 	void AddChild(const SceneState* state, Instruction* Order);
+	static int count;
 };
 
 class SearchTree{
