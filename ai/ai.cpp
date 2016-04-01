@@ -36,6 +36,7 @@ namespace ai{
 		state->enemy=enemy;
 		state->status= GetStatus();
 		state->map=GetMap();
+		state->adv=NULL;
 		state->boss=boss;
 		cout<<"Going to start processor."<<endl;
 		proc = new processor(state);
@@ -91,6 +92,7 @@ namespace ai{
 				temp->status= GetStatus();
 				temp->map=GetMap();
 				temp->boss=boss;
+				temp->adv=NULL;
 				state=temp;
 				cout<<"New state created. Calling proc update."<<endl;
 				proc->update(state);
