@@ -3,7 +3,7 @@
 #ifndef TEAMSTYLE17_H_
 #define TEAMSTYLE17_H_
 
-#include "basic.h"
+#include "../headers/basic.h"
 
 // 查询指令
 int GetTime();  // 查询当前游戏时间
