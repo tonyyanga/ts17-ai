@@ -12,7 +12,7 @@ void observe(Object A,Enemy* enemy)
 {
 	if (enemy!=NULL)
 	{
-		double s;
+		double s=100;
 		int t=GetTime();		//当前回合数
 		if (t-enemy->valid_time==1)				//连续两回合都在视野内
 		{
@@ -79,6 +79,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
 	pos_player=new Position;
+	pos_boss=new Position;
 	for(i=0;i<map->objects_number;i++)
 	{
 		switch(map->objects[i].type)
