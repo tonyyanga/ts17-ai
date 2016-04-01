@@ -58,9 +58,9 @@ namespace ai{
 		int t;
 		while(true){
 			#ifdef WIN32
-			Sleep(100);
+			Sleep(1);
 			#else
-			usleep(100);
+			usleep(1);
 			#endif
 			t=GetTime();
 			if (t!=time) {

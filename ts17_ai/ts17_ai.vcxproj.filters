@@ -30,9 +30,6 @@
     <ClCompile Include="..\ai\processor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\headers\basictypes.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="..\ai\searchtree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -43,6 +40,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\ai\common.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ai\basictypes.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
