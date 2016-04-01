@@ -77,7 +77,7 @@ void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 }
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
-	SceneState* estimate=new SceneState;
+	SceneState* estimate=new SceneState(*state);
 	int t,s=0,n=0;
 	double heal;
 	Position new_position;
@@ -88,6 +88,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
+	return (estimate);
 	switch(order->type)
 	{
 	case 0:
@@ -383,7 +384,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
+			t->argvs=new lnNode;
 			t->argvs->dataptr=&positions[i];
+			t->argvs->next=NULL;
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
@@ -391,6 +394,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 		}
 		t=new Instruction;
 		t->type=InstructionType(EatAdvancedEnergy);
+		t->argvs=new lnNode;
 		t->argvs->dataptr=new Position(temp_analyzer.pos_adv_energy[0]);
 		l->dataptr=t;
 		l->next=NULL;
