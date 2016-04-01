@@ -12,7 +12,6 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 	this->order=order;
 	this->spanned=false;
 	this->number=this->evaluate();
-	this->depth=father->depth+1;
 	if (father) {
 		this->depth=father->depth+1;
 	} else {

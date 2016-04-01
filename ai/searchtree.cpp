@@ -22,9 +22,9 @@ SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 }
 
 MaxHeap* SearchTree::GetHeap(int depth) {
-	int count=0;
+	int count=1;
 	lnNode* ptr=this->HeapsAtDepth;
-	while(ptr) {
+	while(ptr->next) {
 		count++;
 		ptr = ptr->next;
 		if (count==depth)
