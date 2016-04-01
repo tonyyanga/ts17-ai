@@ -407,7 +407,7 @@ double SearchNode::evaluate()
 	if (enemy_in_sight==1&&boss_in_sight==0)
 	{
 		//initializing data
-		int possible_extra_hp,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
+		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
 		int temp_ability=state->status->objects[0].ability;
 		double kill_rate=pow(1.2,3),death_rate=1/kill_rate;
 		while (temp_ability>hp_price)
@@ -462,7 +462,7 @@ double SearchNode::evaluate()
 	{
 		//initializing data
 		double rate4;
-		int possible_extra_hp,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
+		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
 		int temp_ability=state->status->objects[0].ability;
 		double kill_rate=pow(1.2,3),death_rate=1/kill_rate;
 		while (temp_ability>hp_price)
@@ -492,7 +492,7 @@ double SearchNode::evaluate()
 	else																					  //Both enemy and boss in sight
 	{
 		//initializing data
-		int possible_extra_hp,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
+		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
 		int temp_ability=state->status->objects[0].ability;
 		double kill_rate=pow(1.2,3),death_rate=1/kill_rate;
 		while (temp_ability>hp_price)
