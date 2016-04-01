@@ -16,16 +16,18 @@
 using namespace std;
 
 namespace ai{
-	Enemy* enemy;
-	SceneState* state;
-	processor* proc;
-	int time;
-	Boss boss;
 
 	void AIMain();
 	Enemy* Enemy_init();
 	void search();
+	Boss* Boss_init();
 
+	Enemy* enemy;
+	SceneState* state;
+	processor* proc;
+	int time;
+	Boss* boss=Boss_init();
+	
 	void AIMain() {
 		cout<<"AIMain Start."<<endl;
 		// Initialize
@@ -34,6 +36,7 @@ namespace ai{
 		state->enemy=enemy;
 		state->status= GetStatus();
 		state->map=GetMap();
+		state->boss=boss;
 		cout<<"Going to start processor."<<endl;
 		proc = new processor(state);
 		cout<<"Processor init ends."<<endl;
