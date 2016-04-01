@@ -24,7 +24,7 @@ namespace ai{
 
 	void AIMain();
 	Enemy* Enemy_init();
-	void do_search();
+	void search();
 
 	void AIMain() {
 		// Initialize
@@ -35,7 +35,7 @@ namespace ai{
 		state->map=GetMap();
 		proc = new processor(state);
 		time = GetTime();
-		thread search(do_search);
+		thread search(search);
 	}
 
 	Enemy* Enemy_init() {
@@ -50,10 +50,14 @@ namespace ai{
 		enemy->skills[4]=0;
 		return enemy;
 	}
+
 	Boss* Boss_init()
 	{
 		Boss* boss=new Boss;
+
+		return boss;
 	}
+
 	void search() {
 		int t;
 		while(true){

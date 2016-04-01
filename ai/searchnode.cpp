@@ -14,6 +14,10 @@ SearchNode::SearchNode(const SceneState* state, const SearchNode* father, const 
 	this->depth=father->depth+1;
 }
 
+SearchNode::~SearchNode() {
+
+}
+
 bool SearchNode::haschildren() {
 	return (this->children != NULL);
 }
