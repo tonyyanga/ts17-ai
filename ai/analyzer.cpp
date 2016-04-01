@@ -78,6 +78,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 	pos_adv_energy=new Position[num_adv_energy];
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
+	pos_player=new Position;
 	for(i=0;i<map->objects_number;i++)
 	{
 		switch(map->objects[i].type)
