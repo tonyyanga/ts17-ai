@@ -59,8 +59,7 @@ namespace ai{
 
 	Boss* Boss_init()
 	{
-		Boss* boss=new Boss;
-
+		Boss* boss=new Boss;		
 		return boss;
 	}
 

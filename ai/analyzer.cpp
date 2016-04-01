@@ -71,6 +71,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 	num_energy=0;
 	num_adv_energy=0;
 	num_devour=0;
+	this->status=status;
 	for(i=0;i<map->objects_number;i++)
 	{
 		switch(map->objects[i].type)
