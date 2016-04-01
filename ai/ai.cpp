@@ -27,13 +27,16 @@ namespace ai{
 	void search();
 
 	void AIMain() {
+		cout<<"AIMain Start."<<endl;
 		// Initialize
 		enemy = Enemy_init();
 		state=(SceneState*)malloc(sizeof(SceneState));
 		state->enemy=enemy;
 		state->status= GetStatus();
 		state->map=GetMap();
+		cout<<"Going to start processor."<<endl;
 		proc = new processor(state);
+		cout<<"Processor init ends."<<endl;
 		time = GetTime();
 		thread search(search);
 	}
@@ -65,6 +68,7 @@ namespace ai{
 	}
 	void search() {
 		int t;
+		cout<<"Search Thread Start."<<endl;
 		while(true){
 			#ifdef WIN32
 			Sleep(1);
@@ -73,6 +77,7 @@ namespace ai{
 			#endif
 			t=GetTime();
 			if (t!=time) {
+				cout<<"New Time."<<endl;
 				// update, split it from the search tree for real-time performance
 				SceneState* temp;
 				time=t;
@@ -84,27 +89,32 @@ namespace ai{
 				temp->status= GetStatus();
 				temp->map=GetMap();
 				state=temp;
+				cout<<"New state created. Calling proc update."<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
 				delete temp;
 
 				//do search
+				cout<<"Search Tree init Start."<<endl;
 				SearchTree* tree = new SearchTree((const SceneState*)state);
 
 				// time critical
+				cout<<"BFS Start."<<endl;
 				tree->BFS();
+				cout<<"DFS Start."<<endl;
 				tree->DFS();
 
 				// TODO: analyze?
 				{
+					cout<<"Search ends, analyzing."<<endl;
 					SearchNode* SelectedNode;
 					lnNode* orders;
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
-
+					cout<<"proc add instruction."<<endl;
 					proc->AddInstruction((Instruction*) orders->dataptr, 1);
 				}
-				
+				cout<<"do proc."<<endl;
 				proc->temp_set_ins();
 				proc->temp_implement();
 
