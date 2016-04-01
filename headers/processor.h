@@ -16,7 +16,7 @@ public:
 	LIFO(int size);
 	Instruction pop();			//Pop last Instruction out
 	int return_bottom();
-	void push(Instruction t,int priority);	//Push Instruction in
+	void push(Instruction t);	//Push Instruction in
 	Instruction get_top();		//Get last Instruction
 	void clear();				//Clear all
 };
@@ -29,7 +29,7 @@ public:
 	FIFO(int size);
 	Instruction pop();
 	int return_top();
-	void push(Instruction t,int priority);
+	void push(Instruction t);
 	Instruction get_top();
 	void clear();
 };
@@ -50,17 +50,16 @@ public:
 	void temp_set_ins();
 	//TODO
 	void AddInstruction(Instruction* order, int priority); // abstract interface to add orders, ## deep copy needed ##
-	int object_id;
 	void choose_instruction();
 	int judge_condition();
-	APIOrder return_Order();
 // implementation by cxn
 private:
 	APIOrder* Process_MovePosition(Position dest);
 	struct SceneState* scene;
 	class analyzer* state;
 	now_instruction temp_in;	//Instruction to be done
-	APIOrder* now_order;			//API order to be done
+	lnNode* multiple_temp;
+	int multiple;
 	LIFO l1,l2;
 	FIFO f1,f2;
 };

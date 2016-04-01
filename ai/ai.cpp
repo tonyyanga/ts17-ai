@@ -101,7 +101,8 @@ namespace ai{
 					//TODO: add instructions to processor
 				}
 
-				implement(proc->return_Order());
+				proc->temp_set_ins();
+				proc->temp_implement();
 
 				delete tree;
 			}

@@ -22,7 +22,7 @@ Instruction LIFO::pop()		//Pop first Instruction out
 	return i;
 }
 
-void LIFO::push(Instruction t,int priority)
+void LIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
 	bottom++;
@@ -59,7 +59,7 @@ int FIFO::return_top()
 	return top;
 }
 
-void FIFO::push(Instruction t,int priority)
+void FIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
 	top++;
@@ -80,9 +80,7 @@ processor::processor(SceneState* s)
 	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
 	scene=s;
 	state=new analyzer(scene);
-	object_id=(*(*state).status).objects[0].id;
 	temp_in.priority=0;
-	now_order=new APIOrder;
 }
 
 void processor::choose_instruction()
@@ -103,18 +101,7 @@ int processor::judge_condition()  //doesn't work yet
 	return 1;	//0 if object doesn't meet the conditions
 }
 
-/*APIOrder processor::return_Order()
-{
-	while ((judge_condition()==0||now_order->if_elseFinish()||now_order->if_elseNeed())&&f2.return_top()!=0)
-	{
-		temp_in.priority=0;
-		choose_instruction();	
-		now_order->next_order();
-	}
-	//**Move to next order or create orders if a new instruction is given
-	
-}
-*/
+
 void implement(APIOrder x)
 {
 	switch (x.type)
@@ -268,13 +255,22 @@ void processor::temp_set_ins()
 			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=int(temp_in.i.argvs->dataptr))
 				temp_in.priority=0;
 		}
+	case InstructionType(MultiInstructions):
+		{
+			multiple_temp=temp_in.i.argvs;
+			temp_in.i=*(Instruction*)multiple_temp->dataptr;
+		}
 	default:
 		{
+			if (temp_in.valid_time!=GetTime())
 			temp_in.priority=0;
 		}
 	}
+	if (multiple_temp!=NULL&&temp_in.priority==0)
+	{
+		temp_in.priority
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
-		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime();
+		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL;
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
 		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime();
 	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
@@ -350,4 +346,22 @@ void processor::temp_implement()
 			UpgradeSkill(user_id,SkillType((int)temp_in.i.argvs->dataptr));
 		}
 	}
+}
+
+
+void processor::AddInstruction(Instruction* i, int p)
+{
+	switch(p)
+	{
+	case 1:f2.push(*i);
+	case 2:l2.push(*i);
+	case 3:f1.push(*i);
+	case 4:l1.push(*i);
+	}
+}
+
+bool processor::update(SceneState* s)
+{
+	scene=s;
+	return 1;
 }
