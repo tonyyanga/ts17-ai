@@ -10,7 +10,7 @@ MaxHeap::~MaxHeap() {
 }
 
 void MaxHeap::additem(MaxHeapNode* item) {
-	lnNode* temp=root;
+	lnNode* temp=this->root;
 	while(temp) {
 		if (((MaxHeapNode*)(temp->dataptr))->number < item->number)
 			break;
@@ -24,9 +24,9 @@ void MaxHeap::additem(MaxHeapNode* item) {
 		temp->next=newnode;
 		temp->dataptr=item;
 	} else {
-		temp=(lnNode*)malloc(sizeof(lnNode));
-		temp->next=NULL;
-		temp->dataptr=item;
+		root=(lnNode*)malloc(sizeof(lnNode));
+		root->next=NULL;
+		root->dataptr=item;
 	}
 }
 
