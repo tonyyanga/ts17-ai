@@ -43,7 +43,7 @@ enum InstructionType {
 	MovePosition,
 	EatAdvancedEnergy,
 	Approach,
-	Escape,
+	Flee,
 	Skill_ShortAttack,
 	Skill_LongAttack,
 	Skill_Dash,

@@ -206,7 +206,7 @@ void APIOrder::Do_it()
 		type = API_LongAttack;
 		implement(*this);
 	}
-	if ((*Current_instruction).i.type == MovePosition|| (*Current_instruction).i.type==Approach|| (*Current_instruction).i.type == EatAdvancedEnergy|| (*Current_instruction).i.type == Escape)
+	if ((*Current_instruction).i.type == MovePosition|| (*Current_instruction).i.type==Approach|| (*Current_instruction).i.type == EatAdvancedEnergy|| (*Current_instruction).i.type == Flee)
 	{
 		int i, flag = 0;	//flag=0 means no object is inway;
 		for (i = PLAYER; i < kObjectTypes;i++)
@@ -263,7 +263,7 @@ void processor::temp_set_ins()
 			if (Distance(scene->status->objects[0].pos,p->pos)<=int(temp_in.i.argvs->next->dataptr))
 				temp_in.priority=0;
 		}
-	case InstructionType(Escape):
+	case InstructionType(Flee):
 		{
 			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=int(temp_in.i.argvs->dataptr))
 				temp_in.priority=0;
@@ -272,6 +272,7 @@ void processor::temp_set_ins()
 		{
 			temp_in.priority=0;
 		}
+	}
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
 		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime();
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
@@ -280,7 +281,6 @@ void processor::temp_set_ins()
 		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime();
 	else if ((f2.return_top()!=0) && (temp_in.priority<1))
 		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime();
-	}
 }
 void processor::temp_implement()
 {
@@ -313,6 +313,16 @@ void processor::temp_implement()
 			temp.x=t.x-scene->status->objects[0].pos.x;
 			temp.y=t.y-scene->status->objects[0].pos.y;
 			temp.z=t.z-scene->status->objects[0].pos.z;
+			Move(user_id,temp);
+		}
+	case InstructionType(Flee):
+		{
+			Object* p=(Object*)temp_in.i.argvs->dataptr;
+			Position temp;
+			Position t=scene->enemy->player.pos;
+			temp.x=-t.x+scene->status->objects[0].pos.x;
+			temp.y=-t.y+scene->status->objects[0].pos.y;
+			temp.z=-t.z+scene->status->objects[0].pos.z;
 			Move(user_id,temp);
 		}
 	case InstructionType(Skill_ShortAttack):

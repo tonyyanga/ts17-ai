@@ -207,6 +207,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 		}
 		t=new Instruction;
 		t->type=InstructionType(EatAdvancedEnergy);
+		lnNode* n=new lnNode;
+		n->dataptr=&temp_analyzer.pos_adv_energy[0];
+		t->argvs=n;
 		lnNode* temp=new lnNode;
 		l->dataptr=t;
 		l->next=temp;
@@ -215,10 +218,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
-			t->argvs->dataptr=new double(state->status->objects[0].radius);
-			lnNode* n=new lnNode;
-			n->dataptr=new int(state->boss->boss.id);
-			t->argvs->next=n;
+			t->argvs->dataptr=new Object(state->boss->boss);
+			t->argvs->next->dataptr=new double(state->status->objects[0].radius);
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
@@ -228,18 +229,16 @@ lnNode* SearchNode::CheckPossibleOrders()
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
-			t->argvs->dataptr=new double(state->status->objects[0].radius);
-			lnNode* n=new lnNode;
-			n->dataptr=new int(state->enemy->player.id);
-			t->argvs->next=n;
+			t->argvs->dataptr=new Object(state->enemy->player);
+			t->argvs->next->dataptr=new double(state->status->objects[0].radius);
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;
 		}
 		t=new Instruction;
-		t->type=InstructionType(Escape);
-		lnNode* n=new lnNode;
+		t->type=InstructionType(Flee);
+		n=new lnNode;
 		t->argvs=n;
 		t->argvs->dataptr=new double(5000);
 		temp=new lnNode;
@@ -261,7 +260,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=new int(state->enemy->player.id);
+			t->argvs->dataptr=new Object(state->enemy->player);
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
@@ -273,7 +272,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=new int(state->boss->boss.id);
+			t->argvs->dataptr=new Object(state->boss->boss);
 			lnNode* temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
@@ -335,6 +334,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 		}
 		t=new Instruction;
 		t->type=InstructionType(EatAdvancedEnergy);
+		t->argvs->dataptr=new Position(temp_analyzer.pos_adv_energy[0]);
 		l->dataptr=t;
 		l->next=NULL;
 		return head;
