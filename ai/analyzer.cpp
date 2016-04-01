@@ -1,12 +1,12 @@
 #include <stddef.h>
 #include <new>
-
+#include <iostream>
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
 #include "../headers/basic.h"
 
-
+using namespace std;
 
 void observe(Object A,Enemy* enemy)
 {
@@ -33,7 +33,11 @@ void observe(Object A,Enemy* enemy)
 
 void observe_boss(Object A,Boss* Boss)
 {
-	Boss->boss=A;
+	Boss->boss.pos.x=A.pos.x;
+	Boss->boss.pos.y=A.pos.y;
+	Boss->boss.pos.z=A.pos.z;
+	Boss->boss.radius=A.radius;
+	Boss->boss.type=A.type;
 	Boss->valid_time=GetTime();
 }
 
@@ -75,6 +79,9 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		case DEVOUR:num_devour++;break;
 		}
 	}
+	cout<<"num_enengy"<<num_energy;
+	cout<<"num_adv_enengy"<<num_adv_energy;
+	cout<<"num_devour"<<num_devour;
 	pos_adv_energy=new Position[num_adv_energy];
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
@@ -153,6 +160,7 @@ Position analyzer::closest(ObjectType A,Position p0)
 		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
 			closest=i;
 	}
+	cout<<"cloest A:x="<<posA[closest].x;
 	return(posA[closest]);
 }
 
@@ -187,6 +195,7 @@ Position analyzer::closest(ObjectType A)
 		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
 			closest=i;
 	}
+	cout<<"cloest A:x="<<posA[closest].x;
 	return(posA[closest]);
 }
 
