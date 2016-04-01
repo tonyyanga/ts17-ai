@@ -58,8 +58,18 @@ typedef struct Enemy		//己方对敌方的信息储存
 };
 
 void observe(Object A,Enemy* enemy);	//用于观察敌人信息
+void observe_boss(Object A,Boss* Boss);	//用于观察boss信息
 
 //关于光之隧道的函数
+struct Store_adv
+{
+	int valid_time;		//如果看到光之隧道，存下看到的时间
+	bool exist;			//如果光之隧道没有被吃掉，就存真，如果不存在，就存false
+	Position pos;
+	Store_adv* next;
+};
+
+void store_adv(Object A,Store_adv *Node);		//每次发现光之隧道A就自动存储
 
 #endif
 

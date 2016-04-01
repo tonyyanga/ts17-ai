@@ -37,6 +37,28 @@ void observe_boss(Object A,Boss* Boss)
 	Boss->valid_time=GetTime();
 }
 
+void store_adv(Object A,Store_adv *first)
+{
+	Store_adv *node;
+	node=first;
+	bool flag=true;
+	while (flag==true)
+	{
+		if (node->pos.x==A.pos.x && node->pos.y==A.pos.y && node->pos.z==A.pos.z)
+			flag=false;
+		node=node->next;
+		if (node==NULL) break;
+	}
+	if (flag)
+		node=new Store_adv;
+		node->next=NULL;
+		node->pos=A.pos;
+		node->valid_time=GetTime();
+		node->exist=1;
+}
+
+
+
 analyzer::analyzer(Enemy* enemy,Boss* boss,const Status* status=GetStatus(),const Map* map=GetMap())
 {
 	int i;

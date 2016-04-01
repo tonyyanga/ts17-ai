@@ -76,6 +76,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	SceneState* estimate=new SceneState;
 	int t,s=0,n=0;
 	double heal;
+	Position new_position;
 	int type=order->type;
 	lnNode *argv=order->argvs;
 	Status status=*(state->status);
@@ -83,46 +84,50 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
-	estimate->map=&map;
 	switch(order->type)
 	{
 	case 0:
 		{
-			Self.pos.x=*(double *)(argv->dataptr);
+			new_position.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.y=*(double *)(argv->dataptr);
+			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.z=*(double *)(argv->dataptr);
+			new_position.z=*(double *)(argv->dataptr);
+			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			estimate->map=&map;
 			break;
 		}
 	case 1:
 		{
-			Self.pos.x=*(double *)(argv->dataptr);
+			new_position.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.y=*(double *)(argv->dataptr);
+			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.z=*(double *)(argv->dataptr);
+			new_position.z=*(double *)(argv->dataptr);
+			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
 			Self.ability+=3;
 			estimate->map=NULL;
 			break;
 		}
 	case 2:
 		{
-			Self.pos.x=*(double *)(argv->dataptr);
+			new_position.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.y=*(double *)(argv->dataptr);
+			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.z=*(double *)(argv->dataptr);
-			break;
+			new_position.z=*(double *)(argv->dataptr);
+			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			estimate->map=&map;
 		}
 	case 3:
 		{
-			Self.pos.x=*(double *)(argv->dataptr);
+			new_position.x=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.y=*(double *)(argv->dataptr);
+			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
-			Self.pos.z=*(double *)(argv->dataptr);
-			break;
+			new_position.z=*(double *)(argv->dataptr);
+			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			estimate->map=&map;
 		}
 	case 5:
 		{
@@ -138,6 +143,8 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				heal-=100*(Self.skill_level[0]);
 				boss.boss.radius=get_radius(heal);
 			}
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	case 4:
@@ -153,17 +160,23 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				heal-=200+300*(Self.skill_level[1]);
 				boss.boss.radius=get_radius(heal);
 			}
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	case 7:
 		{
 			Self.shield_time=20+10*Self.skill_level[2];
 			Self.skill_cd[2]=100;
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	case 6:
 		{
 			Self.skill_cd[3]=100;
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	case 8:
@@ -180,6 +193,8 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				}
 			}
 			Self.skill_level[5]++;
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	case 9:
@@ -204,6 +219,8 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				}
 			}
 			Self.skill_level[n]++;
+			map.time+=1;
+			estimate->map=&map;
 			break;
 		}
 	}
