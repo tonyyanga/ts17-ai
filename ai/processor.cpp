@@ -8,6 +8,7 @@
 #include"../headers/common.h"
 
 #define PI 3.1415926
+using namespace std;
 LIFO::LIFO(int size=5)
 {
 	s=new Instruction[size];
@@ -81,6 +82,7 @@ processor::processor(SceneState* s)
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
+	cout<<"Processor initialized"<<endl;
 }
 
 void processor::choose_instruction()
@@ -267,6 +269,7 @@ void processor::temp_set_ins()
 			temp_in.priority=0;
 		}
 	}
+	cout<<"Instruction set to "<<temp_in.i.type<<endl;
 	if (multiple_temp!=NULL&&temp_in.priority==0)
 	{
 		temp_in.priority=multiple;
@@ -274,17 +277,18 @@ void processor::temp_set_ins()
 		multiple_temp=multiple_temp->next;
 	}
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
-		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL;
+		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL,cout<<"Instruction updated"<<endl;
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
-		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime();
+		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
 	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
-		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime();
+		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
 	else if ((f2.return_top()!=0) && (temp_in.priority<1))
-		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime();
+		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
 }
 void processor::temp_implement()
 {
 	int user_id=scene->status->objects[0].id;
+	cout<<"Implementing "<<temp_in.i.type<<endl;
 	switch(this->temp_in.i.type)
 	{
 	case InstructionType(MovePosition):
@@ -362,10 +366,21 @@ void processor::AddInstruction(Instruction* i, int p)
 	case 3:f1.push(*i);
 	case 4:l1.push(*i);
 	}
+	cout<<"Instruction added"<<endl;
 }
 
 bool processor::update(SceneState* s)
 {
-	scene=s;
-	return 1;
+	if (scene!=s)
+	{
+		scene=s;
+		cout<<"Processor scene updated"<<endl;
+		return 1;
+	}
+	else
+	{
+		scene=s;
+		cout<<"Processor scene updated"<<endl;
+		return 0;
+	}
 }
