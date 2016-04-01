@@ -24,7 +24,7 @@ SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 }
 
 MaxHeap* SearchTree::GetHeap(int depth) {
-	int count=1;
+	int count=0;
 	lnNode* ptr=this->HeapsAtDepth;
 	while(ptr->next) {
 		count++;
@@ -53,7 +53,7 @@ bool SearchTree::BFS(int BFSdepth) {
 	int count;
 	bool result=false;
 	for(count=1;count<=BFSdepth;count++){
-		ptr = this->GetAllNodes();
+		ptr = this->GetAllNodes(count-1);
 		result = result || search_layer_exec(ptr);
 	}
 	return result;
