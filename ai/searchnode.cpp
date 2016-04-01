@@ -26,7 +26,7 @@ SearchNode::~SearchNode() {
 lnNode* SearchNode::rankchildren() {
 	lnNode* temp=this->children;
 	MaxHeap sorter;
-	while(temp) {
+	while(temp->next) {
 		sorter.additem((SearchNode*)temp->dataptr);
 		temp=temp->next;
 	}
