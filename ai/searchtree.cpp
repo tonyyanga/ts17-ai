@@ -18,6 +18,7 @@ SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 	HeapList->next=NULL;
 	HeapList->dataptr = NULL;
 	this->EndedNodes = HeapList;
+	std::cout<<"search tree finished"<<std::endl;
 }
 
 MaxHeap* SearchTree::GetHeap(int depth) {

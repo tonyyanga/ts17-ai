@@ -20,7 +20,7 @@ namespace ai{
 	void AIMain();
 	Enemy* Enemy_init();
 	void search();
-	Boss* Boss_in                                                       it();
+	Boss* Boss_init();
 
 	Enemy* enemy;
 	SceneState* state;
@@ -41,7 +41,7 @@ namespace ai{
 		proc = new processor(state);
 		cout<<"Processor init ends."<<endl;
 		time = GetTime();
-		thread search(search);
+		search();
 	}
 
 	Enemy* Enemy_init() {

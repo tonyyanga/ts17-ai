@@ -253,7 +253,7 @@ density* analyzer::best_way()
 	density m[26];	//27-1
 	for(x=-1;x<=1;x++)
 	{
-		for(y=-1;i<=1;y++)
+		for(y=-1;y<=1;y++)
 		{
 			for(z=-1;z<=1;z++)
 			{
