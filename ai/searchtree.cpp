@@ -7,7 +7,7 @@
 SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 	// init
 	lnNode* HeapList;
-	this->root = &SearchNode(rootstate, NULL, NULL);
+	this->root = new SearchNode(rootstate, NULL, NULL);
 	this->DFSdepth = DFSdepth;
 
 	HeapList=(lnNode*)malloc(sizeof(lnNode));

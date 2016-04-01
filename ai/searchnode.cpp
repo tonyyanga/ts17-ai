@@ -5,7 +5,7 @@
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
 
-SearchNode::SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order) {
+SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction* order) {
 	this->state=state;
 	this->father=father;
 	this->order=order;
@@ -16,6 +16,35 @@ SearchNode::SearchNode(const SceneState* state, const SearchNode* father, const 
 
 SearchNode::~SearchNode() {
 
+}
+
+lnNode* SearchNode::rankchildren() {
+	lnNode* temp;
+	MaxHeap sorter;
+	while(temp) {
+		sorter.additem((SearchNode*)temp->dataptr);
+		temp=temp->next;
+	}
+	return sorter.returnall();
+}
+
+lnNode* SearchNode::getInstructionChain() {
+	lnNode* temp;
+	lnNode* root;
+	SearchNode* track=this->father;
+	if (this->order) {
+		root=(lnNode*)malloc(sizeof(lnNode));
+		root->next=NULL;
+		root->dataptr=this->order;
+		while(track->order) {
+			temp=(lnNode*)malloc(sizeof(lnNode));
+			temp->dataptr=track->order;
+			temp->next=root;
+			root=temp;
+		}
+		return root;
+	} else
+		return NULL;
 }
 
 bool SearchNode::haschildren() {
@@ -34,7 +63,7 @@ int SearchNode::span() {
 	return count;
 }
 
-void SearchNode::AddChild(const SceneState* state, const Instruction* order) {
+void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 	SearchNode* child=&SearchNode(state, this, order);
 	lnNode* temp = (lnNode*)malloc(sizeof(lnNode));
 	temp->next=this->children;

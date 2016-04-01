@@ -12,8 +12,8 @@ class SearchNode:public MaxHeapNode {
 public:
 	int depth; // tree depth
 	bool spanned;
-	const SearchNode* father; // pointer to father node
-	const Instruction* order;
+	SearchNode* father; // pointer to father node
+	Instruction* order;
 	double number; // work with MaxHeap
 private:
 	lnNode* children; // linked list to child nodes
@@ -22,7 +22,7 @@ private:
 
 public:
 	// constructor
-	SearchNode(const SceneState* state, const SearchNode* father, const Instruction* order);
+	SearchNode(const SceneState* state, SearchNode* father, Instruction* order);
 	~SearchNode();
 
 	double evaluate(); // return evaluated value of this state AND SET gameover_state
@@ -37,7 +37,7 @@ public:
 private:
 	SceneState* Estimate(const Instruction* order); // calculate the next state
 	lnNode* CheckPossibleOrders(); // return a linked list of possible orders
-	void AddChild(const SceneState* state, const Instruction* Order);
+	void AddChild(const SceneState* state, Instruction* Order);
 };
 
 class SearchTree{
