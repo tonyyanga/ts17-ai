@@ -102,8 +102,7 @@ namespace ai{
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
 
-					//TODO: remove some items in this order chain, or choose one
-					//TODO: add instructions to processor
+					proc->AddInstruction((Instruction*) orders->dataptr, 1);
 				}
 				
 				proc->temp_set_ins();
