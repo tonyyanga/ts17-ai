@@ -64,6 +64,7 @@ void store_adv(Object A,Store_adv *first)
 
 
 analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* status=GetStatus(),const Map* map=GetMap())
+
 {
 	int i;
 	int m=0,n=0,q=0;
