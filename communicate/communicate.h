@@ -3,7 +3,7 @@
 # ifndef COMMUNICATE_H_
 # define COMMUNICATE_H_
 
-#include "basic.h"
+#include "../headers/basic.h"
 
 typedef char *(*ComFuncType)(char*);
 extern ComFuncType Communicate;
