@@ -17,11 +17,14 @@ typedef struct binaryNode{
 };
 
 class MaxHeapNode{
+public:
 	double number;
 };
 
 class MaxHeap{
 	// sort items with their pointers, by ptr->number
+
+	// for temporary implementation, use insert sort
 public:
 	//constructor
 	MaxHeap();
@@ -30,11 +33,10 @@ public:
 	// get the best several items, item pointer when n=1, linkedlistNode when n>1
 	MaxHeapNode* getmax(int n=1);
 	lnNode* returnall();
-	void additem(const MaxHeapNode* item);
+	void additem(MaxHeapNode* item);
 
 private:
-	binaryNode* root();
-	void heapsort();
+	lnNode* root;
 };
 
 #endif
