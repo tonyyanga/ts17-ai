@@ -97,17 +97,13 @@ void processor::choose_instruction()
 		temp_in.i=f2.pop(),temp_in.priority=1;
 }
 
-int processor::judge_condition()
+int processor::judge_condition()  //doesn't work yet
 {
 	lnNode* i=temp_in.i.conditons;
-	while (i != NULL)
-	{
-		//Todo
-	}
-	return 0;	//0 if object doesn't meet the conditions
+	return 1;	//0 if object doesn't meet the conditions
 }
 
-APIOrder processor::return_Order()
+/*APIOrder processor::return_Order()
 {
 	while ((judge_condition()==0||now_order->if_elseFinish()||now_order->if_elseNeed())&&f2.return_top()!=0)
 	{
@@ -118,7 +114,7 @@ APIOrder processor::return_Order()
 	//**Move to next order or create orders if a new instruction is given
 	
 }
-
+*/
 void implement(APIOrder x)
 {
 	switch (x.type)
@@ -238,4 +234,110 @@ void APIOrder::Do_it()
 APIOrder::APIOrder()
 {
 	//Objected included in processor
+}
+
+
+void processor::temp_set_ins()
+{
+	switch(temp_in.i.type)
+	{
+	case InstructionType(MovePosition):
+		{
+			Position *p=(Position*)temp_in.i.argvs->dataptr;
+			if (scene->status->objects[0].pos.x==p->x&&
+				scene->status->objects[0].pos.y==p->y&&
+				scene->status->objects[0].pos.z==p->z)
+				temp_in.priority=0;
+		}
+	case InstructionType(EatAdvancedEnergy):
+		{
+			Position *p=(Position*)temp_in.i.argvs->dataptr;
+			if (scene->status->objects[0].pos.x==p->x&&
+				scene->status->objects[0].pos.y==p->y&&
+				scene->status->objects[0].pos.z==p->z)
+				temp_in.priority=0;
+		}
+	case InstructionType(Approach):
+		{
+			Object* p=(Object*)temp_in.i.argvs->dataptr;
+			if (Distance(scene->status->objects[0].pos,p->pos)<=int(temp_in.i.argvs->next->dataptr))
+				temp_in.priority=0;
+		}
+	case InstructionType(Escape):
+		{
+			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=int(temp_in.i.argvs->dataptr))
+				temp_in.priority=0;
+		}
+	default:
+		{
+			temp_in.priority=0;
+		}
+	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
+		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime();
+	else if ((f1.return_top()!=0) && (temp_in.priority<3))
+		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime();
+	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
+		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime();
+	else if ((f2.return_top()!=0) && (temp_in.priority<1))
+		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime();
+	}
+}
+void processor::temp_implement()
+{
+	int user_id=scene->status->objects[0].id;
+	switch(this->temp_in.i.type)
+	{
+	case InstructionType(MovePosition):
+		{
+			Position temp;
+			Position* p=(Position*)temp_in.i.argvs->dataptr;
+			temp.x=p->x-scene->status->objects[0].pos.x;
+			temp.y=p->y-scene->status->objects[0].pos.y;
+			temp.z=p->z-scene->status->objects[0].pos.z;
+			Move(user_id,temp);
+		}
+	case InstructionType(EatAdvancedEnergy):
+		{
+			Position temp;
+			Position* p=(Position*)temp_in.i.argvs->dataptr;
+			temp.x=p->x-scene->status->objects[0].pos.x;
+			temp.y=p->y-scene->status->objects[0].pos.y;
+			temp.z=p->z-scene->status->objects[0].pos.z;
+			Move(user_id,temp);
+		}
+	case InstructionType(Approach):
+		{
+			Object* p=(Object*)temp_in.i.argvs->dataptr;
+			Position temp;
+			Position t=p->pos;
+			temp.x=t.x-scene->status->objects[0].pos.x;
+			temp.y=t.y-scene->status->objects[0].pos.y;
+			temp.z=t.z-scene->status->objects[0].pos.z;
+			Move(user_id,temp);
+		}
+	case InstructionType(Skill_ShortAttack):
+		{
+			ShortAttack(user_id);
+		}
+	case InstructionType(Skill_LongAttack):
+		{
+			LongAttack(user_id,(int)temp_in.i.argvs);
+		}
+	case InstructionType(Skill_Dash):
+		{
+			Dash(user_id);
+		}
+	case InstructionType(Skill_Shield):
+		{
+			Shield(user_id);
+		}
+	case InstructionType(Skill_HealthUp):
+		{
+			HealthUp(user_id);
+		}
+	case InstructionType(Skill_UpgradeSkill):
+		{
+			UpgradeSkill(user_id,SkillType((int)temp_in.i.argvs->dataptr));
+		}
+	}
 }

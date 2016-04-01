@@ -37,20 +37,19 @@ struct now_instruction
 {
 	Instruction i;
 	int priority;
+	int last_round;
+	int valid_time;
 };
 class processor
 {
 public:
 	processor(struct SceneState *s);
 	bool update(struct SceneState *s);
-	now_instruction temp_in;	//Instruction to be done
-	APIOrder* now_order;			//API order to be done
-	LIFO l1,l2;
-	FIFO f1,f2;
 
+	void temp_implement();
+	void temp_set_ins();
 	//TODO
 	void AddInstruction(Instruction* order, int priority); // abstract interface to add orders, ## deep copy needed ##
-
 	int object_id;
 	void choose_instruction();
 	int judge_condition();
@@ -60,6 +59,10 @@ private:
 	APIOrder* Process_MovePosition(Position dest);
 	struct SceneState* scene;
 	class analyzer* state;
+	now_instruction temp_in;	//Instruction to be done
+	APIOrder* now_order;			//API order to be done
+	LIFO l1,l2;
+	FIFO f1,f2;
 };
 
 void implement(APIOrder x);

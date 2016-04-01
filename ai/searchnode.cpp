@@ -1,5 +1,5 @@
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 #include "../headers/teamstyle17.h"
@@ -242,9 +242,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 		lnNode* n=new lnNode;
 		t->argvs=n;
 		t->argvs->dataptr=new double(5000);
-		lnNode* temp=new lnNode;
+		temp=new lnNode;
 		l->dataptr=t;
-		l->next=temp;
+		(l->next)=temp;
 		l=l->next;
 		if (state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]>0)
 		{
