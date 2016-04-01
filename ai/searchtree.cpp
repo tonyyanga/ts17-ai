@@ -7,16 +7,18 @@
 SearchTree::SearchTree(const SceneState* rootstate, int DFSdepth) {
 	// init
 	lnNode* HeapList;
+	MaxHeap* newheap = new MaxHeap;
 	this->root = new SearchNode(rootstate, NULL, NULL);
 	this->DFSdepth = DFSdepth;
 
 	HeapList=(lnNode*)malloc(sizeof(lnNode));
 	HeapList->next=NULL;
-	HeapList->dataptr = root;
+	newheap->additem(root);
+	HeapList->dataptr=newheap;
 	this->HeapsAtDepth = HeapList;
 	HeapList=(lnNode*)malloc(sizeof(lnNode));
 	HeapList->next=NULL;
-	HeapList->dataptr = NULL;
+	HeapList->dataptr = new MaxHeap;
 	this->EndedNodes = HeapList;
 	std::cout<<"search tree finished"<<std::endl;
 }
