@@ -20,7 +20,7 @@ namespace ai{
 	void AIMain();
 	Enemy* Enemy_init();
 	void search();
-	Boss* Boss_init();
+	Boss* Boss_in                                                       it();
 
 	Enemy* enemy;
 	SceneState* state;
@@ -90,6 +90,7 @@ namespace ai{
 				temp->enemy=enemy; // keep enemy updated
 				temp->status= GetStatus();
 				temp->map=GetMap();
+				temp->boss=boss;
 				state=temp;
 				cout<<"New state created. Calling proc update."<<endl;
 				proc->update(state);
