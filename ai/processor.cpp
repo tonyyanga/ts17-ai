@@ -259,6 +259,7 @@ void processor::temp_set_ins()
 		{
 			multiple_temp=temp_in.i.argvs;
 			temp_in.i=*(Instruction*)multiple_temp->dataptr;
+			multiple=temp_in.priority;
 		}
 	default:
 		{
@@ -268,7 +269,10 @@ void processor::temp_set_ins()
 	}
 	if (multiple_temp!=NULL&&temp_in.priority==0)
 	{
-		temp_in.priority
+		temp_in.priority=multiple;
+		temp_in.i=*(Instruction*)multiple_temp->dataptr;
+		multiple_temp=multiple_temp->next;
+	}
 	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
 		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL;
 	else if ((f1.return_top()!=0) && (temp_in.priority<3))
