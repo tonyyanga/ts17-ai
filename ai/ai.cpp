@@ -92,7 +92,6 @@ namespace ai{
 				cout<<"New state created. Calling proc update."<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
-				delete temp;
 
 				//do search
 				cout<<"Search Tree init Start."<<endl;
