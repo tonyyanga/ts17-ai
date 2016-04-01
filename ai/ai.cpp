@@ -111,7 +111,11 @@ namespace ai{
 					lnNode* orders;
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
+<<<<<<< HEAD
 					cout<<"proc add instruction."<<endl;
+=======
+
+>>>>>>> 5866e148c2dc29cfb7cd23ac3d3d6088851e813a
 					proc->AddInstruction((Instruction*) orders->dataptr, 1);
 				}
 				cout<<"do proc."<<endl;
