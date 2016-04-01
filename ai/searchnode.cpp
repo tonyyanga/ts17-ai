@@ -297,7 +297,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 		l->dataptr=t;
 		(l->next)=temp;
 		l=l->next;
-		if (state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]>0)
+		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos)||
+			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
 		{
 			t=new Instruction;
 			t->type=InstructionType(Skill_ShortAttack);
@@ -306,7 +307,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]>0&&state->enemy->valid_time==time)
+		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos))
 		{
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
@@ -318,7 +319,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]>0&&state->boss->valid_time==time)
+		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
 		{
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
