@@ -58,6 +58,11 @@ namespace ai{
 		return boss;
 	}
 
+	Store_adv* firstnode_init()
+	{
+		Store_adv* firstnode=NULL;
+		return(firstnode);
+	}
 	void search() {
 		int t;
 		while(true){

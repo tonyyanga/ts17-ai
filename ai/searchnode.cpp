@@ -93,7 +93,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
 			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
 			estimate->map=&map;
 			break;
 		}
@@ -104,7 +104,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
 			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
 			Self.ability+=3;
 			estimate->map=NULL;
 			break;
@@ -116,7 +116,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
 			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
 			estimate->map=&map;
 		}
 	case 3:
@@ -126,7 +126,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			new_position.y=*(double *)(argv->dataptr);
 			argv=argv->next;
 			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(Self.skill_cd[DASH],new_position,Self.pos,Self);
+			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
 			estimate->map=&map;
 		}
 	case 5:

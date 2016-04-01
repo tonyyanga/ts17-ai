@@ -31,7 +31,7 @@ public:
 	Position* pos_devour;
 	Position* pos_player;
 	Position* pos_boss;
-	analyzer(struct Enemy* enemy,struct Boss* boss,const Status* status,const Map* map);		//构造函数
+	analyzer(struct Enemy* enemy,struct Boss* boss,Store_adv* firstnode,const Status* status,const Map* map);		//构造函数
 	analyzer(struct SceneState* state);
 	Position closest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
 	Position closest(ObjectType A);			

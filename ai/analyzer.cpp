@@ -44,10 +44,10 @@ void store_adv(Object A,Store_adv *first)
 	bool flag=true;
 	while (flag==true)
 	{
+		if (node==NULL) break;
 		if (node->pos.x==A.pos.x && node->pos.y==A.pos.y && node->pos.z==A.pos.z)
 			flag=false;
 		node=node->next;
-		if (node==NULL) break;
 	}
 	if (flag)
 		node=new Store_adv;
@@ -59,7 +59,7 @@ void store_adv(Object A,Store_adv *first)
 
 
 
-analyzer::analyzer(Enemy* enemy,Boss* boss,const Status* status=GetStatus(),const Map* map=GetMap())
+analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* status=GetStatus(),const Map* map=GetMap())
 {
 	int i;
 	int m=0,n=0,q=0;
@@ -92,6 +92,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,const Status* status=GetStatus(),cons
 			{
 				pos_adv_energy[n]=map->objects[i].pos;
 				n++;
+				store_adv(map->objects[i],firstnode);
 				break;
 			}
 		case DEVOUR:
@@ -117,7 +118,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,const Status* status=GetStatus(),cons
 }
 
 analyzer::analyzer(SceneState* state) {
-	new (this) analyzer(state->enemy, state->boss,state->status, state->map);
+	new (this) analyzer(state->enemy, state->boss,state->adv,state->status, state->map);
 }
 
 Position analyzer::closest(ObjectType A,Position p0)
