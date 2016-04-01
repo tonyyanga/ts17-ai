@@ -211,7 +211,7 @@ density* analyzer::best_way()
 	double d;
 	int dis;
 	int x,y,z,i=0;
-	density t[3];
+	density* t=new density[3];
 	double r=status->objects[0].radius;
 	Position selfpos=status->objects[0].pos;
 	density m[26];	//27-1

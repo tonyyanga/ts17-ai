@@ -93,6 +93,7 @@
     <ClInclude Include="..\headers\basic.h" />
     <ClInclude Include="..\headers\basictypes.h" />
     <ClInclude Include="..\headers\common.h" />
+    <ClInclude Include="..\headers\evaluate_rates.h" />
     <ClInclude Include="..\headers\instructions.h" />
     <ClInclude Include="..\headers\processor.h" />
     <ClInclude Include="..\headers\searchtree.h" />

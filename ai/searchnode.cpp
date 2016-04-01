@@ -4,6 +4,7 @@
 #include "../headers/searchtree.h"
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
+#include "../headers/evaluate_rates.h"
 
 SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction* order) {
 	this->state=state;
@@ -72,7 +73,7 @@ void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 }
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
-	SceneState estimate;
+	SceneState* estimate=new SceneState;
 	int t,s=0,n=0;
 	double heal;
 	int type=order->type;
@@ -82,7 +83,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
-	estimate.map=&map;
+	estimate->map=&map;
 	switch(order->type)
 	{
 	case 0:
@@ -102,7 +103,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			argv=argv->next;
 			Self.pos.z=*(double *)(argv->dataptr);
 			Self.ability+=3;
-			estimate.map=NULL;
+			estimate->map=NULL;
 			break;
 		}
 	case 2:
@@ -206,10 +207,10 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			break;
 		}
 	}
-	estimate.status=&status;
-	estimate.boss=&boss;
-	estimate.enemy=&enemy;
-	return(&estimate);
+	estimate->status=&status;
+	estimate->boss=&boss;
+	estimate->enemy=&enemy;
+	return(estimate);
 }
 
 lnNode* SearchNode::CheckPossibleOrders()
@@ -392,7 +393,6 @@ double SearchNode::evaluate()
 	//rate4: distance to different positions in different cases
 	SceneState s=*state;
 	analyzer temp_analyzer(&s);
-	double rate1,rate2,rate3;
 	double food_density=temp_analyzer.best_way()[0].weight+temp_analyzer.best_way()[1].weight+temp_analyzer.best_way()[2].weight;
 	int extra_ability=0;
 	for (int i=SkillType(LONG_ATTACK);i<=SkillType(HEALTH_UP);i++)
@@ -432,8 +432,7 @@ double SearchNode::evaluate()
 		//evaluation
 		if (original_hp_rate>1) //Add enemy's ability points into consideration!
 		{
-			double rate4;
-			double rate5,rate6;//rate5: shield status, rate6: dash status
+			//rate5: shield status, rate6: dash status
 			return original_hp_rate*state->status->objects[0].health+
 				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*distance+
@@ -442,8 +441,7 @@ double SearchNode::evaluate()
 		}
 		else
 		{
-			double rate4;
-			double rate5,rate6;//rate5: shield status, rate6: dash status
+			//rate5: shield status, rate6: dash status
 			return original_hp_rate*state->status->objects[0].health+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
@@ -452,7 +450,6 @@ double SearchNode::evaluate()
 	}
 	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
-		double rate4;
 		return state->status->objects[0].health+
 			rate1*extra_ability+
 			rate2*food_density+
@@ -461,7 +458,6 @@ double SearchNode::evaluate()
 	else if(enemy_in_sight==0&&boss_in_sight==1)//Only boss in sight
 	{
 		//initializing data
-		double rate4;
 		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
 		int temp_ability=state->status->objects[0].ability;
 		double kill_rate=pow(1.2,3),death_rate=1/kill_rate;
@@ -521,12 +517,10 @@ double SearchNode::evaluate()
 			gameover_state=1;
 
 		//evaluating
-		double rate_boss,rate_enemy,rate_boss_distance;
-		int enemy_evaluation_point;
+		double enemy_evaluation_point;
 		if (Enemy_original_hp_rate>1) //Add enemy's ability points into consideration!
 		{
-			double rate4;
-			double rate5,rate6;//rate5: shield status, rate6: dash status
+			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=	
 				Enemy_original_hp_rate*state->status->objects[0].health+
 				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
@@ -536,8 +530,7 @@ double SearchNode::evaluate()
 		}
 		else
 		{
-			double rate4;
-			double rate5,rate6;//rate5: shield status, rate6: dash status
+			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=
 				Enemy_original_hp_rate*state->status->objects[0].health+
 				rate4*Enemy_distance+

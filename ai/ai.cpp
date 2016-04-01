@@ -100,7 +100,7 @@ namespace ai{
 					//TODO: remove some items in this order chain, or choose one
 					//TODO: add instructions to processor
 				}
-
+				
 				proc->temp_set_ins();
 				proc->temp_implement();
 
