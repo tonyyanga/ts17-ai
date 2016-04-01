@@ -157,6 +157,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			}
 			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(1100+300*(Self.skill_level[1]+Self.radius+boss.boss.radius)))
 			{
+				heal=health(boss.boss.radius);
 				heal-=200+300*(Self.skill_level[1]);
 				boss.boss.radius=get_radius(heal);
 			}
