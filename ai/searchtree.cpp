@@ -51,10 +51,10 @@ lnNode* SearchTree::GetAllNodes(int depth) {
 bool SearchTree::BFS(int BFSdepth) {
 	lnNode* ptr;
 	int count;
-	bool result=false;
+	int result=0;
 	for(count=1;count<=BFSdepth;count++){
 		ptr = this->GetAllNodes(count-1);
-		result = result || search_layer_exec(ptr);
+		result+=search_layer_exec(ptr);
 	}
 	return result;
 }
@@ -64,18 +64,18 @@ bool SearchTree::DFS(int width) {
 	int depth=this->DFSdepth;
 	void* temp;
 	lnNode* ptr;
-	bool result=false;
+	int result=false;
 	while(depth <= this->DFSdepth) {
 		heap = this->GetHeap(-1);
 		temp = heap->getmax(width);
 		if (width==1) {
-			result = result || this->search_layer_exec((SearchNode*) temp);
+			result += this->search_layer_exec((SearchNode*) temp);
 			if (result)
 				break;
 			else
 				depth = ((SearchNode*)temp)->depth + 1;
 		} else {
-			result = result || this->search_layer_exec((lnNode*) temp);
+			result += this->search_layer_exec((lnNode*) temp);
 			if (result) {
 				int cancontinue=false;
 				ptr = this->GetAllNodes();
