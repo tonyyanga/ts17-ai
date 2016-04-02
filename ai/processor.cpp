@@ -412,15 +412,48 @@ void processor::AddInstruction(Instruction* i, int p)
 			Position p=*(Position*)(i->argvs->dataptr);
 			p=Displacement(scene->status->objects[0].pos,p);
 			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
-			if (Norm(CrossProduct(p,p2))<=0.05)
+			if (Norm(CrossProduct(p,p2))<=0.1)
 				break;
 		}
 		f2.push(*i);
 		break;
 		   }
-	case 2:{l2.push(*i);break;}
-	case 3:{f1.push(*i);break;}
-	case 4:{l1.push(*i);break;}
+	case 2:{
+		if (i->type==0&&temp_in.i.type==0)
+		{
+			Position p=*(Position*)(i->argvs->dataptr);
+			p=Displacement(scene->status->objects[0].pos,p);
+			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
+			if (Norm(CrossProduct(p,p2))<=0.1)
+				break;
+		}
+		l2.push(*i);
+		break;
+		   }
+	case 3:{
+		if (i->type==0&&temp_in.i.type==0)
+		{
+			Position p=*(Position*)(i->argvs->dataptr);
+			p=Displacement(scene->status->objects[0].pos,p);
+			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
+			if (Norm(CrossProduct(p,p2))<=0.1)
+				break;
+		}
+		f1.push(*i);
+		break;
+		   }
+	case 4:{
+		if (i->type==0&&temp_in.i.type==0)
+		{
+			Position p=*(Position*)(i->argvs->dataptr);
+			p=Displacement(scene->status->objects[0].pos,p);
+			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
+			if (Norm(CrossProduct(p,p2))<=0.1)
+				break;
+		}
+		l1.push(*i);
+		break;
+		   }
 	}
 	cout<<"Instruction added"<<endl;
 }
