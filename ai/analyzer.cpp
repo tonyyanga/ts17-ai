@@ -82,9 +82,9 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		case DEVOUR:num_devour++;break;
 		}
 	}
-	/*cout<<"num_enengy"<<num_energy;
-	cout<<"num_adv_enengy"<<num_adv_energy;
-	cout<<"num_devour"<<num_devour;*/
+	cout<<"num_enengy"<<num_energy<<endl;;
+	cout<<"num_adv_enengy"<<num_adv_energy<<endl;;
+	cout<<"num_devour"<<num_devour<<endl;
 	if (num_adv_energy!=0)
 		pos_adv_energy=new Position[num_adv_energy];
 	else
@@ -246,7 +246,7 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-lnNode* best_way(lnNode* first,Position *self,double r)
+/*lnNode* best_way(lnNode* first,Position *self,double r)
 {
 	lnNode* firstnode;
 	lnNode* currentnode=first;
@@ -255,13 +255,13 @@ lnNode* best_way(lnNode* first,Position *self,double r)
 	double d;
 	int dis;
 	int x,y,z,i=0;
-	density m[27];
+	density m[125];
 	density t;
-	for(x=-1;x<=1;x++)
+	for(x=-2;x<=2;x++)
 	{
-		for(y=-1;y<=1;y++)
+		for(y=-2;y<=2;y++)
 		{
-			for(z=-1;z<=1;z++)
+			for(z=-2;z<=2;z++)
 			{
 				m[i].pos.x=x*d+self->x;
 				m[i].pos.y=y*d+self->y;
@@ -271,7 +271,7 @@ lnNode* best_way(lnNode* first,Position *self,double r)
 			}
 		}
 	}
-	for(i=0;i<27;i++)
+	for(i=0;i<125;i++)
 	{
 		while (currentnode!=NULL)
 		{
@@ -282,9 +282,9 @@ lnNode* best_way(lnNode* first,Position *self,double r)
 		}
 	}
 	x=0;
-	for(i=0;i<27;i++)
+	for(i=0;i<125;i++)
 	{
-		for(x=i+1;x<27;x++)
+		for(x=i+1;x<125;x++)
 		{
 			if (m[i].number<m[x].number) 
 			{
@@ -296,7 +296,7 @@ lnNode* best_way(lnNode* first,Position *self,double r)
 	}
 	firstnode=new lnNode;
 	currentnode=firstnode;
-	for(i=0;i<27;i++)
+	for(i=0;i<125;i++)
 	{
 		if (m[i].number==0) break;
 		obj=new Object;
@@ -314,7 +314,7 @@ lnNode* best_way(lnNode* first,Position *self,double r)
 		return(NULL);
 	}
 	return(firstnode);
-}
+}*/
 	
 
 analyzer::~analyzer()

@@ -9,6 +9,7 @@ struct density			//用于表示食物的密度分布
 	{
 		Position pos;
 		int number;
+		int layers;
 	};
 
 struct Boss
