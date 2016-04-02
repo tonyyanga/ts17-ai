@@ -276,24 +276,20 @@ lnNode* SearchNode::CheckPossibleOrders()
 				l=l->next;
 			}
 		}
-		density* temp_density=new density;
-		temp_density=temp_analyzer.best_way();
-		for (int i=0;i<3;i++)
+		Position* k=new Position[temp_analyzer.num_energy];
+		k=temp_analyzer.pos_energy;
+		for (int i=0;i<temp_analyzer.num_energy;i++)
 		{
-			positions[i].x=temp_density[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=temp_density[i].speed.y*100+state->status->objects[0].pos.y;
-			positions[i].z=temp_density[i].speed.z*100+state->status->objects[0].pos.z;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
 			n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=&positions[i];
+			t->argvs->dataptr=&k[i];
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 			l=l->next;
 		}
-		delete temp_density;
 		if (temp_analyzer.pos_adv_energy!=NULL)
 		{
 			t=new Instruction;
