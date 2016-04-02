@@ -95,7 +95,7 @@ namespace ai{
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
 					cout<<"proc add instruction."<<endl;
-					proc->AddInstruction((Instruction*) orders->dataptr, 1);
+					proc->AddInstruction((Instruction*) orders->dataptr, 2);
 				}
 	delete tree;
 }

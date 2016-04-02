@@ -26,7 +26,8 @@ Instruction LIFO::pop()		//Pop first Instruction out
 void LIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	bottom++;
+	if (bottom<5)
+		bottom++;
 }
 
 Instruction LIFO::get_top()
@@ -63,7 +64,8 @@ int FIFO::return_top()
 void FIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	top++;
+	if (top<5)
+		top++;
 }
 
 Instruction FIFO::get_top()
