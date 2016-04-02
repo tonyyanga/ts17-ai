@@ -112,7 +112,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	SceneState* estimate=new SceneState(*state);
 	int t,s=0,n=0;
 	double heal;
-	Position* new_position;
+	Position* new_position=new Position;
 	Object obj;
 	int type=order->type;
 	lnNode *argv=order->argvs;
@@ -346,7 +346,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* n=new lnNode;
 	int time=GetTime();
 	lnNode* temp;
-
+	if (this->gameover_state)
+		return NULL;
 	if ((state->boss->valid_time==time)||(state->enemy->valid_time==time))
 	{
 		Position* positions=new Position[3];
@@ -524,7 +525,7 @@ double SearchNode::evaluate()
 	//rate3: time
 	//rate4: distance to different positions in different cases
 	if (state->map==NULL)
-		return this->father->evaluate+rate1;
+		return this->father->evaluate()+rate1;
 	analyzer temp_analyzer((SceneState*)state);
 	double food_density=0;
 	int extra_ability=0;

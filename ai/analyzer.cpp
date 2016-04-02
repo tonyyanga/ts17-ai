@@ -117,10 +117,11 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 				q++;
 				break;
 			}
-		case PLAYER:
+		case PLAYER: //****************** SSR: PLAYER IS NOT ENEMY!!!
 			{
 				*pos_player=map->objects[i].pos;
-				observe(map->objects[i],enemy);
+				if (i!=0)
+					observe(map->objects[i],enemy);
 				break;
 			}
 		case BOSS:

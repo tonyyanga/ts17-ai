@@ -38,7 +38,7 @@ double angle(Position p1,Position p2)
 
 double health(double radius)
 {
-	return((pow(radius/10,3)));
+	return((pow(radius/100,3)));
 }
 
 double get_radius(double Health)
