@@ -397,8 +397,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 		for (int i=0;i<3;i++)
 		{
 			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=(temp_analyzer.best_way())[i].speed.y*100+state->status->objects[0].pos.y;
-			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
+			positions[i].y=0;
+			positions[i].z=0;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
 			t->argvs=new lnNode;

@@ -1,6 +1,7 @@
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
 #include "math.h"
+#include "stdlib.h"
 
 int Usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方向改变的回合时,返回从p到p0的回合数,add为假则代表不使用加速技能
 {
@@ -45,4 +46,20 @@ double get_radius(double Health)
 	double r;
 	r=100*pow(Health,1.0/3);
 	return(r);
+}
+
+struct Map filter(struct Map input) {
+	struct Map result;
+	long length=0;
+	long count;
+	result.time=input.time;
+	Object* result_obj=(Object*)malloc(input.objects_number*sizeof(Object));
+	Object* temp=result_obj;
+	for (count=0;count<=input.objects_number-1;count++) {
+		if (input.objects[count].id!=ENERGY) {
+			*temp=input.objects[count];
+			temp++;
+			length++;
+		}
+	}
 }

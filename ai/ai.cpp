@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <thread>
 
+#include <ctime>
+
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -29,8 +31,10 @@ namespace ai{
 	Boss* boss=Boss_init();
 	
 	void AIMain() {
+		long start;
 		cout<<"AIMain Start."<<endl;
 		// Initialize
+		start=clock();
 		enemy = Enemy_init();
 		state=(SceneState*)malloc(sizeof(SceneState));
 		state->enemy=enemy;
@@ -38,9 +42,10 @@ namespace ai{
 		state->map=GetMap();
 		state->adv=NULL;
 		state->boss=boss;
-		cout<<"Going to start processor."<<endl;
+		cout<<"Going to start processor. Time used "<<clock()-start<<endl;
+		start=clock();
 		proc = new processor(state);
-		cout<<"Processor init ends."<<endl;
+		cout<<"Processor init ends. Time used "<<clock()-start<<endl;
 		time = GetTime();
 		search();
 	}
@@ -71,6 +76,7 @@ namespace ai{
 	}
 	void search() {
 		int t;
+		long start;
 		cout<<"Search Thread Start."<<endl;
 		while(true){
 			#ifdef WIN32
@@ -87,6 +93,7 @@ namespace ai{
 				temp=state;
 				state=NULL;
 				delete temp;
+				start=clock();
 				temp=(SceneState*)malloc(sizeof(SceneState));
 				temp->enemy=enemy; // keep enemy updated
 				temp->status= GetStatus();
@@ -94,7 +101,7 @@ namespace ai{
 				temp->boss=boss;
 				temp->adv=NULL;
 				state=temp;
-				cout<<"New state created. Calling proc update."<<endl;
+				cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
 
@@ -104,9 +111,12 @@ namespace ai{
 
 				// time critical
 				cout<<"BFS Start."<<endl;
+				start=clock();
 				tree->BFS();
-				cout<<"DFS Start."<<endl;
+				cout<<"DFS Start. BFS time "<<clock()-start<<endl;
+				start=clock();
 				tree->DFS();
+				cout<<"DFS time "<<clock()-start<<endl;
 
 				// TODO: analyze?
 				{

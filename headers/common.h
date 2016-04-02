@@ -16,6 +16,8 @@ typedef struct SceneState {
 	struct Store_adv* adv;
 };
 
+struct Map filter(struct Map input);
+
 double angle(Position p1,Position p2);		//计算p1,p2矢量夹角（返回arccos值）
 
 double health(double radius);				//输入半径返回血量

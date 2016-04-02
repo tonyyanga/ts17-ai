@@ -309,7 +309,9 @@ void processor::temp_implement()
 			temp.x=p->x-scene->status->objects[0].pos.x;
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
+			PAUSE();
 			Move(user_id,temp);
+			CONTINUE();
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
