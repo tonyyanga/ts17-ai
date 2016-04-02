@@ -84,7 +84,10 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 	/*cout<<"num_enengy"<<num_energy;
 	cout<<"num_adv_enengy"<<num_adv_energy;
 	cout<<"num_devour"<<num_devour;*/
-	pos_adv_energy=new Position[num_adv_energy];
+	if (num_adv_energy!=0)
+		pos_adv_energy=new Position[num_adv_energy];
+	else
+		pos_adv_energy=NULL;
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
 	pos_player=new Position;
@@ -108,7 +111,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 			}
 		case DEVOUR:
 			{
-				pos_adv_energy[q]=map->objects[i].pos;
+				pos_devour[q]=map->objects[i].pos;
 				q++;
 				break;
 			}
@@ -305,10 +308,10 @@ density* analyzer::best_way()
 
 analyzer::~analyzer()
 {
-	delete[] pos_adv_energy;
+	/*delete[] pos_adv_energy;
 	delete[] pos_devour;
 	delete[] pos_energy;
-	delete pos_player;
+	delete pos_player;*/
 }
 
 

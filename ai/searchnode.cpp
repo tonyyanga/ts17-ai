@@ -252,6 +252,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* l=new lnNode;
 	lnNode* head=l;
 	Instruction* t;
+	lnNode* n=new lnNode;
 	int time=GetTime();
 	lnNode* temp;
 
@@ -266,7 +267,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			{
 				t=new Instruction;
 				t->type=InstructionType(Skill_UpgradeSkill);
-				lnNode* n=new lnNode;
+				n=new lnNode;
 				t->argvs=n;
 				t->argvs->dataptr=new int(k);                        //*****************************************//
 				temp=new lnNode;
@@ -275,14 +276,16 @@ lnNode* SearchNode::CheckPossibleOrders()
 				l=l->next;
 			}
 		}
+		density* temp_density=new density;
+		temp_density=temp_analyzer.best_way();
 		for (int i=0;i<3;i++)
 		{
-			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=(temp_analyzer.best_way())[i].speed.y*100+state->status->objects[0].pos.y;
-			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
+			positions[i].x=temp_density[i].speed.x*100+state->status->objects[0].pos.x;
+			positions[i].y=temp_density[i].speed.y*100+state->status->objects[0].pos.y;
+			positions[i].z=temp_density[i].speed.z*100+state->status->objects[0].pos.z;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
-			lnNode* n=new lnNode;
+			n=new lnNode;
 			t->argvs=n;
 			t->argvs->dataptr=&positions[i];
 			temp=new lnNode;
@@ -290,17 +293,21 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		t=new Instruction;
-		t->type=InstructionType(EatAdvancedEnergy);
-		lnNode* n=new lnNode;
-		n->dataptr=&temp_analyzer.pos_adv_energy[0];
-		t->argvs=n;
-		temp=new lnNode;
-		l->dataptr=t;
-		l->next=temp;
+		delete temp_density;
+		if (temp_analyzer.pos_adv_energy!=NULL)
+		{
+			t=new Instruction;
+			t->type=InstructionType(EatAdvancedEnergy);
+			lnNode* n=new lnNode;
+			n->dataptr=&temp_analyzer.pos_adv_energy[0];
+			t->argvs=n;
+			temp=new lnNode;
+			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
+		}
 		if (state->boss->valid_time==time)
 		{
-			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Approach);
 			t->argvs=new lnNode;
@@ -310,10 +317,10 @@ lnNode* SearchNode::CheckPossibleOrders()
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
+			l=l->next;
 		}
 		if (state->enemy->valid_time==time)
 		{
-			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Approach);
 			t->argvs=new lnNode;
@@ -322,9 +329,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->argvs->next->dataptr=new double(state->status->objects[0].radius);
 			temp=new lnNode;
 			l->dataptr=t;
+			l->next=temp;
+			l=l->next;
 		}
-		l->next=new lnNode;
-		l=l->next;
 		t=new Instruction;
 		t->type=InstructionType(Flee);
 		n=new lnNode;
@@ -394,6 +401,16 @@ lnNode* SearchNode::CheckPossibleOrders()
 		Position* positions=new Position[3];
 		SceneState s=*state;
 		analyzer temp_analyzer(&s);
+		if (temp_analyzer.pos_adv_energy!=NULL)
+		{
+			t=new Instruction;
+			t->type=InstructionType(EatAdvancedEnergy);
+			t->argvs=new lnNode;
+			t->argvs->dataptr=new Position(temp_analyzer.pos_adv_energy[0]);
+			l->dataptr=t;
+			l->next=new lnNode;
+			l=l->next;
+		}
 		for (int i=0;i<3;i++)
 		{
 			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
@@ -407,13 +424,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			l=l->next;
+			if (i<2)
+				l=l->next;
 		}
-		t=new Instruction;
-		t->type=InstructionType(EatAdvancedEnergy);
-		t->argvs=new lnNode;
-		t->argvs->dataptr=new Position(temp_analyzer.pos_adv_energy[0]);
-		l->dataptr=t;
 		l->next=NULL;
 		return head;
 	}
