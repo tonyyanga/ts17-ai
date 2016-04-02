@@ -10,28 +10,41 @@ MaxHeap::~MaxHeap() {
 }
 
 void MaxHeap::additem(MaxHeapNode* item) {
+	void* ptr;
 	lnNode* temp=this->root;
-	while(temp) {
-		if (((MaxHeapNode*)(temp->dataptr))->number < item->number)
-			break;
-		else
-			temp=temp->next;
-	}
-	if (temp) {
-		lnNode* newnode=(lnNode*)malloc(sizeof(lnNode));
-		newnode->dataptr=temp->dataptr;
-		newnode->next=temp->next;
-		temp->next=newnode;
-		temp->dataptr=item;
-	} else {
+	if (!temp) {
 		root=(lnNode*)malloc(sizeof(lnNode));
 		root->next=NULL;
 		root->dataptr=item;
+		return;
+	}
+	while(temp->next) {
+		if (((MaxHeapNode*)(temp->dataptr))->number < item->number) {
+			lnNode* newnode=(lnNode*)malloc(sizeof(lnNode));
+			newnode->dataptr=temp->dataptr;
+			newnode->next=temp->next;
+			temp->next=newnode;
+			temp->dataptr=item;
+			return;
+		}
+		else
+			temp=temp->next;
+	}
+	if (temp!=this->root||((MaxHeapNode*)(temp->dataptr))->number >= item->number) {
+		lnNode* newnode=(lnNode*)malloc(sizeof(lnNode));
+		newnode->dataptr=item;
+		newnode->next=NULL;
+		temp->next=newnode;
+	} else {
+		lnNode* newnode=(lnNode*)malloc(sizeof(lnNode));
+		newnode->dataptr=item;
+		newnode->next=this->root;
+		this->root=newnode;
 	}
 }
 
 lnNode* MaxHeap::returnall() {
-	return this->root;
+	return this->root;//TODO: deep copy
 }
 
 MaxHeapNode* MaxHeap::getmax(int n) {
