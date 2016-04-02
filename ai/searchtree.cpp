@@ -64,18 +64,20 @@ bool SearchTree::DFS(int width) {
 	int depth=this->DFSdepth;
 	void* temp;
 	lnNode* ptr;
-	int result=false;
+	int result=0;
+	int count;
 	while(depth <= this->DFSdepth) {
 		heap = this->GetHeap(-1);
 		temp = heap->getmax(width);
 		if (width==1) {
-			result += this->search_layer_exec((SearchNode*) temp);
+			result += this->search_layer_exec(*(SearchNode**)temp);
 			if (result)
 				break;
 			else
 				depth = ((SearchNode*)temp)->depth + 1;
 		} else {
-			result += this->search_layer_exec((lnNode*) temp);
+			for(count=0;count<=width-1;count++)
+				result += this->search_layer_exec((*(SearchNode**)temp+count));
 			if (result) {
 				int cancontinue=false;
 				ptr = this->GetAllNodes();

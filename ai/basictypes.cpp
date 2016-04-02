@@ -47,16 +47,16 @@ lnNode* MaxHeap::returnall() {
 	return this->root;//TODO: deep copy
 }
 
-MaxHeapNode* MaxHeap::getmax(int n) {
-	MaxHeapNode* newroot=(MaxHeapNode*)malloc(n*sizeof(MaxHeapNode));
+MaxHeapNode** MaxHeap::getmax(int n) {
+	MaxHeapNode** newroot=(MaxHeapNode**)malloc(n*sizeof(MaxHeapNode*));
 	lnNode* track=this->root;
-	MaxHeapNode* temp=newroot;
+	MaxHeapNode** temp=newroot;
 	int count;
 	for (count=0;count<=n-1;count++) {
 		if (!track)
 			break;
 		temp=newroot+n;
-		temp=(MaxHeapNode*)track->dataptr;
+		*temp=(MaxHeapNode*)track->dataptr;
 		track=track->next;
 	}
 	return newroot;
