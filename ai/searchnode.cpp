@@ -96,6 +96,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	int t,s=0,n=0;
 	double heal;
 	Position* new_position;
+	Object obj;
 	int type=order->type;
 	lnNode *argv=order->argvs;
 	Status status=*(state->status);
@@ -109,6 +110,18 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		{
 			new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
+			for(t=0;t<n;t++)
+			{
+				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
+				{
+					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
+					map.objects[t]=map.objects[n];
+					map.objects[n]=obj;
+					n--;
+				}
+			}
+			map.objects_number=n;
 			estimate->map=&map;
 			Self->pos.x=new_position->x;
 			Self->pos.y=new_position->y;
@@ -119,6 +132,18 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		{
 			new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
+			for(t=0;t<n;t++)
+			{
+				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
+				{
+					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
+					map.objects[t]=map.objects[n];
+					map.objects[n]=obj;
+					n--;
+				}
+			}
+			map.objects_number=n;
 			estimate->map=&map;
 			Self->pos.x=new_position->x;
 			Self->pos.y=new_position->y;
@@ -131,6 +156,18 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		{
 			new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
+			for(t=0;t<n;t++)
+			{
+				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
+				{
+					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
+					map.objects[t]=map.objects[n];
+					map.objects[n]=obj;
+					n--;
+				}
+			}
+			map.objects_number=n;
 			estimate->map=&map;
 			Self->pos.x=new_position->x;
 			Self->pos.y=new_position->y;
@@ -140,6 +177,18 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		{
 			new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
+			for(t=0;t<n;t++)
+			{
+				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
+				{
+					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
+					map.objects[t]=map.objects[n];
+					map.objects[n]=obj;
+					n--;
+				}
+			}
+			map.objects_number=n;
 			estimate->map=&map;
 			Self->pos.x=new_position->x;
 			Self->pos.y=new_position->y;
