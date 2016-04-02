@@ -86,7 +86,11 @@ processor::processor(SceneState* s)
 	temp_in.priority=0;
 	temp_in.i.type=0;
 	temp_in.i.argvs=new lnNode;
-	temp_in.i.argvs->dataptr=new Position(s->status->objects[0].pos);
+	Position* q=new Position(s->status->objects[0].pos);
+	q->x+=200;
+	q->y+=200;
+	q->z+=200;
+	temp_in.i.argvs->dataptr=q;
 	cout<<"Processor initialized"<<endl;
 }
 
