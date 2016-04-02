@@ -30,7 +30,7 @@ public:
 	lnNode* rankchildren(); // return sorted child linked list, the first should be the best
 	lnNode* reverserankchildren(); // return sorted child linked list, the first should be the worst
 	int span(); // span this node, return number of children
-	int gameover(); //return 0 as not over yet, 1 as winning, 2 as losing
+	int gameover(); //return 0 as not over yet, 1 as winning, -1 as losing
 	bool haschildren();
 	lnNode* getInstructionChain();
 

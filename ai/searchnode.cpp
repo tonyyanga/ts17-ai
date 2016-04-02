@@ -92,6 +92,10 @@ void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 	this->children=temp;
 }
 
+int SearchNode::gameover() {
+	return this->gameover_state;
+}
+
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);

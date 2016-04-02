@@ -78,27 +78,38 @@ namespace ai{
 	}
 
 	void Search_EXEC(SearchTree* tree) {
-	long start;
-	// time critical
-	cout<<"BFS Start."<<endl;
-	start=clock();
-	tree->BFS();
-	cout<<"DFS Start. BFS time "<<clock()-start<<endl;
-	start=clock();
-	tree->DFS();
-	cout<<"DFS time "<<clock()-start<<endl;
-	// TODO: analyze?
+		long start;
+		// time critical
+		cout<<"BFS Start."<<endl;
+		start=clock();
+		tree->BFS();
+		cout<<"DFS Start. BFS time "<<clock()-start<<endl;
+		start=clock();
+		tree->DFS();
+		cout<<"DFS time "<<clock()-start<<endl;
+		// TODO: analyze?
 				{
 					cout<<"Search ends, analyzing."<<endl;
 					SearchNode* SelectedNode;
 					lnNode* orders;
+					lnNode* temp=tree->GetAllNodes();
+					while(temp) {
+						SelectedNode=static_cast<SearchNode*>(temp->dataptr);	
+						if (SelectedNode->gameover()==1) {
+							orders = SelectedNode->getInstructionChain();
+							cout<<"proc add instruction."<<endl;
+							proc->AddInstruction((Instruction*) orders->dataptr, 4);
+							break;
+						}
+						temp=temp->next;
+					}
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
 					cout<<"proc add instruction."<<endl;
 					proc->AddInstruction((Instruction*) orders->dataptr, 2);
 				}
-	delete tree;
-}
+		delete tree;
+	}
 	void search() {
 		int t;
 		long start;
