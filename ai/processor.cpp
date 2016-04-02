@@ -52,7 +52,7 @@ FIFO::FIFO(int size=5)
 
 Instruction FIFO::pop()	
 {
-	return s[top--];
+	return s[(top--)-1];
 }
 
 int FIFO::return_top()
@@ -228,6 +228,14 @@ APIOrder::APIOrder()
 
 void processor::temp_set_ins()
 {
+	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
+		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL,cout<<"Instruction updated"<<endl;
+	else if ((f1.return_top()!=0) && (temp_in.priority<3))
+		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
+	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
+		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
+	else if ((f2.return_top()!=0) && (temp_in.priority<1))
+		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
 	switch(temp_in.i.type)
 	{
 	case InstructionType(MovePosition):
@@ -237,6 +245,8 @@ void processor::temp_set_ins()
 				scene->status->objects[0].pos.y==p->y&&
 				scene->status->objects[0].pos.z==p->z)
 				temp_in.priority=0;
+			multiple_temp=NULL;
+			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
@@ -245,28 +255,37 @@ void processor::temp_set_ins()
 				scene->status->objects[0].pos.y==p->y&&
 				scene->status->objects[0].pos.z==p->z)
 				temp_in.priority=0;
+			multiple_temp=NULL;
+			break;
 		}
 	case InstructionType(Approach):
 		{
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
 			if (Distance(scene->status->objects[0].pos,p->pos)<=int(temp_in.i.argvs->next->dataptr))
 				temp_in.priority=0;
+			multiple_temp=NULL;
+			break;
 		}
 	case InstructionType(Flee):
 		{
 			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=int(temp_in.i.argvs->dataptr))
 				temp_in.priority=0;
+			multiple_temp=NULL;
+			break;
 		}
 	case InstructionType(MultiInstructions):
 		{
 			multiple_temp=temp_in.i.argvs;
 			temp_in.i=*(Instruction*)multiple_temp->dataptr;
 			multiple=temp_in.priority;
+			break;
 		}
 	default:
 		{
 			if (temp_in.valid_time!=GetTime())
 			temp_in.priority=0;
+			multiple_temp=NULL;
+			break;
 		}
 	}
 	cout<<"Instruction set to "<<temp_in.i.type<<endl;
@@ -276,14 +295,6 @@ void processor::temp_set_ins()
 		temp_in.i=*(Instruction*)multiple_temp->dataptr;
 		multiple_temp=multiple_temp->next;
 	}
-	if ((l1.return_bottom()!=0) && (temp_in.priority<4))
-		temp_in.i=l1.pop(),temp_in.priority=4,temp_in.valid_time=GetTime(),multiple_temp=NULL,cout<<"Instruction updated"<<endl;
-	else if ((f1.return_top()!=0) && (temp_in.priority<3))
-		temp_in.i=f1.pop(),temp_in.priority=3,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
-	else if ((l2.return_bottom()!=0) && (temp_in.priority<2))
-		temp_in.i=l2.pop(),temp_in.priority=2,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
-	else if ((f2.return_top()!=0) && (temp_in.priority<1))
-		temp_in.i=f2.pop(),temp_in.priority=1,temp_in.valid_time=GetTime(),cout<<"Instruction updated"<<endl;
 }
 void processor::temp_implement()
 {

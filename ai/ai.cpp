@@ -80,7 +80,6 @@ namespace ai{
 			#endif
 			t=GetTime();
 			if (t!=time) {
-				PAUSE();
 				cout<<"New Time."<<endl;
 				// update, split it from the search tree for real-time performance
 				SceneState* temp;
