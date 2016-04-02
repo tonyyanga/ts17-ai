@@ -287,7 +287,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->type=InstructionType(MovePosition);
 			n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=&positions[i];
+			t->argvs->dataptr=positions+i;
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
@@ -414,12 +414,12 @@ lnNode* SearchNode::CheckPossibleOrders()
 		for (int i=0;i<3;i++)
 		{
 			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=0;
-			positions[i].z=0;
+			positions[i].y=(temp_analyzer.best_way())[i].speed.y*100+state->status->objects[0].pos.y;
+			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
 			t->argvs=new lnNode;
-			t->argvs->dataptr=&positions[i];
+			t->argvs->dataptr=positions+i;
 			t->argvs->next=NULL;
 			temp=new lnNode;
 			l->dataptr=t;

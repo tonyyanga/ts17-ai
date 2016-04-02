@@ -310,6 +310,7 @@ void processor::temp_implement()
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
+			printf("%lf, %lf, %lf\n", p->x, p->y, p->z);
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
