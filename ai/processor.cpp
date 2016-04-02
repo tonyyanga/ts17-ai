@@ -82,6 +82,9 @@ processor::processor(SceneState* s)
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
+	temp_in.i.type=0;
+	temp_in.i.argvs=new lnNode;
+	temp_in.i.argvs->dataptr=new Position(s->status->objects[0].pos);
 	cout<<"Processor initialized"<<endl;
 }
 
@@ -384,7 +387,18 @@ void processor::AddInstruction(Instruction* i, int p)
 {
 	switch(p)
 	{
-	case 1:{f2.push(*i);break;}
+	case 1:{
+		if (i->type==0&&temp_in.i.type==0)
+		{
+			Position p=*(Position*)(i->argvs->dataptr);
+			p=Displacement(scene->status->objects[0].pos,p);
+			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
+			if (Norm(CrossProduct(p,p2))==0)
+				break;
+		}
+		f2.push(*i);
+		break;
+		   }
 	case 2:{l2.push(*i);break;}
 	case 3:{f1.push(*i);break;}
 	case 4:{l1.push(*i);break;}
