@@ -114,7 +114,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	{
 	case 0:
 		{
-			new_position=(Position *)(argv->dataptr);
+			if (argv->dataptr==NULL)
+			{
+				new_position->x=Self->pos.x+200;
+				new_position->y=Self->pos.y+200;
+				new_position->z=Self->pos.z+200;
+			}
+			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -136,7 +142,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 1:
 		{
-			new_position=(Position *)(argv->dataptr);
+			if (argv->dataptr==NULL)
+			{
+				new_position->x=Self->pos.x+200;
+				new_position->y=Self->pos.y+200;
+				new_position->z=Self->pos.z+200;
+			}
+			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -160,7 +172,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 2:
 		{
-			new_position=(Position *)(argv->dataptr);
+			if (argv->dataptr==NULL)
+			{
+				new_position->x=Self->pos.x+200;
+				new_position->y=Self->pos.y+200;
+				new_position->z=Self->pos.z+200;
+			}
+			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -181,7 +199,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 3:
 		{
-			new_position=(Position *)(argv->dataptr);
+			if (argv->dataptr==NULL)
+			{
+				new_position->x=Self->pos.x+200;
+				new_position->y=Self->pos.y+200;
+				new_position->z=Self->pos.z+200;
+			}
+			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
