@@ -17,11 +17,9 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 	this->order=order;
 	this->spanned=false;
 	this->children=NULL;
-	PAUSE();
 	long start=clock();
 	this->number=this->evaluate();
 	cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
-	CONTINUE();
 	if (father) {
 		this->depth=father->depth+1;
 	} else {
@@ -80,7 +78,6 @@ bool SearchNode::haschildren() {
 int SearchNode::span() {
 	int count=0;
 	long start=clock();
-	PAUSE();
 	lnNode* temp = this->CheckPossibleOrders();
 	cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
 	
@@ -89,7 +86,6 @@ int SearchNode::span() {
 		temp = temp->next;
 		count++;
 	}
-	CONTINUE();
 	this->spanned=true;
 	return count;
 }
