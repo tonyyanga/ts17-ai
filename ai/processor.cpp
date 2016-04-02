@@ -310,6 +310,7 @@ void processor::temp_implement()
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
+			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
@@ -319,6 +320,7 @@ void processor::temp_implement()
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
+			break;
 		}
 	case InstructionType(Approach):
 		{
@@ -329,6 +331,7 @@ void processor::temp_implement()
 			temp.y=t.y-scene->status->objects[0].pos.y;
 			temp.z=t.z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
+			break;
 		}
 	case InstructionType(Flee):
 		{
@@ -339,30 +342,37 @@ void processor::temp_implement()
 			temp.y=-t.y+scene->status->objects[0].pos.y;
 			temp.z=-t.z+scene->status->objects[0].pos.z;
 			Move(user_id,temp);
+			break;
 		}
 	case InstructionType(Skill_ShortAttack):
 		{
 			ShortAttack(user_id);
+			break;
 		}
 	case InstructionType(Skill_LongAttack):
 		{
 			LongAttack(user_id,(int)temp_in.i.argvs);
+			break;
 		}
 	case InstructionType(Skill_Dash):
 		{
 			Dash(user_id);
+			break;
 		}
 	case InstructionType(Skill_Shield):
 		{
 			Shield(user_id);
+			break;
 		}
 	case InstructionType(Skill_HealthUp):
 		{
 			HealthUp(user_id);
+			break;
 		}
 	case InstructionType(Skill_UpgradeSkill):
 		{
 			UpgradeSkill(user_id,SkillType((int)temp_in.i.argvs->dataptr));
+			break;
 		}
 	}
 }

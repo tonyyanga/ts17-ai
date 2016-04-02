@@ -21,7 +21,7 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 		this->depth=0;
 	}
 	count++;
-	std::cout<<count<<std::endl;
+	//std::cout<<count<<std::endl;
 }
 
 SearchNode::~SearchNode() {

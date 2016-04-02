@@ -258,9 +258,9 @@ density* analyzer::best_way()
 			for(z=-1;z<=1;z++)
 			{
 				if (!x && !y && !z) continue;
-				m[i].speed.x=x;
-				m[i].speed.y=y;
-				m[i].speed.z=z;
+				m[i].speed.x=double(x);
+				m[i].speed.y=double(y);
+				m[i].speed.z=double(z);
 				m[i].weight=0;
 				m[i].number=0;
 			}
