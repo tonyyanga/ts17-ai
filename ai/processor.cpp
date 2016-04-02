@@ -361,10 +361,10 @@ void processor::AddInstruction(Instruction* i, int p)
 {
 	switch(p)
 	{
-	case 1:f2.push(*i);
-	case 2:l2.push(*i);
-	case 3:f1.push(*i);
-	case 4:l1.push(*i);
+	case 1:{f2.push(*i);break;}
+	case 2:{l2.push(*i);break;}
+	case 3:{f1.push(*i);break;}
+	case 4:{l1.push(*i);break;}
 	}
 	cout<<"Instruction added"<<endl;
 }
