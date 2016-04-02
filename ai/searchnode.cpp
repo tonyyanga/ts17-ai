@@ -407,6 +407,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 		n=new lnNode;
 		t->argvs=n;
 		t->argvs->dataptr=temp_analyzer.closest(ENERGY);
+		t->argvs->next=NULL;
 		temp=new lnNode;
 		l->dataptr=t;
 		l->next=NULL;

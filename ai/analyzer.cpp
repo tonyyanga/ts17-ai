@@ -104,6 +104,8 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 			}
 		case ADVANCED_ENERGY:
 			{
+				if (num_adv_energy==0)
+					break;								//*****************************//
 				pos_adv_energy[n]=map->objects[i].pos;
 				n++;
 				store_adv(map->objects[i],firstnode);
