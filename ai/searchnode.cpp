@@ -99,7 +99,6 @@ int SearchNode::gameover() {
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);
-	//return (estimate);
 	int t,s=0,n=0;
 	double heal;
 	Position* new_position;
