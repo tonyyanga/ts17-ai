@@ -14,6 +14,7 @@
 #include "../headers/analyzer.h"
 #include "../headers/processor.h"
 #include "../headers/searchtree.h"
+#include "../headers/common.h"
 
 using namespace std;
 
@@ -104,7 +105,7 @@ namespace ai{
 		cout<<"Search Thread Start."<<endl;
 		while(true){
 			#ifdef WIN32
-			Sleep(1);
+			//Sleep(1);
 			#else
 			usleep(1);
 			#endif
@@ -131,7 +132,17 @@ namespace ai{
 
 				//do search
 				cout<<"Search Tree init Start."<<endl;
-				SceneState* newstate=new SceneState(*state);
+				SceneState* newstate=new SceneState;
+				if (state->adv) {
+					newstate->adv=new Store_adv(*state->adv);
+				} else {
+					newstate->adv=NULL;
+				}
+				newstate->boss=new Boss(*state->boss);
+				newstate->enemy=new Enemy(*state->enemy);
+				newstate->map=new Map(*state->map);
+				newstate->status=new Status(*state->status);
+
 				SearchTree* tree = new SearchTree(newstate);
 
 				thread* EXEC=new thread(ai::Search_EXEC, tree);
