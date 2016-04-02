@@ -511,8 +511,9 @@ double SearchNode::evaluate()
 	//rate2: total density of foods
 	//rate3: time
 	//rate4: distance to different positions in different cases
-	SceneState s=*state;
-	analyzer temp_analyzer(&s);
+	if (state->map==NULL)
+		return this->father->evaluate+rate1;
+	analyzer temp_analyzer((SceneState*)state);
 	double food_density=0;
 	int extra_ability=0;
 	for (int i=SkillType(LONG_ATTACK);i<=SkillType(HEALTH_UP);i++)
