@@ -78,7 +78,7 @@ void FIFO::clear()
 
 processor::processor(SceneState* s)
 {
-	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
+	this->l1=LIFO (20),this->l2=LIFO (20),this->f1=FIFO (20),this->f2=FIFO (20);
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
@@ -385,6 +385,14 @@ void processor::temp_implement()
 
 void processor::AddInstruction(Instruction* i, int p)
 {
+	if (i->type==0&&i->argvs->dataptr==NULL)
+	{
+		Position* temp=new Position;
+		temp->x=scene->status->objects[0].pos.x+200;
+		temp->y=scene->status->objects[0].pos.y+200;
+		temp->z=scene->status->objects[0].pos.z+200;
+		i->argvs->dataptr=temp;
+	}
 	switch(p)
 	{
 	case 1:{
@@ -393,7 +401,7 @@ void processor::AddInstruction(Instruction* i, int p)
 			Position p=*(Position*)(i->argvs->dataptr);
 			p=Displacement(scene->status->objects[0].pos,p);
 			Position p2=Displacement(scene->status->objects[0].pos,*(Position*)temp_in.i.argvs->dataptr);
-			if (Norm(CrossProduct(p,p2))==0)
+			if (Norm(CrossProduct(p,p2))<=0.05)
 				break;
 		}
 		f2.push(*i);

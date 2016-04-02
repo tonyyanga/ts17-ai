@@ -178,12 +178,16 @@ Position* analyzer::closest(ObjectType A=ENERGY)
 			break;
 		}
 	}
+	if (n==0) 
+	{
+		posA=NULL;
+	}
 	for(i=1;i<n;i++)
 	{
 		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
 			closest=i;
 	}
-	cout<<"cloest A:x="<<posA[closest].x;
+	//cout<<"cloest A:x="<<posA[closest].x;
 	return(&posA[closest]);
 }
 
