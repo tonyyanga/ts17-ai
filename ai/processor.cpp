@@ -333,7 +333,7 @@ void processor::temp_implement()
 			temp.y=t.y-scene->status->objects[0].pos.y;
 			temp.z=t.z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
-			cout<<"Moving to"<<p->x<<p->y<<p->z;
+			cout<<"Moving to"<<t.x<<t.y<<t.z;
 			break;
 		}
 	case InstructionType(Flee):

@@ -284,7 +284,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->type=InstructionType(MovePosition);
 			n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=&k[i];
+			t->argvs->dataptr=k+i;
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
