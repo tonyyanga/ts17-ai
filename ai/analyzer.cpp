@@ -135,41 +135,22 @@ analyzer::analyzer(SceneState* state) {
 	new (this) analyzer(state->enemy, state->boss,state->adv,state->status, state->map);
 }
 
-Position analyzer::closest(ObjectType A,Position p0)
+Position* analyzer::closest(Position p0)
 {
 	int closest=0,i,n;
 	Position* posA;
-	switch (A)
-	{
-	case ENERGY:
-		{
-			posA=pos_energy;
-			n=num_energy;
-			break;
-		}
-	case ADVANCED_ENERGY:
-		{
-			posA=pos_adv_energy;
-			n=num_adv_energy;
-			break;
-		}
-	case DEVOUR:
-		{
-			posA=pos_devour;
-			n=num_devour;
-			break;
-		}
-	}
+	posA=pos_energy;
+	n=num_energy;
 	for(i=1;i<n;i++)
 	{
 		if (Distance(p0,posA[i])<Distance(p0,posA[closest]))
 			closest=i;
 	}
 	cout<<"cloest A:x="<<posA[closest].x;
-	return(posA[closest]);
+	return(&posA[closest]);
 }
 
-Position analyzer::closest(ObjectType A)
+Position* analyzer::closest(ObjectType A=ENERGY)
 {
 	int closest=0,i,n;
 	Position* posA;
@@ -201,7 +182,7 @@ Position analyzer::closest(ObjectType A)
 			closest=i;
 	}
 	cout<<"cloest A:x="<<posA[closest].x;
-	return(posA[closest]);
+	return(&posA[closest]);
 }
 
 Position* analyzer::inway(ObjectType B,Speed A)
@@ -245,27 +226,27 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-density* analyzer::best_way()
+
+/*density* divide(lnNode* first,Position *self,double r)
 {
-	double d;
+	lnNode* firstnode;
+	lnNode* currentnode=first;
+	Object* obj;
+	Position pos_en;
 	int dis;
 	int x,y,z,i=0;
-	density* t=new density[3];
-	double r=status->objects[0].radius;
-	Position selfpos=status->objects[0].pos;
-	density m[26];	//27-1
-	for(x=-1;x<=1;x++)
+	density m[4][4][4];
+	density t;
+	for(x=0;x<4;x+=1)
 	{
-		for(y=-1;y<=1;y++)
+		for(y=0;y<4;y+=1)
 		{
-			for(z=-1;z<=1;z++)
+			for(z=0;z<4;z+=1)
 			{
-				if (!x && !y && !z) continue;
-				m[i].speed.x=double(x);
-				m[i].speed.y=double(y);
-				m[i].speed.z=double(z);
-				m[i].weight=0;
-				m[i].number=0;
+				m[x][y][z].pos.x=self->x+(x-2.5)*r;
+				m[x][y][z].pos.y=self->y+(y-2.5)*r;
+				m[x][y][z].pos.z=self->z+(z-2.5)*r;
+				m[x][y][z].number=0;
 				i++;
 			}
 		}
@@ -304,7 +285,42 @@ density* analyzer::best_way()
 	}
 	return(t);
 }
-	
+=======
+	while (currentnode!=NULL)
+	{
+		pos_en=*(Position*)currentnode->dataptr;
+		x=(int)(pos_en.x+2.5*r-self->x)/r;
+		y=(int)(pos_en.y+2.5*r-self->y)/r;
+		z=(int)(pos_en.z+2.5*r-self->z)/r;
+		m[x][y][z].number++;
+		currentnode=currentnode->next;
+	}
+	return(&m[0][0][0]);
+}
+
+density* order(density m[4][4][4],Position *pos)
+{
+	int x,y,z;
+	int a=0,b=0,c=0;
+	for(x=0;x<4;x+=1)
+	{
+		for(y=0;y<4;y+=1)
+		{
+			for(z=0;z<4;z+=1)
+			{
+				if (m[x][y][z].number>m[a][b][c].number)
+				{
+					a=x;
+					b=y;
+					c=z;
+				}
+			}
+		}
+	}
+	return(&m[a][b][c]);
+}
+*/
+
 
 analyzer::~analyzer()
 {

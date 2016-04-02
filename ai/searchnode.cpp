@@ -276,44 +276,15 @@ lnNode* SearchNode::CheckPossibleOrders()
 				l=l->next;
 			}
 		}
-		density* temp_density=new density;
-		temp_density=temp_analyzer.best_way();
-		if (temp_density[0].number>1)
-		{
-			for (int i=0;i<3;i++)
-			{
-				positions[i].x=temp_density[i].speed.x*80+state->status->objects[0].pos.x;
-				positions[i].y=temp_density[i].speed.y*80+state->status->objects[0].pos.y;
-				positions[i].z=temp_density[i].speed.z*80+state->status->objects[0].pos.z;
-				PAUSE();
-				t=new Instruction;
-				CONTINUE();
-				t->type=InstructionType(MovePosition);
-				n=new lnNode;
-				t->argvs=n;
-				t->argvs->dataptr=positions+i;
-				t->argvs->next=NULL;
-				temp=new lnNode;
-				l->dataptr=t;
-				l->next=temp;
-				l=l->next;
-			}
-		}
-		else
-		{
-			t=new Instruction;
-			CONTINUE();
-			t->type=InstructionType(MovePosition);
-			n=new lnNode;
-			t->argvs=n;
-			t->argvs->dataptr=&state->boss->boss.pos;
-			t->argvs->next=NULL;
-			temp=new lnNode;
-			l->dataptr=t;
-			l->next=temp;
-			l=l->next;
-		}
-		delete temp_density;
+		t=new Instruction;
+		t->type=InstructionType(MovePosition);
+		n=new lnNode;
+		t->argvs=n;
+		t->argvs->dataptr=temp_analyzer.closest(ENERGY);
+		temp=new lnNode;
+		l->dataptr=t;
+		l->next=temp;
+		l=l->next;
 		if (temp_analyzer.pos_adv_energy!=NULL)
 		{
 			t=new Instruction;
@@ -418,7 +389,6 @@ lnNode* SearchNode::CheckPossibleOrders()
 }
 	else
 	{
-		Position* positions=new Position[3];
 		SceneState s=*state;
 		analyzer temp_analyzer(&s);
 		if (temp_analyzer.pos_adv_energy!=NULL)
@@ -427,26 +397,18 @@ lnNode* SearchNode::CheckPossibleOrders()
 			t->type=InstructionType(EatAdvancedEnergy);
 			t->argvs=new lnNode;
 			t->argvs->dataptr=new Position(temp_analyzer.pos_adv_energy[0]);
+			t->argvs->next=NULL;
 			l->dataptr=t;
 			l->next=new lnNode;
 			l=l->next;
 		}
-		for (int i=0;i<3;i++)
-		{
-			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=(temp_analyzer.best_way())[i].speed.y*100+state->status->objects[0].pos.y;
-			positions[i].z=(temp_analyzer.best_way())[i].speed.z*100+state->status->objects[0].pos.z;
-			t=new Instruction;
-			t->type=InstructionType(MovePosition);
-			t->argvs=new lnNode;
-			t->argvs->dataptr=positions+i;
-			t->argvs->next=NULL;
-			temp=new lnNode;
-			l->dataptr=t;
-			l->next=temp;
-			if (i<2)
-				l=l->next;
-		}
+		t=new Instruction;
+		t->type=InstructionType(MovePosition);
+		n=new lnNode;
+		t->argvs=n;
+		t->argvs->dataptr=temp_analyzer.closest(ENERGY);
+		temp=new lnNode;
+		l->dataptr=t;
 		l->next=NULL;
 		return head;
 	}
@@ -470,7 +432,7 @@ double SearchNode::evaluate()
 	//rate4: distance to different positions in different cases
 	SceneState s=*state;
 	analyzer temp_analyzer(&s);
-	double food_density=temp_analyzer.best_way()[0].weight+temp_analyzer.best_way()[1].weight+temp_analyzer.best_way()[2].weight;
+	double food_density=0;
 	int extra_ability=0;
 	for (int i=SkillType(LONG_ATTACK);i<=SkillType(HEALTH_UP);i++)
 	{

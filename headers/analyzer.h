@@ -9,7 +9,6 @@ struct density			//用于表示食物的密度分布
 	{
 		Speed speed;
 		int number;
-		double weight;
 	};
 
 struct Boss
@@ -33,8 +32,8 @@ public:
 	Position* pos_boss;
 	analyzer(struct Enemy* enemy,struct Boss* boss,struct Store_adv* firstnode,const Status* status,const Map* map);		//构造函数
 	analyzer(struct SceneState* state);
-	Position closest(ObjectType A,Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
-	Position closest(ObjectType A);			
+	Position* closest(Position p0);			//返回据p0最近的物体A的位置，默认p0为自身位置
+	Position* closest(ObjectType A);			
 	Position* inway(ObjectType B,Speed A);				//判断speed方向上是否会碰到B，是则返回B的位置，不是则返回null）
 	~analyzer();
 	density* best_way();								//通过自身为中心的半径一定范围内的食物集群情况，返回能吃到最多energy的density数组
