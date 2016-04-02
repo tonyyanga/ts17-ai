@@ -82,7 +82,7 @@ int SearchNode::span() {
 }
 
 void SearchNode::AddChild(const SceneState* state, Instruction* order) {
-	SearchNode* child=&SearchNode(state, this, order);
+	SearchNode* child=new SearchNode(state, this, order);
 	lnNode* temp = (lnNode*)malloc(sizeof(lnNode));
 	temp->next=this->children;
 	temp->dataptr=child;
