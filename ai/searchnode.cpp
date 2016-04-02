@@ -28,17 +28,23 @@ SearchNode::~SearchNode() {
 
 }
 
+#ifdef SORTING
 lnNode* SearchNode::rankchildren() {
 	lnNode* temp=this->children;
 	MaxHeap sorter;
 	if (!temp)
 		return NULL;
 	while(temp->next) {
-		sorter.additem((SearchNode*)temp->dataptr);
+		sorter.additem(static_cast<MaxHeapNode*>(temp->dataptr));
 		temp=temp->next;
 	}
 	return sorter.returnall();
 }
+#else
+lnNode* SearchNode::rankchildren() {
+	return this->children;
+}
+#endif
 
 lnNode* SearchNode::getInstructionChain() {
 	lnNode* temp;

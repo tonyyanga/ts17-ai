@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "../headers/basictypes.h"
+#include "../headers/searchtree.h"
 
 MaxHeap::MaxHeap() {
 	this->root=NULL;
@@ -9,8 +10,7 @@ MaxHeap::~MaxHeap() {
 
 }
 
-void MaxHeap::additem(MaxHeapNode* item) {
-	void* ptr;
+void MaxHeap::additem(class SearchNode* item) {
 	lnNode* temp=this->root;
 	if (!temp) {
 		root=(lnNode*)malloc(sizeof(lnNode));

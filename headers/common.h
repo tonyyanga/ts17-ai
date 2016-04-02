@@ -1,6 +1,8 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+//#define SORTING
+
 #include "basic.h"
 #include "analyzer.h"
 

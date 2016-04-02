@@ -33,7 +33,7 @@ public:
 	// get the best several items, item pointer when n=1, linkedlistNode when n>1
 	MaxHeapNode* getmax(int n=1);
 	lnNode* returnall();
-	void additem(MaxHeapNode* item);
+	void additem(class SearchNode* item);
 
 private:
 	lnNode* root;

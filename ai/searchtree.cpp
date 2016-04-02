@@ -104,14 +104,23 @@ bool SearchTree::search_layer_exec(const lnNode* layerNodes) {
 	else
 		return false;
 	while(ptr) {
-		temp = (SearchNode*)(ptr ->dataptr);
+		temp = (SearchNode*)(ptr->dataptr);
 		temp->span();
 		child = temp->rankchildren();
 		while(child) {
 			if (heap==NULL)
 				heap = this->GetHeap(depth);
 			if (heap==NULL)
-				heap = this->extendheap();
+			{
+				lnNode* heapNode=this->HeapsAtDepth;
+				lnNode* newNode=(lnNode*)malloc(sizeof(lnNode));
+				while(heapNode->next)
+					heapNode = heapNode->next;
+				heapNode->next = newNode;
+				newNode->next=NULL;
+				newNode->dataptr = new MaxHeap;
+				heap=(MaxHeap*)newNode->dataptr;
+			}
 			heap->additem((SearchNode*)child->dataptr);
 			if (!((SearchNode*)(child->dataptr))->haschildren()) {
 				lnNode* linkedlist = (lnNode*)malloc(sizeof(lnNode));
@@ -143,7 +152,16 @@ bool SearchTree::search_layer_exec(const SearchNode* node) {
 		if (heap==NULL)
 			heap = this->GetHeap(depth);
 		if (heap==NULL)
-			heap = this->extendheap();
+			{
+				lnNode* heapNode=this->HeapsAtDepth;
+				lnNode* newNode=(lnNode*)malloc(sizeof(lnNode));
+				while(heapNode->next)
+					heapNode = heapNode->next;
+				heapNode->next = newNode;
+				newNode->next=NULL;
+				newNode->dataptr = new MaxHeap;
+				heap=(MaxHeap*)newNode->dataptr;
+			}
 		heap->additem((SearchNode*)child->dataptr);
 		if (!((SearchNode*)(child->dataptr))->haschildren()) {
 			lnNode* linkedlist = (lnNode*)malloc(sizeof(lnNode));
