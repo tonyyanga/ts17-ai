@@ -521,7 +521,7 @@ double SearchNode::evaluate()
 		for (int k=0;k<state->status->objects[0].skill_level[i];k++)
 			extra_ability+=kBasicSkillPrice[i]*pow(2,k);
 	}
-	int time=GetTime();
+	int time=state->map->time;
 	bool enemy_in_sight=(state->enemy->valid_time==time);
 	bool boss_in_sight=(state->boss->valid_time==time);
 	//Enemy in sight
