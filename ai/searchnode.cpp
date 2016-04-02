@@ -344,7 +344,11 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* head=l;
 	Instruction* t;
 	lnNode* n=new lnNode;
-	int time=GetTime();
+	int time;
+	if (state->map!=NULL)
+		time=state->map->time;
+	else
+		time=0;
 	lnNode* temp;
 	if (this->gameover_state)
 		return NULL;
