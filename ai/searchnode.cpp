@@ -59,6 +59,7 @@ lnNode* SearchNode::getInstructionChain() {
 			temp->dataptr=track->order;
 			temp->next=root;
 			root=temp;
+			track=track->father;
 		}
 		return root;
 	} else

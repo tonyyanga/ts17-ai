@@ -40,7 +40,7 @@ MaxHeap* SearchTree::GetHeap(int depth) {
 
 SearchNode* SearchTree::GetBestNode(int depth) {
 	MaxHeap* heap = this->GetHeap(depth);
-	return (SearchNode*)(heap->getmax());
+	return *((SearchNode**)(heap->getmax()));
 }
 
 lnNode* SearchTree::GetAllNodes(int depth) {
@@ -68,13 +68,13 @@ bool SearchTree::DFS(int width) {
 	int count;
 	while(depth <= this->DFSdepth) {
 		heap = this->GetHeap(-1);
-		temp = heap->getmax(width);
+		temp = heap->getmax(width); // temp -s SearchNode**
 		if (width==1) {
 			result += this->search_layer_exec(*(SearchNode**)temp);
 			if (result)
 				break;
 			else
-				depth = ((SearchNode*)temp)->depth + 1;
+				depth = (*(SearchNode**)temp)->depth + 1;
 		} else {
 			for(count=0;count<=width-1;count++)
 				result += this->search_layer_exec((*(SearchNode**)temp+count));
@@ -87,7 +87,7 @@ bool SearchTree::DFS(int width) {
 				}
 				if (!cancontinue)
 					break;
-			depth = ((SearchNode*)((lnNode*)temp)->dataptr)->depth + 1;
+			depth = (*(SearchNode**)temp)->depth + 1;
 			}
 		}
 	}
