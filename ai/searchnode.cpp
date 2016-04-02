@@ -6,6 +6,8 @@
 #include "../headers/analyzer.h"
 #include "../headers/evaluate_rates.h"
 
+using namespace std;
+
 int SearchNode::count=0;
 
 SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction* order) {
@@ -91,8 +93,9 @@ void SearchNode::AddChild(const SceneState* state, Instruction* order) {
 }
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
+	cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);
-	return (estimate);
+	//return (estimate);
 	int t,s=0,n=0;
 	double heal;
 	Position* new_position;
@@ -293,6 +296,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	estimate->status=&status;
 	estimate->boss=&boss;
 	estimate->enemy=&enemy;
+	cout<<"EXIT ESTIMATE"<<endl;
 	return(estimate);
 }
 

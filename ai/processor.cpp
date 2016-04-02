@@ -310,13 +310,22 @@ void processor::temp_implement()
 	case InstructionType(MovePosition):
 		{
 			Position temp;
+			double multiply;
 			Position* p=(Position*)temp_in.i.argvs->dataptr;
 			temp.x=p->x-scene->status->objects[0].pos.x;
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius)
+				temp.x=kMapSize/2-scene->status->objects[0].pos.x;
+			if (p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius)
+				temp.y=kMapSize/2-scene->status->objects[0].pos.y;
+			if (p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp.z=kMapSize/2-scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
-			printf("%lf, %lf, %lf\n", p->x, p->y, p->z);
-			printf("%lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
+			printf("MOVING TO %lf, %lf, %lf\n", temp.x, temp.y, temp.z);
+			printf("PLAYER AT %lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
