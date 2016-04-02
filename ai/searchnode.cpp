@@ -278,16 +278,36 @@ lnNode* SearchNode::CheckPossibleOrders()
 		}
 		density* temp_density=new density;
 		temp_density=temp_analyzer.best_way();
-		for (int i=0;i<3;i++)
+		if (temp_density[0].number>1)
 		{
-			positions[i].x=temp_density[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=temp_density[i].speed.y*100+state->status->objects[0].pos.y;
-			positions[i].z=temp_density[i].speed.z*100+state->status->objects[0].pos.z;
+			for (int i=0;i<3;i++)
+			{
+				positions[i].x=temp_density[i].speed.x*80+state->status->objects[0].pos.x;
+				positions[i].y=temp_density[i].speed.y*80+state->status->objects[0].pos.y;
+				positions[i].z=temp_density[i].speed.z*80+state->status->objects[0].pos.z;
+				PAUSE();
+				t=new Instruction;
+				CONTINUE();
+				t->type=InstructionType(MovePosition);
+				n=new lnNode;
+				t->argvs=n;
+				t->argvs->dataptr=positions+i;
+				t->argvs->next=NULL;
+				temp=new lnNode;
+				l->dataptr=t;
+				l->next=temp;
+				l=l->next;
+			}
+		}
+		else
+		{
 			t=new Instruction;
+			CONTINUE();
 			t->type=InstructionType(MovePosition);
 			n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=positions+i;
+			t->argvs->dataptr=&state->boss->boss.pos;
+			t->argvs->next=NULL;
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;

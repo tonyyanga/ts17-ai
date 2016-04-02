@@ -3,7 +3,7 @@
 _CD rate1=99999;
 _CD	rate2=1;
 _CD rate3=1;
-_CD rate4=1;
+_CD rate4=100000;
 _CD	rate5=1;
 _CD rate6=1;
 _CD rate_boss=1;

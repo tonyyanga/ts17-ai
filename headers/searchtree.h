@@ -55,7 +55,7 @@ public:
 	~SearchTree();
 	
 	//return True when there are end nodes
-	bool BFS(int BFSdepth=3);
+	bool BFS(int BFSdepth=2);
 	bool DFS(int width=1);
 	
 	SearchNode* GetBestNode(int depth=-1);

@@ -23,6 +23,7 @@ namespace ai{
 	Enemy* Enemy_init();
 	void search();
 	Boss* Boss_init();
+	void Search_EXEC(SearchTree* tree);
 
 	Enemy* enemy;
 	SceneState* state;
@@ -74,6 +75,29 @@ namespace ai{
 		Store_adv* firstnode=NULL;
 		return(firstnode);
 	}
+
+	void Search_EXEC(SearchTree* tree) {
+	long start;
+	// time critical
+	cout<<"BFS Start."<<endl;
+	start=clock();
+	tree->BFS();
+	cout<<"DFS Start. BFS time "<<clock()-start<<endl;
+	start=clock();
+	tree->DFS();
+	cout<<"DFS time "<<clock()-start<<endl;
+	// TODO: analyze?
+				{
+					cout<<"Search ends, analyzing."<<endl;
+					SearchNode* SelectedNode;
+					lnNode* orders;
+					SelectedNode = tree->GetBestNode();
+					orders = SelectedNode->getInstructionChain();
+					cout<<"proc add instruction."<<endl;
+					proc->AddInstruction((Instruction*) orders->dataptr, 1);
+				}
+	delete tree;
+}
 	void search() {
 		int t;
 		long start;
@@ -107,37 +131,20 @@ namespace ai{
 
 				//do search
 				cout<<"Search Tree init Start."<<endl;
-				SearchTree* tree = new SearchTree((const SceneState*)state);
+				SceneState* newstate=new SceneState(*state);
+				SearchTree* tree = new SearchTree(newstate);
 
-				// time critical
-				cout<<"BFS Start."<<endl;
-				start=clock();
-				tree->BFS();
-				cout<<"DFS Start. BFS time "<<clock()-start<<endl;
-				start=clock();
-				tree->DFS();
-				cout<<"DFS time "<<clock()-start<<endl;
-
-				// TODO: analyze?
-				{
-					cout<<"Search ends, analyzing."<<endl;
-					SearchNode* SelectedNode;
-					lnNode* orders;
-					SelectedNode = tree->GetBestNode();
-					orders = SelectedNode->getInstructionChain();
-					cout<<"proc add instruction."<<endl;
-					proc->AddInstruction((Instruction*) orders->dataptr, 1);
-				}
+				thread* EXEC=new thread(ai::Search_EXEC, tree);
+				
 				cout<<"do proc."<<endl;
 				proc->temp_set_ins();
 				proc->temp_implement();
-
-				delete tree;
 			}
 		}
 	}
-
 }
+
+
 
 void AIMain() {
 	ai::AIMain();

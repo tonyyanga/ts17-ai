@@ -241,9 +241,9 @@ void processor::temp_set_ins()
 	case InstructionType(MovePosition):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			if (abs(scene->status->objects[0].pos.x-p->x)<150&&
+				abs(scene->status->objects[0].pos.y-p->y)<150&&
+				abs(scene->status->objects[0].pos.z-p->z)<150)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -251,9 +251,9 @@ void processor::temp_set_ins()
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			if (abs(scene->status->objects[0].pos.x-p->x)<150&&
+				abs(scene->status->objects[0].pos.y-p->y)<150&&
+				abs(scene->status->objects[0].pos.z-p->z)<150)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -311,6 +311,7 @@ void processor::temp_implement()
 			temp.z=p->z-scene->status->objects[0].pos.z;
 			Move(user_id,temp);
 			printf("%lf, %lf, %lf\n", p->x, p->y, p->z);
+			printf("%lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
