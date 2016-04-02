@@ -81,9 +81,9 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		case DEVOUR:num_devour++;break;
 		}
 	}
-	/*cout<<"num_enengy"<<num_energy;
-	cout<<"num_adv_enengy"<<num_adv_energy;
-	cout<<"num_devour"<<num_devour;*/
+	cout<<"num_enengy="<<num_energy;
+	cout<<",num_adv_enengy="<<num_adv_energy;
+	cout<<",num_devour="<<num_devour<<endl;
 	if (num_adv_energy!=0)
 		pos_adv_energy=new Position[num_adv_energy];
 	else
@@ -245,7 +245,7 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-density* analyzer::best_way()
+/*density* analyzer::best_way()
 {
 	double d;
 	int dis;
@@ -303,7 +303,7 @@ density* analyzer::best_way()
 		t[i]=m[i];
 	}
 	return(t);
-}
+}*/
 	
 
 analyzer::~analyzer()
