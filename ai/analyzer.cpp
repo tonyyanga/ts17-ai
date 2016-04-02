@@ -263,6 +263,7 @@ density* analyzer::best_way()
 				m[i].speed.z=double(z);
 				m[i].weight=0;
 				m[i].number=0;
+				i++;
 			}
 		}
 	}
