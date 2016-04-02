@@ -241,9 +241,9 @@ void processor::temp_set_ins()
 	case InstructionType(MovePosition):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (scene->status->objects[0].pos.x==p->x&&
-				scene->status->objects[0].pos.y==p->y&&
-				scene->status->objects[0].pos.z==p->z)
+			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
+				abs(scene->status->objects[0].pos.y-p->y)<100&&
+				abs(scene->status->objects[0].pos.z-p->z)<100)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -251,9 +251,9 @@ void processor::temp_set_ins()
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (scene->status->objects[0].pos.x==p->x&&
-				scene->status->objects[0].pos.y==p->y&&
-				scene->status->objects[0].pos.z==p->z)
+			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
+				abs(scene->status->objects[0].pos.y-p->y)<100&&
+				abs(scene->status->objects[0].pos.z-p->z)<100)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
