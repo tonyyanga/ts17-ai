@@ -40,7 +40,7 @@ namespace ai{
 		enemy = Enemy_init();
 		state=(SceneState*)malloc(sizeof(SceneState));
 		state->enemy=enemy;
-		state->status= GetStatus();
+		state->status=GetStatus();
 		state->map=GetMap();
 		state->adv=NULL;
 		state->boss=boss;
@@ -105,7 +105,7 @@ namespace ai{
 		cout<<"Search Thread Start."<<endl;
 		while(true){
 			#ifdef WIN32
-			//Sleep(1);
+			Sleep(1);
 			#else
 			usleep(1);
 			#endif
@@ -115,9 +115,6 @@ namespace ai{
 				// update, split it from the search tree for real-time performance
 				SceneState* temp;
 				time=t;
-				temp=state;
-				state=NULL;
-				delete temp;
 				start=clock();
 				temp=(SceneState*)malloc(sizeof(SceneState));
 				temp->enemy=enemy; // keep enemy updated
@@ -125,7 +122,8 @@ namespace ai{
 				temp->map=GetMap();
 				temp->boss=boss;
 				temp->adv=NULL;
-				state=temp;
+				memcpy(state, temp, sizeof(SceneState));
+				free(temp);
 				cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
