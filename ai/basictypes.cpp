@@ -55,7 +55,7 @@ MaxHeapNode** MaxHeap::getmax(int n) {
 	for (count=0;count<=n-1;count++) {
 		if (!track)
 			break;
-		temp=newroot+n;
+		temp=newroot+count;
 		*temp=(MaxHeapNode*)track->dataptr;
 		track=track->next;
 	}
