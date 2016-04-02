@@ -529,7 +529,10 @@ double SearchNode::evaluate()
 	//rate3: time
 	//rate4: distance to different positions in different cases
 	if (state->map==NULL)
+	{
+		gameover_state=2;
 		return this->father->evaluate()+rate1;
+	}
 	analyzer temp_analyzer((SceneState*)state);
 	double food_density=0;
 	int extra_ability=0;
@@ -590,6 +593,7 @@ double SearchNode::evaluate()
 	}
 	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
+		gameover_state=0;
 		return state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
