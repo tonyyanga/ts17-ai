@@ -491,7 +491,7 @@ double SearchNode::evaluate()
 		{
 			//rate5: shield status, rate6: dash status
 			return original_hp_rate*state->status->objects[0].health+
-				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
+				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
@@ -508,7 +508,7 @@ double SearchNode::evaluate()
 	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
 		return state->status->objects[0].health+
-			rate1*extra_ability+
+			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
 			rate3*(time); //distance to center?
 	}
@@ -537,7 +537,7 @@ double SearchNode::evaluate()
 
 		//evaluating
 		return state->status->objects[0].health+
-			rate1*extra_ability+
+			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
 			rate3*state->map->time+
 			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius;
@@ -580,7 +580,7 @@ double SearchNode::evaluate()
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=	
 				Enemy_original_hp_rate*state->status->objects[0].health+
-				rate1*(state->status->objects[0].ability-3/* 3 should be ability points of enemy, do we have that?*/)+
+				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*Enemy_distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)]);
@@ -597,7 +597,7 @@ double SearchNode::evaluate()
 		return 
 			(rate_boss)*
 			(state->status->objects[0].health+
-			rate1*extra_ability+
+			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
 			rate3*state->map->time+
 			rate_boss_distance*(state->status->objects[0].vision-Boss_distance)/state->boss->boss.radius)+
