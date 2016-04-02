@@ -48,22 +48,31 @@ double get_radius(double Health)
 	return(r);
 }
 
-struct Map filter(struct Map input) {
+struct Map filter(struct Map input, PlayerObject* player) {
 	struct Map result;
 	long length=0;
 	long count;
 	result.time=input.time;
 	Object* result_obj=(Object*)malloc(input.objects_number*sizeof(Object));
 	Object* temp=result_obj;
+	lnNode* rawfood=new lnNode;
+	rawfood->next=NULL;
+	lnNode* temp2=rawfood;
 	for (count=0;count<=input.objects_number-1;count++) {
 		if (input.objects[count].id!=ENERGY) {
 			*temp=input.objects[count];
 			temp++;
 			length++;
+		} else {
+			temp2->next=new lnNode;
+			temp2=temp2->next;
+			temp2->dataptr=&input.objects[count];
+			temp2->next=NULL;
 		}
 	}
-	lnNode* parsedlists;
-	lnNode* temp2=parsedlists;
+	rawfood=rawfood->next;
+	lnNode* parsedlists=best_way(rawfood, &player->pos, player->radius);
+	temp2=parsedlists;
 	while(temp2) {
 		*temp=*(Object*)temp2->dataptr;
 		temp2=temp2->next;

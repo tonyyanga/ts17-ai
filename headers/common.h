@@ -20,8 +20,7 @@ typedef struct SceneState {
 
 struct Map filter(struct Map input);
 
-lnNode* best_way(lnNode* first,Position *self,double r);	
-
+lnNode* best_way(lnNode* first,Position *self,double radius);	
 
 double angle(Position p1,Position p2);		//计算p1,p2矢量夹角（返回arccos值）
 
