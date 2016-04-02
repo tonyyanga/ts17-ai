@@ -26,7 +26,7 @@ Instruction LIFO::pop()		//Pop first Instruction out
 void LIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	if (bottom<5)
+	if (bottom<4)
 		bottom++;
 }
 
@@ -64,7 +64,7 @@ int FIFO::return_top()
 void FIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	if (top<5)
+	if (top<4)
 		top++;
 }
 
@@ -80,7 +80,7 @@ void FIFO::clear()
 
 processor::processor(SceneState* s)
 {
-	this->l1=LIFO (20),this->l2=LIFO (20),this->f1=FIFO (20),this->f2=FIFO (20);
+	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
@@ -246,9 +246,9 @@ void processor::temp_set_ins()
 	case InstructionType(MovePosition):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<150&&
-				abs(scene->status->objects[0].pos.y-p->y)<150&&
-				abs(scene->status->objects[0].pos.z-p->z)<150)
+			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
+				abs(scene->status->objects[0].pos.y-p->y)<100&&
+				abs(scene->status->objects[0].pos.z-p->z)<100)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -256,9 +256,9 @@ void processor::temp_set_ins()
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<150&&
-				abs(scene->status->objects[0].pos.y-p->y)<150&&
-				abs(scene->status->objects[0].pos.z-p->z)<150)
+			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
+				abs(scene->status->objects[0].pos.y-p->y)<100&&
+				abs(scene->status->objects[0].pos.z-p->z)<100)
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
