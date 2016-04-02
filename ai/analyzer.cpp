@@ -136,7 +136,7 @@ analyzer::analyzer(SceneState* state) {
 	new (this) analyzer(state->enemy, state->boss,state->adv,state->status, state->map);
 }
 
-Position analyzer::closest(ObjectType A,Position p0)
+Position* analyzer::closest(ObjectType A=ENERGY,Position p0)
 {
 	int closest=0,i,n;
 	Position* posA;
@@ -167,10 +167,10 @@ Position analyzer::closest(ObjectType A,Position p0)
 			closest=i;
 	}
 	cout<<"cloest A:x="<<posA[closest].x;
-	return(posA[closest]);
+	return(&posA[closest]);
 }
 
-Position analyzer::closest(ObjectType A)
+Position* analyzer::closest(ObjectType A=ENERGY)
 {
 	int closest=0,i,n;
 	Position* posA;
@@ -202,7 +202,7 @@ Position analyzer::closest(ObjectType A)
 			closest=i;
 	}
 	cout<<"cloest A:x="<<posA[closest].x;
-	return(posA[closest]);
+	return(&posA[closest]);
 }
 
 Position* analyzer::inway(ObjectType B,Speed A)
@@ -246,75 +246,66 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-/*lnNode* best_way(lnNode* first,Position *self,double r)
+/*density* divide(lnNode* first,Position *self,double r)
 {
 	lnNode* firstnode;
 	lnNode* currentnode=first;
 	Object* obj;
-	Position* pos_en;
-	double d;
+	Position pos_en;
 	int dis;
 	int x,y,z,i=0;
-	density m[125];
+	density m[4][4][4];
 	density t;
-	for(x=-2;x<=2;x++)
+	for(x=0;x<4;x+=1)
 	{
-		for(y=-2;y<=2;y++)
+		for(y=0;y<4;y+=1)
 		{
-			for(z=-2;z<=2;z++)
+			for(z=0;z<4;z+=1)
 			{
-				m[i].pos.x=x*d+self->x;
-				m[i].pos.y=y*d+self->y;
-				m[i].pos.z=z*d+self->z;
-				m[i].number=0;
+				m[x][y][z].pos.x=self->x+(x-2.5)*r;
+				m[x][y][z].pos.y=self->y+(y-2.5)*r;
+				m[x][y][z].pos.z=self->z+(z-2.5)*r;
+				m[x][y][z].number=0;
 				i++;
 			}
 		}
 	}
-	for(i=0;i<125;i++)
+	while (currentnode!=NULL)
 	{
-		while (currentnode!=NULL)
-		{
-			pos_en=(Position*)currentnode->dataptr;
-			currentnode=currentnode->next;
-			if (Norm(Displacement(m[i].pos,*pos_en))<r)
-				m[i].number++;
-		}
+		pos_en=*(Position*)currentnode->dataptr;
+		x=(int)(pos_en.x+2.5*r-self->x)/r;
+		y=(int)(pos_en.y+2.5*r-self->y)/r;
+		z=(int)(pos_en.z+2.5*r-self->z)/r;
+		m[x][y][z].number++;
+		currentnode=currentnode->next;
 	}
-	x=0;
-	for(i=0;i<125;i++)
+	return(&m[0][0][0]);
+}
+
+density* order(density m[4][4][4],Position *pos)
+{
+	int x,y,z;
+	int a=0,b=0,c=0;
+	for(x=0;x<4;x+=1)
 	{
-		for(x=i+1;x<125;x++)
+		for(y=0;y<4;y+=1)
 		{
-			if (m[i].number<m[x].number) 
+			for(z=0;z<4;z+=1)
 			{
-				t=m[i];
-				m[i]=m[x];
-				m[x]=t;
+				if (m[x][y][z].number>m[a][b][c].number)
+				{
+					a=x;
+					b=y;
+					c=z;
+				}
 			}
 		}
 	}
-	firstnode=new lnNode;
-	currentnode=firstnode;
-	for(i=0;i<125;i++)
-	{
-		if (m[i].number==0) break;
-		obj=new Object;
-		currentnode->dataptr=obj;
-		obj->pos.x=m[i].pos.x;
-		obj->pos.y=m[i].pos.y;
-		obj->pos.z=m[i].pos.z;
-		obj->type=ENERGY;
-		obj->radius=m[i].number;
-		obj->shield_time=-5;		//以表示这是聚类过的energy
-	}
-	if (i=0)
-	{
-		delete firstnode;
-		return(NULL);
-	}
-	return(firstnode);
-}*/
+	return(&m[a][b][c]);
+}
+*/
+
+			
 	
 
 analyzer::~analyzer()

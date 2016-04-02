@@ -17,7 +17,6 @@ typedef struct SceneState {
 	struct Store_adv* adv;
 };
 
-int max(int x,int y,int z);
 
 struct Map filter(struct Map input);
 

@@ -3,22 +3,6 @@
 #include <cmath>
 #include <iostream>
 
-int max(int x,int y,int z)
-{
-	int m;
-	if (x>y)
-	{
-		if (x>z) m=x;
-		else m=z;
-	}
-	else
-	{
-		if (y>z) m=y;
-		else m=z;
-	}
-	return(m);
-}
-
 int Usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方向改变的回合时,返回从p到p0的回合数,add为假则代表不使用加速技能
 {
 	int time,da_time;

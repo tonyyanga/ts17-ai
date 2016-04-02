@@ -106,7 +106,6 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
-	n=map.objects_number;
 	switch(order->type)
 	{
 	case 0:
@@ -118,6 +117,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
 				{
 					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
 					map.objects[t]=map.objects[n];
 					map.objects[n]=obj;
 					n--;
@@ -139,6 +139,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
 				{
 					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
 					map.objects[t]=map.objects[n];
 					map.objects[n]=obj;
 					n--;
@@ -162,6 +163,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
 				{
 					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
 					map.objects[t]=map.objects[n];
 					map.objects[n]=obj;
 					n--;
@@ -182,6 +184,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				if (PointLineDistance(map.objects[t].pos,Self->pos,*new_position)<Self->radius)
 				{
 					obj=map.objects[t];
+					if (obj.type==ENERGY) Self->health+=40;
 					map.objects[t]=map.objects[n];
 					map.objects[n]=obj;
 					n--;
