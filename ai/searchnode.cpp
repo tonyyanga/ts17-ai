@@ -407,20 +407,19 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=new lnNode;
 			l=l->next;
 		}
-		for (int i=0;i<3;i++)
+		Position* k=new Position[temp_analyzer.num_energy];
+		k=temp_analyzer.pos_energy;
+		for (int i=0;i<temp_analyzer.num_energy;i++)
 		{
-			positions[i].x=(temp_analyzer.best_way())[i].speed.x*100+state->status->objects[0].pos.x;
-			positions[i].y=0;
-			positions[i].z=0;
 			t=new Instruction;
 			t->type=InstructionType(MovePosition);
-			t->argvs=new lnNode;
-			t->argvs->dataptr=&positions[i];
-			t->argvs->next=NULL;
+			n=new lnNode;
+			t->argvs=n;
+			t->argvs->dataptr=k+i;
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
-			if (i<2)
+			if (i<temp_analyzer.num_energy-1)
 				l=l->next;
 		}
 		l->next=NULL;
