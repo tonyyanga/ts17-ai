@@ -12,11 +12,11 @@
 #include <unistd.h>
 #endif
 
-//#include "../communicate/basic.h"
-//#include "teamstyle17.h"
+#include "../communicate/basic.h"
+#include "teamstyle17.h"
 
-#include "../headers/basic.h"
-#include "../headers/teamstyle17.h"
+//#include "../headers/basic.h"
+//#include "../headers/teamstyle17.h"
 
 
 #define _CD const double

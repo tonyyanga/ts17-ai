@@ -1,6 +1,6 @@
 ﻿// 在这里定义一些选手将来会用到的辅助函数
 
-#include "../headers/basic.h"
+#include "../communicate/basic.h"
 #include <math.h>
 
 double Distance(Position pos1, Position pos2) {

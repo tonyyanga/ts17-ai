@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/filestorage/git/ts17-ai/ai/ai.cpp
+stdlib.h
+-
+new
+-
+iostream
+-
+cmath
+-
+cstring
+-
+thread
+-
+ctime
+-
+windows.h
+-
+unistd.h
+-
+../headers/basic.h
+/filestorage/git/ts17-ai/headers/basic.h
+../headers/teamstyle17.h
+/filestorage/git/ts17-ai/headers/teamstyle17.h
+
+/filestorage/git/ts17-ai/headers/basic.h
+
+/filestorage/git/ts17-ai/headers/teamstyle17.h
+../headers/basic.h
+/filestorage/git/ts17-ai/headers/basic.h
+
