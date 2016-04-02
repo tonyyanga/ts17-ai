@@ -1,7 +1,7 @@
 #include "../headers/common.h"
 #include "../headers/teamstyle17.h"
-#include "math.h"
-#include "stdlib.h"
+#include <cmath>
+#include <iostream>
 
 int Usetime(bool add,Position &p,Position &p0,PlayerObject &Self)	//不计算速度方向改变的回合时,返回从p到p0的回合数,add为假则代表不使用加速技能
 {
@@ -62,4 +62,15 @@ struct Map filter(struct Map input) {
 			length++;
 		}
 	}
+	lnNode* parsedlists;
+	lnNode* temp2=parsedlists;
+	while(temp2) {
+		*temp=*(Object*)temp2->dataptr;
+		temp2=temp2->next;
+		length++;
+		temp++;
+	}
+	result.objects_number=length;
+	memcpy(result.objects, result_obj, length*sizeof(Object));
+	return result;
 }
