@@ -95,11 +95,11 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	return (estimate);
 	int t,s=0,n=0;
 	double heal;
-	Position new_position;
+	Position* new_position;
 	int type=order->type;
 	lnNode *argv=order->argvs;
 	Status status=*(state->status);
-	PlayerObject Self=state->status->objects[0];
+	PlayerObject* Self=status.objects;
 	Map map=*state->map;
 	Enemy enemy=*state->enemy;
 	Boss boss=*state->boss;
@@ -107,59 +107,56 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	{
 	case 0:
 		{
-			new_position.x=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.y=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
+			new_position=(Position *)(argv->dataptr);
+			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			estimate->map=&map;
+			Self->pos.x=new_position->x;
+			Self->pos.y=new_position->y;
+			Self->pos.z=new_position->z;
 			break;
 		}
 	case 1:
 		{
-			new_position.x=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.y=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
-			Self.ability+=3;
+			new_position=(Position *)(argv->dataptr);
+			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
+			estimate->map=&map;
+			Self->pos.x=new_position->x;
+			Self->pos.y=new_position->y;
+			Self->pos.z=new_position->z;
+			Self->ability+=3;
 			estimate->map=NULL;
 			break;
 		}
 	case 2:
 		{
-			new_position.x=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.y=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
+			new_position=(Position *)(argv->dataptr);
+			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			estimate->map=&map;
+			Self->pos.x=new_position->x;
+			Self->pos.y=new_position->y;
+			Self->pos.z=new_position->z;
 		}
 	case 3:
 		{
-			new_position.x=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.y=*(double *)(argv->dataptr);
-			argv=argv->next;
-			new_position.z=*(double *)(argv->dataptr);
-			map.time+=Usetime(!Self.skill_cd[DASH],new_position,Self.pos,Self);
+			new_position=(Position *)(argv->dataptr);
+			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			estimate->map=&map;
+			Self->pos.x=new_position->x;
+			Self->pos.y=new_position->y;
+			Self->pos.z=new_position->z;
 		}
 	case 5:
 		{
-			Self.skill_cd[0]=80;
-			if (Norm(Displacement(enemy.player.pos,Self.pos))<=(2000+500*(Self.skill_level[0])+Self.radius+enemy.player.radius))
+			Self->skill_cd[0]=80;
+			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+enemy.player.radius))
 				{
-					enemy.Health-=100*(Self.skill_level[0]);
+					enemy.Health-=100*(Self->skill_level[0]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(2000+500*(Self.skill_level[0])+Self.radius+boss.boss.radius))
+			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+boss.boss.radius))
 			{
 				heal=health(boss.boss.radius);
-				heal-=100*(Self.skill_level[0]);
+				heal-=100*(Self->skill_level[0]);
 				boss.boss.radius=get_radius(heal);
 			}
 			map.time+=1;
@@ -168,16 +165,16 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 4:
 		{
-			Self.skill_cd[1]=80;
-			if (Norm(Displacement(enemy.player.pos,Self.pos))<=(1100+300*(Self.skill_level[1])+Self.radius+enemy.player.radius))
+			Self->skill_cd[1]=80;
+			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(1100+300*(Self->skill_level[1])+Self->radius+enemy.player.radius))
 				{
-					enemy.Health-=200+300*(Self.skill_level[1]);
+					enemy.Health-=200+300*(Self->skill_level[1]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (Norm(Displacement(boss.boss.pos,Self.pos))<=(1100+300*(Self.skill_level[1]+Self.radius+boss.boss.radius)))
+			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(1100+300*(Self->skill_level[1]+Self->radius+boss.boss.radius)))
 			{
 				heal=health(boss.boss.radius);
-				heal-=200+300*(Self.skill_level[1]);
+				heal-=200+300*(Self->skill_level[1]);
 				boss.boss.radius=get_radius(heal);
 			}
 			map.time+=1;
@@ -186,33 +183,33 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 7:
 		{
-			Self.shield_time=20+10*Self.skill_level[2];
-			Self.skill_cd[2]=100;
+			Self->shield_time=20+10*Self->skill_level[2];
+			Self->skill_cd[2]=100;
 			map.time+=1;
 			estimate->map=&map;
 			break;
 		}
 	case 6:
 		{
-			Self.skill_cd[3]=100;
+			Self->skill_cd[3]=100;
 			map.time+=1;
 			estimate->map=&map;
 			break;
 		}
 	case 8:
 		{
-			Self.health+=500;
-			if (Self.skill_level[5])
-				Self.ability-=pow(2,Self.skill_level[5]);
+			Self->health+=500;
+			if (Self->skill_level[5])
+				Self->ability-=pow(2,Self->skill_level[5]);
 			else
 			{
 				for(t=0;t<6;t++)
 				{
-					if (Self.skill_level[t]) s++;
-					Self.ability-=pow(2,s);
+					if (Self->skill_level[t]) s++;
+					Self->ability-=pow(2,s);
 				}
 			}
-			Self.skill_level[5]++;
+			Self->skill_level[5]++;
 			map.time+=1;
 			estimate->map=&map;
 			break;
@@ -220,25 +217,25 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	case 9:
 		{
 			n=*(int *)(argv->dataptr);
-			if (Self.skill_level[n])
+			if (Self->skill_level[n])
 			{
 				if (n==2 || n==4)
-					Self.ability-=2*pow(2,Self.skill_level[n]);
+					Self->ability-=2*pow(2,Self->skill_level[n]);
 				else 
-					Self.ability-=pow(2,Self.skill_level[n]);
+					Self->ability-=pow(2,Self->skill_level[n]);
 			}
 			else
 			{
 				for(t=0;t<6;t++)
 				{
-					if (Self.skill_level[t]) s++;
+					if (Self->skill_level[t]) s++;
 					if (n==2 || n==4)
-						Self.ability-=2*pow(2,s);
+						Self->ability-=2*pow(2,s);
 					else 
-						Self.ability-=pow(2,s);
+						Self->ability-=pow(2,s);
 				}
 			}
-			Self.skill_level[n]++;
+			Self->skill_level[n]++;
 			map.time+=1;
 			estimate->map=&map;
 			break;
