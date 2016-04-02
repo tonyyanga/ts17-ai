@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <ctime>
 #include "../headers/basictypes.h"
 #include "../headers/searchtree.h"
 #include "../headers/teamstyle17.h"
@@ -16,7 +17,11 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 	this->order=order;
 	this->spanned=false;
 	this->children=NULL;
+	PAUSE();
+	long start=clock();
 	this->number=this->evaluate();
+	cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
+	CONTINUE();
 	if (father) {
 		this->depth=father->depth+1;
 	} else {
@@ -74,12 +79,17 @@ bool SearchNode::haschildren() {
 
 int SearchNode::span() {
 	int count=0;
+	long start=clock();
+	PAUSE();
 	lnNode* temp = this->CheckPossibleOrders();
+	cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
+	
 	while(temp) {
 		this->AddChild(this->Estimate((Instruction*)(temp->dataptr)), (Instruction*)(temp->dataptr));
 		temp = temp->next;
 		count++;
 	}
+	CONTINUE();
 	this->spanned=true;
 	return count;
 }
@@ -97,6 +107,7 @@ int SearchNode::gameover() {
 }
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
+	long start=clock();
 	cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);
 	int t,s=0,n=0;
@@ -323,7 +334,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	estimate->status=&status;
 	estimate->boss=&boss;
 	estimate->enemy=&enemy;
-	cout<<"EXIT ESTIMATE"<<endl;
+	cout<<"EXIT ESTIMATE, time = "<<clock()-start<<endl;
 	return(estimate);
 }
 
@@ -499,6 +510,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 
 double SearchNode::evaluate()
 {
+	
 	//Self: hp, skill point(different skills converted to ability), density_max, time
 	//Enemy: hp, skill point
 	//Boss: hp

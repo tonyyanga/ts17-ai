@@ -30,7 +30,7 @@ public:
 	lnNode* rankchildren(); // return sorted child linked list, the first should be the best
 	lnNode* reverserankchildren(); // return sorted child linked list, the first should be the worst
 	int span(); // span this node, return number of children
-	int gameover(); //return 0 as not over yet, 1 as winning, -1 as losing
+	int gameover(); //return 0 as not over yet, 1 as winning, -1 as losing, 2 as eaten adv_energy
 	bool haschildren();
 	lnNode* getInstructionChain();
 
@@ -45,7 +45,7 @@ class SearchTree{
 private:
 	SearchNode* root;
 	lnNode* HeapsAtDepth; // linked list to store heaps for nodes at certain depth
-	lnNode* EndedNodes; // heap for ended nodes pointers, TODO: provide a method to analyze it
+	
 	//bool Ended
 	int DFSdepth;
 
@@ -53,7 +53,7 @@ public:
 	//constructor
 	SearchTree(const SceneState* rootstate, int maxDepth=8); // root is at depth = 0
 	~SearchTree();
-	
+	lnNode* EndedNodes; // heap for ended nodes pointers, TODO: provide a method to analyze it
 	//return True when there are end nodes
 	bool BFS(int BFSdepth=3);
 	bool DFS(int width=1);

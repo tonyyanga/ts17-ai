@@ -92,14 +92,22 @@ namespace ai{
 					cout<<"Search ends, analyzing."<<endl;
 					SearchNode* SelectedNode;
 					lnNode* orders;
-					lnNode* temp=tree->GetAllNodes();
+					lnNode* temp=tree->EndedNodes;
 					while(temp) {
 						SelectedNode=static_cast<SearchNode*>(temp->dataptr);	
 						if (SelectedNode->gameover()==1) {
-							orders = SelectedNode->getInstructionChain();
-							cout<<"proc add instruction."<<endl;
-							proc->AddInstruction((Instruction*) orders->dataptr, 4);
+							Instruction* command = new Instruction;
+							command->argvs = SelectedNode->getInstructionChain();
+							cout<<"proc add multi instruction."<<endl;
+							command->type=MultiInstructions;
+							proc->AddInstruction(command, 4);
 							break;
+						} else if (SelectedNode->gameover()==2) {
+							Instruction* command = new Instruction;
+							command->argvs = SelectedNode->getInstructionChain();
+							cout<<"proc add multi instruction."<<endl;
+							command->type=MultiInstructions;
+							proc->AddInstruction(command, 3);
 						}
 						temp=temp->next;
 					}
@@ -153,8 +161,8 @@ namespace ai{
 				newstate->status=new Status(*state->status);
 
 				SearchTree* tree = new SearchTree(newstate);
-
-				thread* EXEC=new thread(ai::Search_EXEC, tree);
+				if (t%4==0)
+					thread* EXEC=new thread(ai::Search_EXEC, tree);
 				
 				cout<<"do proc."<<endl;
 				proc->temp_set_ins();
