@@ -5,6 +5,7 @@
 #include "../headers/teamstyle17.h"
 #include "../headers/analyzer.h"
 #include "../headers/basic.h"
+#include "../headers//basictypes.h"
 
 using namespace std;
 
@@ -245,64 +246,74 @@ Position* analyzer::inway(ObjectType B,Speed A)
 	return(NULL);
 }
 
-density* analyzer::best_way()
+lnNode* best_way(lnNode* first,Position *self,double r)
 {
+	lnNode* firstnode;
+	lnNode* currentnode=first;
+	Object* obj;
+	Position* pos_en;
 	double d;
 	int dis;
 	int x,y,z,i=0;
-	density* t=new density[3];
-	double r=status->objects[0].radius;
-	Position selfpos=status->objects[0].pos;
-	density m[26];	//27-1
+	density m[27];
+	density t;
 	for(x=-1;x<=1;x++)
 	{
 		for(y=-1;y<=1;y++)
 		{
 			for(z=-1;z<=1;z++)
 			{
-				if (!x && !y && !z) continue;
-				m[i].speed.x=double(x);
-				m[i].speed.y=double(y);
-				m[i].speed.z=double(z);
-				m[i].weight=0;
+				m[i].pos.x=x*d+self->x;
+				m[i].pos.y=y*d+self->y;
+				m[i].pos.z=z*d+self->z;
 				m[i].number=0;
 				i++;
 			}
 		}
 	}
-	for(i=0;i<26;i++)
+	for(i=0;i<27;i++)
 	{
-		for(x=0;x<num_energy;x++)
+		while (currentnode!=NULL)
 		{
-			d=PointLineDistance(pos_energy[x],selfpos,Displacement(selfpos,m[i].speed));
-			if (d<r) 
-			{
-					dis=int(Norm(Displacement(pos_energy[x],selfpos)));				//为节省运算资源，将其作为int计算
-					dis/=100;
-					dis=dis*dis;
-					m[i].weight+=1.0/dis;
-					m[i].number++;
-			}
+			pos_en=(Position*)currentnode->dataptr;
+			currentnode=currentnode->next;
+			if (Norm(Displacement(m[i].pos,*pos_en))<r)
+				m[i].number++;
 		}
 	}
 	x=0;
-	for(i=0;i<26;i++)
+	for(i=0;i<27;i++)
 	{
-		for(x=i+1;x<26;x++)
+		for(x=i+1;x<27;x++)
 		{
-			if (m[i].weight>m[x].weight) 
+			if (m[i].number<m[x].number) 
 			{
-				t[0]=m[i];
+				t=m[i];
 				m[i]=m[x];
-				m[x]=t[0];
+				m[x]=t;
 			}
 		}
 	}
-	for(i=0;i<3;i++)
+	firstnode=new lnNode;
+	currentnode=firstnode;
+	for(i=0;i<27;i++)
 	{
-		t[i]=m[i];
+		if (m[i].number==0) break;
+		obj=new Object;
+		currentnode->dataptr=obj;
+		obj->pos.x=m[i].pos.x;
+		obj->pos.y=m[i].pos.y;
+		obj->pos.z=m[i].pos.z;
+		obj->type=ENERGY;
+		obj->radius=m[i].number;
+		obj->shield_time=-5;		//以表示这是聚类过的energy
 	}
-	return(t);
+	if (i=0)
+	{
+		delete firstnode;
+		return(NULL);
+	}
+	return(firstnode);
 }
 	
 
