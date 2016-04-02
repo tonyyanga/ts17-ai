@@ -72,6 +72,8 @@ bool SearchNode::haschildren() {
 
 int SearchNode::span() {
 	int count=0;
+	if (this->gameover_state)
+		return 0;
 	lnNode* temp = this->CheckPossibleOrders();
 	while(temp) {
 		this->AddChild(this->Estimate((Instruction*)(temp->dataptr)), (Instruction*)(temp->dataptr));

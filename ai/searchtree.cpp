@@ -124,7 +124,7 @@ bool SearchTree::search_layer_exec(const lnNode* layerNodes) {
 				heap=(MaxHeap*)newNode->dataptr;
 			}
 			heap->additem((SearchNode*)child->dataptr);
-			if (!((SearchNode*)(child->dataptr))->haschildren()) {
+			if (((SearchNode*)(child->dataptr))->haschildren()) {
 				lnNode* linkedlist = (lnNode*)malloc(sizeof(lnNode));
 				linkedlist->next = this->EndedNodes;
 				linkedlist->dataptr = child->dataptr;
