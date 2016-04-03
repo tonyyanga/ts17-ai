@@ -623,12 +623,13 @@ double SearchNode::evaluate()
 		if (original_hp_rate>=1) //Add enemy's ability points into consideration!
 		{
 			//rate5: shield status, rate6: dash status
-			return 999999999*original_hp_rate*state->status->objects[0].health+
+			return original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
-				rate4*distance+
+				rate4*(state->status->objects[0].vision-distance)+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
-				+9999*gameover_state;
+				+9999*gameover_state
+				-99999*health(state->enemy->player.radius);
 		}
 		else
 		{
@@ -643,10 +644,8 @@ double SearchNode::evaluate()
 	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
 		gameover_state=0;
-		return 9999999999999*state->status->objects[0].health+
-			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*(time); //distance to center?
+		return state->status->objects[0].health+
+			rate1*(extra_ability+state->status->objects[0].ability);
 	}
 	else if(enemy_in_sight==0&&boss_in_sight==1)									//Only boss in sight
 	{
@@ -673,12 +672,11 @@ double SearchNode::evaluate()
 			gameover_state=1;
 
 		//evaluating
-		return 9999999999999*state->status->objects[0].health+
-			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*state->map->time+
-			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius
-			+9999*gameover_state;
+		return state->status->objects[0].health+
+			rate1*(extra_ability+state->status->objects[0].ability)
+			+rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius
+			+9999*gameover_state
+			-99999*health(state->boss->boss.radius);
 	}
 	else																					  //Both enemy and boss in sight
 	{
@@ -713,22 +711,23 @@ double SearchNode::evaluate()
 
 		//evaluating
 		double enemy_evaluation_point;
-		if (Enemy_original_hp_rate>1) //Add enemy's ability points into consideration!
+		if (Enemy_original_hp_rate>=1) //Add enemy's ability points into consideration!
 		{
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=	
 				9999*Enemy_original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
-				rate4*Enemy_distance+
+				rate4*(state->status->objects[0].vision-Enemy_distance)+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
-				+9999*gameover_state;
+				+9999*gameover_state
+				-99999*health(state->enemy->player.radius);
 		}
 		else
 		{
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=
-				9999*Enemy_original_hp_rate*state->status->objects[0].health+
+				Enemy_original_hp_rate*state->status->objects[0].health+
 				rate4*Enemy_distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
@@ -738,8 +737,6 @@ double SearchNode::evaluate()
 			9999*(rate_boss)*
 			(state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*state->map->time+
 			rate_boss_distance*(state->status->objects[0].vision-Boss_distance)/state->boss->boss.radius)+
 			(rate_enemy)*enemy_evaluation_point
 			+9999*gameover_state;

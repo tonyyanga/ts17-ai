@@ -104,12 +104,6 @@ namespace ai{
 							command->type=MultiInstructions;
 							proc->AddInstruction(command, 4);
 							break;
-						} else if (SelectedNode->gameover()==2) {
-							Instruction* command = new Instruction;
-							command->argvs = SelectedNode->getInstructionChain();
-							//cout<<"proc add multi instruction."<<endl;
-							command->type=MultiInstructions;
-							proc->AddInstruction(command, 3);
 						}
 						temp=temp->next;
 					}
@@ -126,7 +120,14 @@ namespace ai{
 						temp=temp->next;
 					}
 					if (!flag)
-						proc->AddInstruction((Instruction*) orders->dataptr, 2);
+					{
+						if (((Instruction*) orders->dataptr)->type==2)
+							{
+								double i=SelectedNode->evaluate();
+								cout<<" "<<endl;
+						}
+						proc->AddInstruction((Instruction*) orders->dataptr, 1);
+					}
 					else {
 						Instruction* command = new Instruction;
 						command->argvs = orders;

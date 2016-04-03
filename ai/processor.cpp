@@ -26,7 +26,7 @@ Instruction LIFO::pop()		//Pop first Instruction out
 void LIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	if (bottom<4)
+	if (bottom<sizeof(s)/sizeof(Instruction)-1)
 		bottom++;
 }
 
@@ -80,7 +80,7 @@ void FIFO::clear()
 
 processor::processor(SceneState* s)
 {
-	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
+	this->l1=LIFO (5),this->l2=LIFO (1),this->f1=FIFO (5),this->f2=FIFO (5);
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
@@ -284,7 +284,7 @@ void processor::temp_set_ins()
 				p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius||
 				p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
 				temp_in.priority=0;
-			if (state->num_adv_energy>0)
+			if (state->num_adv_energy=0)
 				temp_in.priority=0;
 			if (PointLineDistance(*boss,*p,selfpos)<r)
 				temp_in.priority=0;
