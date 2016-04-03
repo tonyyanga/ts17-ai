@@ -116,10 +116,24 @@ namespace ai{
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
 					//cout<<"proc add instruction."<<endl;
-					if (((Instruction*) orders->dataptr)->type<2)
+					bool flag=false;
+					temp=orders;
+					while(temp) {
+						if (((Instruction*) temp->dataptr)->type>2) {
+							flag=true;
+							break;
+						}
+						temp=temp->next;
+					}
+					if (!flag)
 						proc->AddInstruction((Instruction*) orders->dataptr, 2);
-					else
-						proc->AddInstruction((Instruction*) orders->dataptr, 4);
+					else {
+						Instruction* command = new Instruction;
+						command->argvs = orders;
+						//cout<<"proc add multi instruction."<<endl;
+						command->type=MultiInstructions;
+						proc->AddInstruction(command, 4);
+					}
 				}
 		delete tree;
 		flag=false;
