@@ -26,6 +26,7 @@ namespace ai{
 	Boss* Boss_init();
 	void Search_EXEC(SearchTree* tree);
 
+	bool flag;
 	Enemy* enemy;
 	SceneState* state;
 	processor* proc;
@@ -34,7 +35,7 @@ namespace ai{
 	
 	void AIMain() {
 		long start;
-		cout<<"AIMain Start."<<endl;
+		//cout<<"AIMain Start."<<endl;
 		// Initialize
 		start=clock();
 		enemy = Enemy_init();
@@ -44,10 +45,10 @@ namespace ai{
 		state->map=GetMap();
 		state->adv=NULL;
 		state->boss=boss;
-		cout<<"Going to start processor. Time used "<<clock()-start<<endl;
+		//cout<<"Going to start processor. Time used "<<clock()-start<<endl;
 		start=clock();
 		proc = new processor(state);
-		cout<<"Processor init ends. Time used "<<clock()-start<<endl;
+		//cout<<"Processor init ends. Time used "<<clock()-start<<endl;
 		time = GetTime();
 		search();
 	}
@@ -80,16 +81,17 @@ namespace ai{
 	void Search_EXEC(SearchTree* tree) {
 		long start;
 		// time critical
-		cout<<"BFS Start."<<endl;
+		flag=true;
+		//cout<<"BFS Start."<<endl;
 		start=clock();
 		tree->BFS();
-		cout<<"DFS Start. BFS time "<<clock()-start<<endl;
+		//cout<<"DFS Start. BFS time "<<clock()-start<<endl;
 		start=clock();
 		tree->DFS();
-		cout<<"DFS time "<<clock()-start<<endl;
+		//cout<<"DFS time "<<clock()-start<<endl;
 		// TODO: analyze?
 				{
-					cout<<"Search ends, analyzing."<<endl;
+					//cout<<"Search ends, analyzing."<<endl;
 					SearchNode* SelectedNode;
 					lnNode* orders;
 					lnNode* temp=tree->EndedNodes;
@@ -98,14 +100,14 @@ namespace ai{
 						if (SelectedNode->gameover()==1) {
 							Instruction* command = new Instruction;
 							command->argvs = SelectedNode->getInstructionChain();
-							cout<<"proc add multi instruction."<<endl;
+							//cout<<"proc add multi instruction."<<endl;
 							command->type=MultiInstructions;
 							proc->AddInstruction(command, 4);
 							break;
 						} else if (SelectedNode->gameover()==2) {
 							Instruction* command = new Instruction;
 							command->argvs = SelectedNode->getInstructionChain();
-							cout<<"proc add multi instruction."<<endl;
+							//cout<<"proc add multi instruction."<<endl;
 							command->type=MultiInstructions;
 							proc->AddInstruction(command, 3);
 						}
@@ -113,15 +115,19 @@ namespace ai{
 					}
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
-					cout<<"proc add instruction."<<endl;
-					proc->AddInstruction((Instruction*) orders->dataptr, 2);
+					//cout<<"proc add instruction."<<endl;
+					if (((Instruction*) orders->dataptr)->type<2)
+						proc->AddInstruction((Instruction*) orders->dataptr, 2);
+					else
+						proc->AddInstruction((Instruction*) orders->dataptr, 4);
 				}
 		delete tree;
+		flag=false;
 	}
 	void search() {
 		int t;
 		long start;
-		cout<<"Search Thread Start."<<endl;
+		//cout<<"Search Thread Start."<<endl;
 		while(true){
 			#ifdef WIN32
 			Sleep(1);
@@ -130,7 +136,7 @@ namespace ai{
 			#endif
 			t=GetTime();
 			if (t!=time) {
-				cout<<"New Time."<<endl;
+				//cout<<"New Time."<<endl;
 				// update, split it from the search tree for real-time performance
 				SceneState* temp;
 				time=t;
@@ -143,12 +149,12 @@ namespace ai{
 				temp->adv=NULL;
 				memcpy(state, temp, sizeof(SceneState));
 				free(temp);
-				cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
+				//cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
 
 				//do search
-				cout<<"Search Tree init Start."<<endl;
+				//cout<<"Search Tree init Start."<<endl;
 				SceneState* newstate=new SceneState;
 				if (state->adv) {
 					newstate->adv=new Store_adv(*state->adv);
@@ -161,10 +167,10 @@ namespace ai{
 				newstate->status=new Status(*state->status);
 
 				SearchTree* tree = new SearchTree(newstate);
-				if (t%4==0)
+				if (t%4==0&&!flag)
 					thread* EXEC=new thread(ai::Search_EXEC, tree);
 				
-				cout<<"do proc."<<endl;
+				//cout<<"do proc."<<endl;
 				proc->temp_set_ins();
 				proc->temp_implement();
 			}

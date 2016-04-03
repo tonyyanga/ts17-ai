@@ -90,7 +90,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		pos_adv_energy=NULL;
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
-	pos_player=new Position;
+	pos_player=NULL;
 	pos_boss=new Position;
 	for(i=0;i<map->objects_number;i++)
 	{
@@ -119,9 +119,11 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 			}
 		case PLAYER: //****************** SSR: PLAYER IS NOT ENEMY!!!
 			{
-				*pos_player=map->objects[i].pos;
-				if (i!=0)
+				if (map->objects[i].team_id!=this->status->team_id)
+				{
 					observe(map->objects[i],enemy);
+					pos_player=(Position*)&(map->objects[i].pos);
+				}
 				break;
 			}
 		case BOSS:
@@ -298,7 +300,7 @@ Position* analyzer::inway(ObjectType B,Speed A)
 		pos_en=*(Position*)currentnode->dataptr;
 		x=(int)(pos_en.x+2.5*r-self->x)/r;
 		y=(int)(pos_en.y+2.5*r-self->y)/r;
-		z=(int)(pos_en.z+2.5*r-self->z)/r;
+		z=(pos_en.z+2.5*r-self->z)/r;
 		m[x][y][z].number++;
 		currentnode=currentnode->next;
 	}

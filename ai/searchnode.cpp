@@ -18,8 +18,10 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 	this->spanned=false;
 	this->children=NULL;
 	long start=clock();
+	//PAUSE();
 	this->number=this->evaluate();
-	cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
+	//CONTINUE();
+	//cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
 	if (father) {
 		this->depth=father->depth+1;
 	} else {
@@ -79,7 +81,7 @@ int SearchNode::span() {
 	int count=0;
 	long start=clock();
 	lnNode* temp = this->CheckPossibleOrders();
-	cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
+	//cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
 	
 	while(temp) {
 		this->AddChild(this->Estimate((Instruction*)(temp->dataptr)), (Instruction*)(temp->dataptr));
@@ -104,7 +106,7 @@ int SearchNode::gameover() {
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	long start=clock();
-	cout<<"ENTER ESTIMATE"<<endl;
+	//cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);
 	int t,s=0,n=0;
 	double heal;
@@ -327,10 +329,10 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			break;
 		}
 	}
-	estimate->status=&status;
-	estimate->boss=&boss;
-	estimate->enemy=&enemy;
-	cout<<"EXIT ESTIMATE, time = "<<clock()-start<<endl;
+	estimate->status=new Status(status);
+	estimate->boss=new Boss(boss);
+	estimate->enemy=new Enemy(enemy);
+	//cout<<"EXIT ESTIMATE, time = "<<clock()-start<<endl;
 	return(estimate);
 }
 
@@ -348,11 +350,11 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* temp;
 	if (this->gameover_state)
 		return NULL;
-	if ((state->boss->valid_time==time)||(state->enemy->valid_time==time))
+	SceneState s=*state;
+	analyzer temp_analyzer(&s);
+	if (abs(state->boss->valid_time-time)<5||temp_analyzer.pos_player!=NULL)
 	{
 		Position* positions=new Position[3];
-		SceneState s=*state;
-		analyzer temp_analyzer(&s);
 		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
 		{
 			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
@@ -362,6 +364,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 				n=new lnNode;
 				t->argvs=n;
 				t->argvs->dataptr=new int(k);                        //*****************************************//
+				t->argvs->next=NULL;
 				temp=new lnNode;
 				l->dataptr=t;
 				l->next=temp;
@@ -402,7 +405,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->enemy->valid_time==time)
+		if (abs(state->enemy->valid_time-time)<5)
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
@@ -423,8 +426,9 @@ lnNode* SearchNode::CheckPossibleOrders()
 		temp=new lnNode;
 		l->dataptr=t;
 		(l->next)=temp;
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos)||
-			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
+		if ((state->status->objects[0].skill_level[SHORT_ATTACK]>0)&&
+			((kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))||
+			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos)))
 		{
 			l=l->next;
 			t=new Instruction;
@@ -433,7 +437,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos))
+		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos)&&state->status->objects[0].skill_level[SHORT_ATTACK]>0)
 		{
 			l=l->next;
 			t=new Instruction;
@@ -445,7 +449,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
+		if ((state->status->objects[0].skill_level[LONG_ATTACK]>0)&&
+			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos))
 		{
 			l=l->next;
 			t=new Instruction;
@@ -538,8 +543,8 @@ double SearchNode::evaluate()
 			extra_ability+=kBasicSkillPrice[i]*pow(2,k);
 	}
 	int time=state->map->time;
-	bool enemy_in_sight=(state->enemy->valid_time==time);
-	bool boss_in_sight=(state->boss->valid_time==time);
+	bool enemy_in_sight=temp_analyzer.pos_player!=NULL;
+	bool boss_in_sight=abs(state->boss->valid_time-time)<5;
 	//Enemy in sight
 	if (enemy_in_sight==1&&boss_in_sight==0)
 	{
@@ -567,10 +572,10 @@ double SearchNode::evaluate()
 
 
 		//evaluation
-		if (original_hp_rate>1) //Add enemy's ability points into consideration!
+		if (original_hp_rate>=1) //Add enemy's ability points into consideration!
 		{
 			//rate5: shield status, rate6: dash status
-			return original_hp_rate*state->status->objects[0].health+
+			return 999999999*original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
@@ -580,7 +585,7 @@ double SearchNode::evaluate()
 		else
 		{
 			//rate5: shield status, rate6: dash status
-			return original_hp_rate*state->status->objects[0].health+
+			return 9999*original_hp_rate*state->status->objects[0].health+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
@@ -663,7 +668,7 @@ double SearchNode::evaluate()
 		{
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=	
-				Enemy_original_hp_rate*state->status->objects[0].health+
+				9999*Enemy_original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
 				rate4*Enemy_distance+
 				rate5*(state->status->objects[0].shield_time>0)+
@@ -674,14 +679,14 @@ double SearchNode::evaluate()
 		{
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=
-				Enemy_original_hp_rate*state->status->objects[0].health+
+				9999*Enemy_original_hp_rate*state->status->objects[0].health+
 				rate4*Enemy_distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
 				+9999*gameover_state;
 		}
 		return 
-			(rate_boss)*
+			9999*(rate_boss)*
 			(state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+

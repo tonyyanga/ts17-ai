@@ -250,34 +250,63 @@ void processor::temp_set_ins()
 	case InstructionType(MovePosition):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			Position *boss=state->pos_boss;
+			Position *devour;
+			Position d1=Displacement(scene->status->objects[0].pos,*p);
+			Position d2=Displacement(scene->status->objects[0].pos,*boss);
+			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius||
+				p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius||
+				p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp_in.priority=0;
+			if (1-abs(angle(d1,d2))<0.1)
+				temp_in.priority=0;
+			for (int i=0;i<state->num_devour;i++)
+			{
+				devour=state->pos_devour+i;
+				if (1-abs(angle(d1,d2))<0.1)
+					temp_in.priority=0;
+			}
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			Position *devour;
+			Position d1=Displacement(scene->status->objects[0].pos,*p);
+			Position d2=Displacement(scene->status->objects[0].pos,*boss);
+			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius||
+				p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius||
+				p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp_in.priority=0;
+			if (state->num_adv_energy>0)
+				temp_in.priority=0;
+			if (1-abs(angle(d1,d2))<0.1)
+				temp_in.priority=0;
+			for (int i=0;i<state->num_devour;i++)
+			{
+				devour=state->pos_devour+i;
+				if (1-abs(angle(d1,d2))<0.1)
+					temp_in.priority=0;
+			}
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(Approach):
 		{
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
-			if (Distance(scene->status->objects[0].pos,p->pos)<=int(temp_in.i.argvs->next->dataptr))
+			if (Distance(scene->status->objects[0].pos,p->pos)<=*(double*)(temp_in.i.argvs->next->dataptr))
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(Flee):
 		{
-			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=int(temp_in.i.argvs->dataptr))
+			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=*(double*)(temp_in.i.argvs->dataptr))
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -328,17 +357,26 @@ void processor::temp_implement()
 			multiply=100 / Norm(temp);
 			temp=Scale(multiply, temp);
 			Move(user_id,temp);
-			printf("MOVING TO %lf, %lf, %lf\n", temp.x, temp.y, temp.z);
-			printf("PLAYER AT %lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
+			//printf("MOVING TO %lf, %lf, %lf\n", temp.x, temp.y, temp.z);
+			//printf("PLAYER AT %lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position temp;
 			Position* p=(Position*)temp_in.i.argvs->dataptr;
+			double multiply;
 			temp.x=p->x-scene->status->objects[0].pos.x;
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius)
+				temp.x=kMapSize/2-scene->status->objects[0].pos.x;
+			if (p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius)
+				temp.y=kMapSize/2-scene->status->objects[0].pos.y;
+			if (p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp.z=kMapSize/2-scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -347,9 +385,12 @@ void processor::temp_implement()
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
 			Position temp;
 			Position t=p->pos;
+			double multiply;
 			temp.x=t.x-scene->status->objects[0].pos.x;
 			temp.y=t.y-scene->status->objects[0].pos.y;
 			temp.z=t.z-scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -358,9 +399,12 @@ void processor::temp_implement()
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
 			Position temp;
 			Position t=scene->enemy->player.pos;
+			double multiply;
 			temp.x=-t.x+scene->status->objects[0].pos.x;
 			temp.y=-t.y+scene->status->objects[0].pos.y;
 			temp.z=-t.z+scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -371,7 +415,7 @@ void processor::temp_implement()
 		}
 	case InstructionType(Skill_LongAttack):
 		{
-			LongAttack(user_id,(int)temp_in.i.argvs);
+			LongAttack(user_id,*(int*)temp_in.i.argvs);
 			break;
 		}
 	case InstructionType(Skill_Dash):
@@ -391,7 +435,7 @@ void processor::temp_implement()
 		}
 	case InstructionType(Skill_UpgradeSkill):
 		{
-			UpgradeSkill(user_id,SkillType((int)temp_in.i.argvs->dataptr));
+			UpgradeSkill(user_id,SkillType(*(int*)temp_in.i.argvs->dataptr));
 			break;
 		}
 	}
@@ -455,6 +499,8 @@ void processor::AddInstruction(Instruction* i, int p)
 			if (Norm(CrossProduct(p,p2))<=0.1)
 				break;
 		}
+		if (i->type==9)
+			cout<<"Add upgrade!"<<endl;
 		l1.push(*i);
 		break;
 		   }
