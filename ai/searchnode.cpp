@@ -130,7 +130,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
-			if ((PointLineDistance(boss.boss.pos,Self->pos,Self->pos)<(Self->radius)))
+			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
 			{
 				if ((boss.boss.radius*5)>(Self->radius*6))
 				{
