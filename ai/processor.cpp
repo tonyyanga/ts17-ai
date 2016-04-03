@@ -275,6 +275,7 @@ void processor::temp_set_ins()
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
 			Position *devour;
+			Position *boss=state->pos_boss;
 			Position d1=Displacement(scene->status->objects[0].pos,*p);
 			Position d2=Displacement(scene->status->objects[0].pos,*boss);
 			if (Distance(scene->status->objects[0].pos,*p)<300)
