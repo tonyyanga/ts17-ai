@@ -24,57 +24,9 @@
     <ClCompile Include="..\ai\teamstyle17.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\ai\dll_main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\processor.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\searchtree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\searchnode.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\analyzer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\common.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ai\basictypes.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\headers\basic.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\teamstyle17.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\instructions.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
     <ClInclude Include="..\communicate\communicate.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\processor.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\analyzer.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\searchtree.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\basictypes.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\common.h">
-      <Filter>源文件\头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\headers\evaluate_rates.h">
       <Filter>源文件\头文件</Filter>
     </ClInclude>
   </ItemGroup>

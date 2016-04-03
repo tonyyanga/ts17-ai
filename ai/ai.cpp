@@ -5,13 +5,13 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
-#include <thread>
+//#include <thread>
 #include <ctime>
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
+//#ifdef WIN32
+//#include <windows.h>
+//#else
+//#include <unistd.h>
+//#endif
 
 #include "../communicate/basic.h"
 #include "teamstyle17.h"
@@ -357,21 +357,6 @@ struct Store_adv
 
 void store_adv(Object A,Store_adv *Node);		//每次发现光之隧道A就自动存储
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 namespace ai{
 
 	void AIMain();
@@ -380,6 +365,7 @@ namespace ai{
 	Boss* Boss_init();
 	void Search_EXEC(SearchTree* tree);
 
+	bool flag;
 	Enemy* enemy;
 	SceneState* state;
 	processor* proc;
@@ -388,7 +374,7 @@ namespace ai{
 	
 	void AIMain() {
 		long start;
-		cout<<"AIMain Start."<<endl;
+		//cout<<"AIMain Start."<<endl;
 		// Initialize
 		start=clock();
 		enemy = Enemy_init();
@@ -398,10 +384,10 @@ namespace ai{
 		state->map=GetMap();
 		state->adv=NULL;
 		state->boss=boss;
-		cout<<"Going to start processor. Time used "<<clock()-start<<endl;
+		//cout<<"Going to start processor. Time used "<<clock()-start<<endl;
 		start=clock();
 		proc = new processor(state);
-		cout<<"Processor init ends. Time used "<<clock()-start<<endl;
+		//cout<<"Processor init ends. Time used "<<clock()-start<<endl;
 		time = GetTime();
 		search();
 	}
@@ -434,16 +420,17 @@ namespace ai{
 	void Search_EXEC(SearchTree* tree) {
 		long start;
 		// time critical
-		cout<<"BFS Start."<<endl;
+		flag=true;
+		//cout<<"BFS Start."<<endl;
 		start=clock();
 		tree->BFS();
-		cout<<"DFS Start. BFS time "<<clock()-start<<endl;
+		//cout<<"DFS Start. BFS time "<<clock()-start<<endl;
 		start=clock();
 		tree->DFS();
-		cout<<"DFS time "<<clock()-start<<endl;
+		//cout<<"DFS time "<<clock()-start<<endl;
 		// TODO: analyze?
 				{
-					cout<<"Search ends, analyzing."<<endl;
+					//cout<<"Search ends, analyzing."<<endl;
 					SearchNode* SelectedNode;
 					lnNode* orders;
 					lnNode* temp=tree->EndedNodes;
@@ -452,39 +439,58 @@ namespace ai{
 						if (SelectedNode->gameover()==1) {
 							Instruction* command = new Instruction;
 							command->argvs = SelectedNode->getInstructionChain();
-							cout<<"proc add multi instruction."<<endl;
+							//cout<<"proc add multi instruction."<<endl;
 							command->type=MultiInstructions;
 							proc->AddInstruction(command, 4);
 							break;
-						} else if (SelectedNode->gameover()==2) {
-							Instruction* command = new Instruction;
-							command->argvs = SelectedNode->getInstructionChain();
-							cout<<"proc add multi instruction."<<endl;
-							command->type=MultiInstructions;
-							proc->AddInstruction(command, 3);
 						}
 						temp=temp->next;
 					}
 					SelectedNode = tree->GetBestNode();
 					orders = SelectedNode->getInstructionChain();
-					cout<<"proc add instruction."<<endl;
-					proc->AddInstruction((Instruction*) orders->dataptr, 2);
+					//cout<<"proc add instruction."<<endl;
+					bool flag=false;
+					temp=orders;
+					while(temp) {
+						if (((Instruction*) temp->dataptr)->type>2) {
+							flag=true;
+							break;
+						}
+						temp=temp->next;
+					}
+					if (!flag)
+					{
+						if (((Instruction*) orders->dataptr)->type==2)
+							{
+								double i=SelectedNode->evaluate();
+								cout<<" "<<endl;
+						}
+						proc->AddInstruction((Instruction*) orders->dataptr, 1);
+					}
+					else {
+						Instruction* command = new Instruction;
+						command->argvs = orders;
+						//cout<<"proc add multi instruction."<<endl;
+						command->type=MultiInstructions;
+						proc->AddInstruction(command, 4);
+					}
 				}
 		delete tree;
+		flag=false;
 	}
 	void search() {
 		int t;
 		long start;
-		cout<<"Search Thread Start."<<endl;
+		//cout<<"Search Thread Start."<<endl;
 		while(true){
-			#ifdef WIN32
+			/*#ifdef WIN32
 			Sleep(1);
 			#else
 			usleep(1);
-			#endif
+			#endif*/
 			t=GetTime();
 			if (t!=time) {
-				cout<<"New Time."<<endl;
+				//cout<<"New Time."<<endl;
 				// update, split it from the search tree for real-time performance
 				SceneState* temp;
 				time=t;
@@ -497,12 +503,12 @@ namespace ai{
 				temp->adv=NULL;
 				memcpy(state, temp, sizeof(SceneState));
 				free(temp);
-				cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
+				//cout<<"New state created. Calling proc update. Time used "<<clock()-start<<endl;
 				proc->update(state);
 				//implement(proc->return_Order());
 
 				//do search
-				cout<<"Search Tree init Start."<<endl;
+				//cout<<"Search Tree init Start."<<endl;
 				SceneState* newstate=new SceneState;
 				if (state->adv) {
 					newstate->adv=new Store_adv(*state->adv);
@@ -515,10 +521,9 @@ namespace ai{
 				newstate->status=new Status(*state->status);
 
 				SearchTree* tree = new SearchTree(newstate);
-				if (t%4==0)
-					thread* EXEC=new thread(ai::Search_EXEC, tree);
+				ai::Search_EXEC(tree);
 				
-				cout<<"do proc."<<endl;
+				//cout<<"do proc."<<endl;
 				proc->temp_set_ins();
 				proc->temp_implement();
 			}
@@ -614,7 +619,7 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 		pos_adv_energy=NULL;
 	pos_devour=new Position[num_devour];
 	pos_energy=new Position[num_energy];
-	pos_player=new Position;
+	pos_player=NULL;
 	pos_boss=new Position;
 	for(i=0;i<map->objects_number;i++)
 	{
@@ -643,9 +648,11 @@ analyzer::analyzer(Enemy* enemy,Boss* boss,Store_adv* firstnode,const Status* st
 			}
 		case PLAYER: //****************** SSR: PLAYER IS NOT ENEMY!!!
 			{
-				*pos_player=map->objects[i].pos;
-				if (i!=0)
+				if (map->objects[i].team_id!=this->status->team_id)
+				{
 					observe(map->objects[i],enemy);
+					pos_player=(Position*)&(map->objects[i].pos);
+				}
 				break;
 			}
 		case BOSS:
@@ -822,7 +829,7 @@ Position* analyzer::inway(ObjectType B,Speed A)
 		pos_en=*(Position*)currentnode->dataptr;
 		x=(int)(pos_en.x+2.5*r-self->x)/r;
 		y=(int)(pos_en.y+2.5*r-self->y)/r;
-		z=(int)(pos_en.z+2.5*r-self->z)/r;
+		z=(pos_en.z+2.5*r-self->z)/r;
 		m[x][y][z].number++;
 		currentnode=currentnode->next;
 	}
@@ -1011,7 +1018,7 @@ Instruction LIFO::pop()		//Pop first Instruction out
 void LIFO::push(Instruction t)
 {
 	s[4]=s[3],s[3]=s[2],s[2]=s[1],s[1]=s[0],s[0]=t;
-	if (bottom<4)
+	if (bottom<sizeof(s)/sizeof(Instruction)-1)
 		bottom++;
 }
 
@@ -1065,7 +1072,7 @@ void FIFO::clear()
 
 processor::processor(SceneState* s)
 {
-	this->l1=LIFO (5),this->l2=LIFO (5),this->f1=FIFO (5),this->f2=FIFO (5);
+	this->l1=LIFO (5),this->l2=LIFO (1),this->f1=FIFO (5),this->f2=FIFO (5);
 	scene=s;
 	state=new analyzer(scene);
 	temp_in.priority=0;
@@ -1235,34 +1242,64 @@ void processor::temp_set_ins()
 	case InstructionType(MovePosition):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			Position *boss=state->pos_boss;
+			Position *devour;
+			Position selfpos=(scene->status->objects[0].pos);
+			double r=scene->status->objects[0].radius;
+			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
+			if (p->x<=r||p->x>=kMapSize-scene->status->objects[0].radius||
+				p->y<=r||p->y>=kMapSize-scene->status->objects[0].radius||
+				p->z<=r||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp_in.priority=0;
+			if (PointLineDistance(*boss,*p,selfpos)<r)
+				temp_in.priority=0;
+			for (int i=0;i<state->num_devour;i++)
+			{
+				devour=state->pos_devour+i;
+				if (PointLineDistance(*devour,*p,selfpos)<r)
+					temp_in.priority=0;
+			}
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
-			if (abs(scene->status->objects[0].pos.x-p->x)<100&&
-				abs(scene->status->objects[0].pos.y-p->y)<100&&
-				abs(scene->status->objects[0].pos.z-p->z)<100)
+			Position *devour;
+			Position *boss=state->pos_boss;
+			Position selfpos=(scene->status->objects[0].pos);
+			double r=scene->status->objects[0].radius;
+			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius||
+				p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius||
+				p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp_in.priority=0;
+			if (state->num_adv_energy=0)
+				temp_in.priority=0;
+			if (PointLineDistance(*boss,*p,selfpos)<r)
+				temp_in.priority=0;
+			for (int i=0;i<state->num_devour;i++)
+			{
+				devour=state->pos_devour+i;
+				if (PointLineDistance(*devour,*p,selfpos)<r)
+					temp_in.priority=0;
+			}
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(Approach):
 		{
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
-			if (Distance(scene->status->objects[0].pos,p->pos)<=*(int*)(temp_in.i.argvs->next->dataptr))
+			if (Distance(scene->status->objects[0].pos,p->pos)<=*(double*)(temp_in.i.argvs->next->dataptr))
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
 		}
 	case InstructionType(Flee):
 		{
-			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=*(int*)(temp_in.i.argvs->dataptr))
+			if (Distance(scene->status->objects[0].pos,scene->enemy->player.pos)<=*(double*)(temp_in.i.argvs->dataptr))
 				temp_in.priority=0;
 			multiple_temp=NULL;
 			break;
@@ -1313,17 +1350,26 @@ void processor::temp_implement()
 			multiply=100 / Norm(temp);
 			temp=Scale(multiply, temp);
 			Move(user_id,temp);
-			printf("MOVING TO %lf, %lf, %lf\n", temp.x, temp.y, temp.z);
-			printf("PLAYER AT %lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
+			//printf("MOVING TO %lf, %lf, %lf\n", temp.x, temp.y, temp.z);
+			//printf("PLAYER AT %lf, %lf, %lf\n", scene->status->objects[0].pos.x, scene->status->objects[0].pos.y, scene->status->objects[0].pos.z);
 			break;
 		}
 	case InstructionType(EatAdvancedEnergy):
 		{
 			Position temp;
 			Position* p=(Position*)temp_in.i.argvs->dataptr;
+			double multiply;
 			temp.x=p->x-scene->status->objects[0].pos.x;
 			temp.y=p->y-scene->status->objects[0].pos.y;
 			temp.z=p->z-scene->status->objects[0].pos.z;
+			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius)
+				temp.x=kMapSize/2-scene->status->objects[0].pos.x;
+			if (p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius)
+				temp.y=kMapSize/2-scene->status->objects[0].pos.y;
+			if (p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+				temp.z=kMapSize/2-scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -1332,9 +1378,12 @@ void processor::temp_implement()
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
 			Position temp;
 			Position t=p->pos;
+			double multiply;
 			temp.x=t.x-scene->status->objects[0].pos.x;
 			temp.y=t.y-scene->status->objects[0].pos.y;
 			temp.z=t.z-scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -1343,9 +1392,12 @@ void processor::temp_implement()
 			Object* p=(Object*)temp_in.i.argvs->dataptr;
 			Position temp;
 			Position t=scene->enemy->player.pos;
+			double multiply;
 			temp.x=-t.x+scene->status->objects[0].pos.x;
 			temp.y=-t.y+scene->status->objects[0].pos.y;
 			temp.z=-t.z+scene->status->objects[0].pos.z;
+			multiply=100 / Norm(temp);
+			temp=Scale(multiply, temp);
 			Move(user_id,temp);
 			break;
 		}
@@ -1356,7 +1408,7 @@ void processor::temp_implement()
 		}
 	case InstructionType(Skill_LongAttack):
 		{
-			LongAttack(user_id,*(int*)temp_in.i.argvs->dataptr);
+			LongAttack(user_id,*(int*)temp_in.i.argvs);
 			break;
 		}
 	case InstructionType(Skill_Dash):
@@ -1393,6 +1445,8 @@ void processor::AddInstruction(Instruction* i, int p)
 		temp->z=scene->status->objects[0].pos.z+200;
 		i->argvs->dataptr=temp;
 	}
+	if (i->type>1&&i->type<9)
+			cout<<"Add upgrade!"<<endl;
 	switch(p)
 	{
 	case 1:{
@@ -1472,8 +1526,10 @@ SearchNode::SearchNode(const SceneState* state, SearchNode* father, Instruction*
 	this->spanned=false;
 	this->children=NULL;
 	long start=clock();
+	//PAUSE();
 	this->number=this->evaluate();
-	cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
+	//CONTINUE();
+	//cout<<"EVAL TIME = !!!!!!!!!!!!!! "<<clock()-start<<endl;
 	if (father) {
 		this->depth=father->depth+1;
 	} else {
@@ -1533,7 +1589,7 @@ int SearchNode::span() {
 	int count=0;
 	long start=clock();
 	lnNode* temp = this->CheckPossibleOrders();
-	cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
+	//cout<<"CHECK ORDER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<clock()-start<<endl;
 	
 	while(temp) {
 		this->AddChild(this->Estimate((Instruction*)(temp->dataptr)), (Instruction*)(temp->dataptr));
@@ -1558,7 +1614,7 @@ int SearchNode::gameover() {
 
 SceneState* SearchNode::Estimate(const Instruction* order) {
 	long start=clock();
-	cout<<"ENTER ESTIMATE"<<endl;
+	//cout<<"ENTER ESTIMATE"<<endl;
 	SceneState* estimate=new SceneState(*state);
 	int t,s=0,n=0;
 	double heal;
@@ -1582,6 +1638,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -1610,6 +1675,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -1633,13 +1707,22 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 2:
 		{
-			if (argv->dataptr==NULL)
+			Object* O=(Object *)(argv->dataptr);
+			double d=*(double *)(argv->next->dataptr);
+			Position dif=(Displacement(O->pos,Self->pos));
+			d=d/Norm(dif);
+			new_position->x=dif.x*d+Self->pos.x;
+			new_position->y=dif.y*d+Self->pos.y;
+			new_position->z=dif.x*d+Self->pos.z;
+			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
 			{
-				new_position->x=Self->pos.x+200;
-				new_position->y=Self->pos.y+200;
-				new_position->z=Self->pos.z+200;
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
 			}
-			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -1660,13 +1743,21 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 3:
 		{
-			if (argv->dataptr==NULL)
+			double d=*(double *)(argv->dataptr);
+			Position dif=(Displacement(enemy.player.pos,Self->pos));
+			d=d/Norm(dif);
+			new_position->x=Self->pos.x-dif.x*d;
+			new_position->y=Self->pos.y-dif.y*d;
+			new_position->z=Self->pos.z-dif.z*d;
+			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
 			{
-				new_position->x=Self->pos.x+200;
-				new_position->y=Self->pos.y+200;
-				new_position->z=Self->pos.z+200;
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
 			}
-			else new_position=(Position *)(argv->dataptr);
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -1687,13 +1778,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 5:
 		{
+			int id=*(int *)(argv->dataptr);
 			Self->skill_cd[0]=80;
-			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+enemy.player.radius))
+			
+			if (id==enemy.player.id)
 				{
 					enemy.Health-=100*(Self->skill_level[0]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+boss.boss.radius))
+			if (id==boss.boss.id)
 			{
 				heal=health(boss.boss.radius);
 				heal-=100*(Self->skill_level[0]);
@@ -1706,12 +1799,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	case 4:
 		{
 			Self->skill_cd[1]=80;
-			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(1100+300*(Self->skill_level[1])+Self->radius+enemy.player.radius))
+			if (((Object*)(argv->dataptr))->type==PLAYER)
 				{
 					enemy.Health-=200+300*(Self->skill_level[1]);
 					enemy.player.radius=get_radius(enemy.Health);
+
 			}
-			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(1100+300*(Self->skill_level[1]+Self->radius+boss.boss.radius)))
+			if (((Object*)(argv->dataptr))->type==BOSS)
 			{
 				heal=health(boss.boss.radius);
 				heal-=200+300*(Self->skill_level[1]);
@@ -1781,10 +1875,10 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 			break;
 		}
 	}
-	estimate->status=&status;
-	estimate->boss=&boss;
-	estimate->enemy=&enemy;
-	cout<<"EXIT ESTIMATE, time = "<<clock()-start<<endl;
+	estimate->status=new Status(status);
+	estimate->boss=new Boss(boss);
+	estimate->enemy=new Enemy(enemy);
+	//cout<<"EXIT ESTIMATE, time = "<<clock()-start<<endl;
 	return(estimate);
 }
 
@@ -1802,12 +1896,12 @@ lnNode* SearchNode::CheckPossibleOrders()
 	lnNode* temp;
 	if (this->gameover_state)
 		return NULL;
-	if ((state->boss->valid_time==time)||(state->enemy->valid_time==time))
+	SceneState s=*state;
+	analyzer temp_analyzer(&s);
+	if (abs(state->boss->valid_time-time)<5||temp_analyzer.pos_player!=NULL)
 	{
 		Position* positions=new Position[3];
-		SceneState s=*state;
-		analyzer temp_analyzer(&s);
-		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
+		for (int k=SkillType(LONG_ATTACK);k<SkillType(HEALTH_UP);k++)
 		{
 			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
 			{
@@ -1816,12 +1910,22 @@ lnNode* SearchNode::CheckPossibleOrders()
 				n=new lnNode;
 				t->argvs=n;
 				t->argvs->dataptr=new int(k);                        //*****************************************//
+				t->argvs->next=NULL;
 				temp=new lnNode;
 				l->dataptr=t;
 				l->next=temp;
 				l=l->next;
 			}
 		}
+		if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[HEALTH_UP])*kBasicSkillPrice[HEALTH_UP]))
+			{
+				t=new Instruction;
+				t->type=InstructionType(Skill_HealthUp);
+				temp=new lnNode;
+				l->dataptr=t;
+				l->next=temp;
+				l=l->next;
+			}
 		t=new Instruction;
 		t->type=InstructionType(MovePosition);
 		n=new lnNode;
@@ -1843,7 +1947,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->boss->valid_time==time)
+		if (abs(state->boss->valid_time-time)<5)
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
@@ -1856,7 +1960,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->enemy->valid_time==time)
+		if (abs(state->enemy->valid_time-time)<5)
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
@@ -1877,8 +1981,8 @@ lnNode* SearchNode::CheckPossibleOrders()
 		temp=new lnNode;
 		l->dataptr=t;
 		(l->next)=temp;
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos)||
-			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
+		if (((kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))||
+			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos)))
 		{
 			l=l->next;
 			t=new Instruction;
@@ -1887,19 +1991,21 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->enemy->player.pos))
+		if ((state->status->objects[0].skill_level[LONG_ATTACK]>0))
+			cout<<" "<<endl;
+		if (kLongAttackRange[state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))
 		{
 			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=new Object(state->enemy->player);
+			t->argvs->dataptr=new int(state->enemy->player.id);
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->enemy->player.pos,state->boss->boss.pos))
+		if (kLongAttackRange[state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos))
 		{
 			l=l->next;
 			t=new Instruction;
@@ -1992,8 +2098,8 @@ double SearchNode::evaluate()
 			extra_ability+=kBasicSkillPrice[i]*pow(2,k);
 	}
 	int time=state->map->time;
-	bool enemy_in_sight=(state->enemy->valid_time==time);
-	bool boss_in_sight=(state->boss->valid_time==time);
+	bool enemy_in_sight=temp_analyzer.pos_player!=NULL;
+	bool boss_in_sight=abs(state->boss->valid_time-time)<5;
 	//Enemy in sight
 	if (enemy_in_sight==1&&boss_in_sight==0)
 	{
@@ -2007,6 +2113,7 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<possible_extra_hp<<endl;
 		double original_hp_rate=state->status->objects[0].health/health(state->enemy->player.radius);
 		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->enemy->player.radius);
 		double distance=Distance(state->status->objects[0].pos,state->enemy->player.pos);
@@ -2021,20 +2128,21 @@ double SearchNode::evaluate()
 
 
 		//evaluation
-		if (original_hp_rate>1) //Add enemy's ability points into consideration!
+		if (original_hp_rate>=1) //Add enemy's ability points into consideration!
 		{
 			//rate5: shield status, rate6: dash status
 			return original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
-				rate4*distance+
+				rate4*(state->status->objects[0].vision-distance)+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
-				+9999*gameover_state;
+				+9999*gameover_state
+				-99999*health(state->enemy->player.radius);
 		}
 		else
 		{
 			//rate5: shield status, rate6: dash status
-			return original_hp_rate*state->status->objects[0].health+
+			return 99999999999*original_hp_rate*state->status->objects[0].health+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
@@ -2045,11 +2153,9 @@ double SearchNode::evaluate()
 	{
 		gameover_state=0;
 		return state->status->objects[0].health+
-			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*(time); //distance to center?
+			rate1*(extra_ability+state->status->objects[0].ability);
 	}
-	else if(enemy_in_sight==0&&boss_in_sight==1)//Only boss in sight
+	else if(enemy_in_sight==0&&boss_in_sight==1)									//Only boss in sight
 	{
 		//initializing data
 		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
@@ -2061,6 +2167,7 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<possible_extra_hp<<endl;
 		double original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
 		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
 		double distance=Distance(state->status->objects[0].pos,state->boss->boss.pos);
@@ -2074,11 +2181,10 @@ double SearchNode::evaluate()
 
 		//evaluating
 		return state->status->objects[0].health+
-			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*state->map->time+
-			rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius
-			+9999*gameover_state;
+			rate1*(extra_ability+state->status->objects[0].ability)
+			+rate4*(state->status->objects[0].vision-distance)/state->boss->boss.radius
+			+9999*gameover_state
+			-99999*health(state->boss->boss.radius);
 	}
 	else																					  //Both enemy and boss in sight
 	{
@@ -2113,16 +2219,17 @@ double SearchNode::evaluate()
 
 		//evaluating
 		double enemy_evaluation_point;
-		if (Enemy_original_hp_rate>1) //Add enemy's ability points into consideration!
+		if (Enemy_original_hp_rate>=1) //Add enemy's ability points into consideration!
 		{
 			//rate5: shield status, rate6: dash status
 			enemy_evaluation_point=	
-				Enemy_original_hp_rate*state->status->objects[0].health+
+				9999*Enemy_original_hp_rate*state->status->objects[0].health+
 				rate1*((extra_ability+state->status->objects[0].ability)-3/* 3 should be ability points of enemy, do we have that?*/)+
-				rate4*Enemy_distance+
+				rate4*(state->status->objects[0].vision-Enemy_distance)+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
-				+9999*gameover_state;
+				+9999*gameover_state
+				-99999*health(state->enemy->player.radius);
 		}
 		else
 		{
@@ -2135,11 +2242,9 @@ double SearchNode::evaluate()
 				+9999*gameover_state;
 		}
 		return 
-			(rate_boss)*
+			9999*(rate_boss)*
 			(state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
-			rate2*food_density+
-			rate3*state->map->time+
 			rate_boss_distance*(state->status->objects[0].vision-Boss_distance)/state->boss->boss.radius)+
 			(rate_enemy)*enemy_evaluation_point
 			+9999*gameover_state;
@@ -2333,11 +2438,3 @@ MaxHeap* SearchTree::extendheap() {
 SearchTree::~SearchTree() {
 
 }
-
-
-
-
-
-
-
-

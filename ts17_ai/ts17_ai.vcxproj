@@ -80,27 +80,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\ai\ai.cpp" />
-    <ClCompile Include="..\ai\analyzer.cpp" />
-    <ClCompile Include="..\ai\basictypes.cpp" />
-    <ClCompile Include="..\ai\common.cpp" />
-    <ClCompile Include="..\ai\dll_main.cpp" />
-    <ClCompile Include="..\ai\processor.cpp" />
-    <ClCompile Include="..\ai\searchnode.cpp" />
-    <ClCompile Include="..\ai\searchtree.cpp" />
     <ClCompile Include="..\ai\teamstyle17.cpp" />
     <ClCompile Include="..\communicate\communicate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\communicate\communicate.h" />
-    <ClInclude Include="..\headers\analyzer.h" />
-    <ClInclude Include="..\headers\basic.h" />
-    <ClInclude Include="..\headers\basictypes.h" />
-    <ClInclude Include="..\headers\common.h" />
-    <ClInclude Include="..\headers\evaluate_rates.h" />
-    <ClInclude Include="..\headers\instructions.h" />
-    <ClInclude Include="..\headers\processor.h" />
-    <ClInclude Include="..\headers\searchtree.h" />
-    <ClInclude Include="..\headers\teamstyle17.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

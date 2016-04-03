@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
-#include "../headers/basic.h"
+#include "basic.h"
 #include "communicate.h"
 
 #pragma warning(disable : 4996)
