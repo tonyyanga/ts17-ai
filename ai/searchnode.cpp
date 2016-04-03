@@ -272,12 +272,12 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	case 5:
 		{
 			Self->skill_cd[0]=80;
-			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+enemy.player.radius))
+			if (((Object*)(argv->dataptr))->type==PLAYER)
 				{
 					enemy.Health-=100*(Self->skill_level[0]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(2000+500*(Self->skill_level[0])+Self->radius+boss.boss.radius))
+			if (((Object*)(argv->dataptr))->type==BOSS)
 			{
 				heal=health(boss.boss.radius);
 				heal-=100*(Self->skill_level[0]);
@@ -290,12 +290,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 	case 4:
 		{
 			Self->skill_cd[1]=80;
-			if (Norm(Displacement(enemy.player.pos,Self->pos))<=(1100+300*(Self->skill_level[1])+Self->radius+enemy.player.radius))
+			if (((Object*)(argv->dataptr))->type==PLAYER)
 				{
 					enemy.Health-=200+300*(Self->skill_level[1]);
 					enemy.player.radius=get_radius(enemy.Health);
+
 			}
-			if (Norm(Displacement(boss.boss.pos,Self->pos))<=(1100+300*(Self->skill_level[1]+Self->radius+boss.boss.radius)))
+			if (((Object*)(argv->dataptr))->type==BOSS)
 			{
 				heal=health(boss.boss.radius);
 				heal-=200+300*(Self->skill_level[1]);
