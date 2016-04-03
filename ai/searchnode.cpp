@@ -130,6 +130,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,Self->pos,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -158,6 +167,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,Self->pos,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -188,6 +206,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,Self->pos,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
@@ -215,6 +242,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 				new_position->z=Self->pos.z+200;
 			}
 			else new_position=(Position *)(argv->dataptr);
+			if ((PointLineDistance(boss.boss.pos,Self->pos,Self->pos)<(Self->radius)))
+			{
+				if ((boss.boss.radius*5)>(Self->radius*6))
+				{
+						Self->health=0;
+						Self->radius=0;
+						break;
+				}
+			}
 			map.time+=Usetime(!Self->skill_cd[DASH],*new_position,Self->pos,*Self);
 			for(t=0;t<n;t++)
 			{
