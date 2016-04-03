@@ -252,20 +252,20 @@ void processor::temp_set_ins()
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
 			Position *boss=state->pos_boss;
 			Position *devour;
-			Position d1=Displacement(scene->status->objects[0].pos,*p);
-			Position d2=Displacement(scene->status->objects[0].pos,*boss);
+			Position selfpos=(scene->status->objects[0].pos);
+			double r=scene->status->objects[0].radius;
 			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
-			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius||
-				p->y<=scene->status->objects[0].radius||p->y>=kMapSize-scene->status->objects[0].radius||
-				p->z<=scene->status->objects[0].radius||p->z>=kMapSize-scene->status->objects[0].radius)
+			if (p->x<=r||p->x>=kMapSize-scene->status->objects[0].radius||
+				p->y<=r||p->y>=kMapSize-scene->status->objects[0].radius||
+				p->z<=r||p->z>=kMapSize-scene->status->objects[0].radius)
 				temp_in.priority=0;
-			if (1-abs(angle(d1,d2))<0.1)
+			if (PointLineDistance(*boss,*p,selfpos)<r)
 				temp_in.priority=0;
 			for (int i=0;i<state->num_devour;i++)
 			{
 				devour=state->pos_devour+i;
-				if (1-abs(angle(d1,d2))<0.1)
+				if (PointLineDistance(*devour,*p,selfpos)<r)
 					temp_in.priority=0;
 			}
 			multiple_temp=NULL;
@@ -276,8 +276,8 @@ void processor::temp_set_ins()
 			Position *p=(Position*)temp_in.i.argvs->dataptr;
 			Position *devour;
 			Position *boss=state->pos_boss;
-			Position d1=Displacement(scene->status->objects[0].pos,*p);
-			Position d2=Displacement(scene->status->objects[0].pos,*boss);
+			Position selfpos=(scene->status->objects[0].pos);
+			double r=scene->status->objects[0].radius;
 			if (Distance(scene->status->objects[0].pos,*p)<300)
 				temp_in.priority=0;
 			if (p->x<=scene->status->objects[0].radius||p->x>=kMapSize-scene->status->objects[0].radius||
@@ -286,12 +286,12 @@ void processor::temp_set_ins()
 				temp_in.priority=0;
 			if (state->num_adv_energy>0)
 				temp_in.priority=0;
-			if (1-abs(angle(d1,d2))<0.1)
+			if (PointLineDistance(*boss,*p,selfpos)<r)
 				temp_in.priority=0;
 			for (int i=0;i<state->num_devour;i++)
 			{
 				devour=state->pos_devour+i;
-				if (1-abs(angle(d1,d2))<0.1)
+				if (PointLineDistance(*devour,*p,selfpos)<r)
 					temp_in.priority=0;
 			}
 			multiple_temp=NULL;
