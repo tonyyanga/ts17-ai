@@ -1,5 +1,6 @@
 ﻿//#define SORTING
 #include <stdlib.h>
+#include <stdio.h>
 #include <new>
 #include <iostream>
 #include <cmath>
