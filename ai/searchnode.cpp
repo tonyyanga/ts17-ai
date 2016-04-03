@@ -237,7 +237,7 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		{
 			double d=*(double *)(argv->dataptr);
 			Position dif=(Displacement(enemy.player.pos,Self->pos));
-			double d=d/Norm(dif);
+			d=d/Norm(dif);
 			new_position->x=Self->pos.x-dif.x*d;
 			new_position->y=Self->pos.y-dif.y*d;
 			new_position->z=Self->pos.z-dif.z*d;
