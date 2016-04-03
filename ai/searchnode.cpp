@@ -199,13 +199,13 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 2:
 		{
-			if (argv->dataptr==NULL)
-			{
-				new_position->x=Self->pos.x+200;
-				new_position->y=Self->pos.y+200;
-				new_position->z=Self->pos.z+200;
-			}
-			else new_position=(Position *)(argv->dataptr);
+			Object* O=(Object *)(argv->dataptr);
+			double d=*(double *)(argv->next->dataptr);
+			Position dif=(Displacement(O->pos,Self->pos));
+			d=d/Norm(dif);
+			new_position->x=dif.x*d+Self->pos.x;
+			new_position->y=dif.y*d+Self->pos.y;
+			new_position->z=dif.x*d+Self->pos.z;
 			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
 			{
 				if ((boss.boss.radius*5)>(Self->radius*6))
@@ -235,13 +235,12 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 3:
 		{
-			if (argv->dataptr==NULL)
-			{
-				new_position->x=Self->pos.x+200;
-				new_position->y=Self->pos.y+200;
-				new_position->z=Self->pos.z+200;
-			}
-			else new_position=(Position *)(argv->dataptr);
+			double d=*(double *)(argv->dataptr);
+			Position dif=(Displacement(enemy.player.pos,Self->pos));
+			double d=d/Norm(dif);
+			new_position->x=Self->pos.x-dif.x*d;
+			new_position->y=Self->pos.y-dif.y*d;
+			new_position->z=Self->pos.z-dif.z*d;
 			if ((PointLineDistance(boss.boss.pos,*new_position,Self->pos)<(Self->radius)))
 			{
 				if ((boss.boss.radius*5)>(Self->radius*6))
@@ -271,13 +270,15 @@ SceneState* SearchNode::Estimate(const Instruction* order) {
 		}
 	case 5:
 		{
+			int id=*(int *)(argv->dataptr);
 			Self->skill_cd[0]=80;
-			if (((Object*)(argv->dataptr))->type==PLAYER)
+			
+			if (id==enemy.player.id)
 				{
 					enemy.Health-=100*(Self->skill_level[0]);
 					enemy.player.radius=get_radius(enemy.Health);
 			}
-			if (((Object*)(argv->dataptr))->type==BOSS)
+			if (id==boss.boss.id)
 			{
 				heal=health(boss.boss.radius);
 				heal-=100*(Self->skill_level[0]);
