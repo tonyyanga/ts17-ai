@@ -392,7 +392,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 	if (abs(state->boss->valid_time-time)<5||temp_analyzer.pos_player!=NULL)
 	{
 		Position* positions=new Position[3];
-		for (int k=SkillType(LONG_ATTACK);k<=SkillType(HEALTH_UP);k++)
+		for (int k=SkillType(LONG_ATTACK);k<SkillType(HEALTH_UP);k++)
 		{
 			if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[k])*kBasicSkillPrice[k]))
 			{
@@ -408,6 +408,15 @@ lnNode* SearchNode::CheckPossibleOrders()
 				l=l->next;
 			}
 		}
+		if (state->status->objects[0].ability>int(pow(2,state->status->objects[0].skill_level[HEALTH_UP])*kBasicSkillPrice[HEALTH_UP]))
+			{
+				t=new Instruction;
+				t->type=InstructionType(Skill_HealthUp);
+				temp=new lnNode;
+				l->dataptr=t;
+				l->next=temp;
+				l=l->next;
+			}
 		t=new Instruction;
 		t->type=InstructionType(MovePosition);
 		n=new lnNode;
@@ -429,7 +438,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->next=temp;
 			l=l->next;
 		}
-		if (state->boss->valid_time==time)
+		if (abs(state->boss->valid_time-time)<5)
 		{
 			t=new Instruction;
 			t->type=InstructionType(Approach);
@@ -463,8 +472,7 @@ lnNode* SearchNode::CheckPossibleOrders()
 		temp=new lnNode;
 		l->dataptr=t;
 		(l->next)=temp;
-		if ((state->status->objects[0].skill_level[SHORT_ATTACK]>0)&&
-			((kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))||
+		if (((kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))||
 			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos)))
 		{
 			l=l->next;
@@ -474,20 +482,21 @@ lnNode* SearchNode::CheckPossibleOrders()
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if (kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos)&&state->status->objects[0].skill_level[SHORT_ATTACK]>0)
+		if ((state->status->objects[0].skill_level[LONG_ATTACK]>0))
+			cout<<" "<<endl;
+		if (kLongAttackRange[state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]]>Distance(state->status->objects[0].pos,state->enemy->player.pos))
 		{
 			l=l->next;
 			t=new Instruction;
 			t->type=InstructionType(Skill_LongAttack);
 			lnNode* n=new lnNode;
 			t->argvs=n;
-			t->argvs->dataptr=new Object(state->enemy->player);
+			t->argvs->dataptr=new int(state->enemy->player.id);
 			temp=new lnNode;
 			l->dataptr=t;
 			l->next=temp;
 		}
-		if ((state->status->objects[0].skill_level[LONG_ATTACK]>0)&&
-			kShortAttackRange[state->status->objects[0].skill_level[SkillType(SHORT_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos))
+		if (kLongAttackRange[state->status->objects[0].skill_level[SkillType(LONG_ATTACK)]]>Distance(state->status->objects[0].pos,state->boss->boss.pos))
 		{
 			l=l->next;
 			t=new Instruction;
@@ -595,6 +604,7 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<possible_extra_hp<<endl;
 		double original_hp_rate=state->status->objects[0].health/health(state->enemy->player.radius);
 		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->enemy->player.radius);
 		double distance=Distance(state->status->objects[0].pos,state->enemy->player.pos);
@@ -622,7 +632,7 @@ double SearchNode::evaluate()
 		else
 		{
 			//rate5: shield status, rate6: dash status
-			return 9999*original_hp_rate*state->status->objects[0].health+
+			return 99999999999*original_hp_rate*state->status->objects[0].health+
 				rate4*distance+
 				rate5*(state->status->objects[0].shield_time>0)+
 				rate6*(state->status->objects[0].dash_time>0)*(state->status->objects[0].skill_level[SkillType(DASH)])
@@ -632,12 +642,12 @@ double SearchNode::evaluate()
 	else if (enemy_in_sight==0&&boss_in_sight==0)									//Regular mode
 	{
 		gameover_state=0;
-		return state->status->objects[0].health+
+		return 9999999999999*state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
 			rate3*(time); //distance to center?
 	}
-	else if(enemy_in_sight==0&&boss_in_sight==1)//Only boss in sight
+	else if(enemy_in_sight==0&&boss_in_sight==1)									//Only boss in sight
 	{
 		//initializing data
 		int possible_extra_hp=0,hp_price=pow(2,state->status->objects[0].skill_level[SkillType(HEALTH_UP)]);
@@ -649,6 +659,7 @@ double SearchNode::evaluate()
 			temp_ability-=hp_price;
 			hp_price=2*hp_price;
 		}
+		cout<<"!!!!!!!!!!!!!!!!!!!!!!!!"<<possible_extra_hp<<endl;
 		double original_hp_rate=state->status->objects[0].health/health(state->map->objects[0].radius);
 		double extra_hp_rate_self=(state->status->objects[0].health+possible_extra_hp)/health(state->map->objects[0].radius);
 		double distance=Distance(state->status->objects[0].pos,state->boss->boss.pos);
@@ -661,7 +672,7 @@ double SearchNode::evaluate()
 			gameover_state=1;
 
 		//evaluating
-		return state->status->objects[0].health+
+		return 9999999999999*state->status->objects[0].health+
 			rate1*(extra_ability+state->status->objects[0].ability)+
 			rate2*food_density+
 			rate3*state->map->time+

@@ -453,6 +453,8 @@ void processor::AddInstruction(Instruction* i, int p)
 		temp->z=scene->status->objects[0].pos.z+200;
 		i->argvs->dataptr=temp;
 	}
+	if (i->type>1&&i->type<9)
+			cout<<"Add upgrade!"<<endl;
 	switch(p)
 	{
 	case 1:{
@@ -500,8 +502,6 @@ void processor::AddInstruction(Instruction* i, int p)
 			if (Norm(CrossProduct(p,p2))<=0.1)
 				break;
 		}
-		if (i->type==9)
-			cout<<"Add upgrade!"<<endl;
 		l1.push(*i);
 		break;
 		   }
